@@ -11,6 +11,9 @@
   "author": "Tim Santeford",
   "license": "ISC",
   "dependencies": {
+    "lodash": "^2.4.1",
+    "q": "^1.1.1",
+    "request": "^2.48.0"
   },
   "devDependencies": {
   }
