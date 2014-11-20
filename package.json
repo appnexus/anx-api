@@ -1,0 +1,17 @@
+{
+  "name": "anx-api",
+  "version": "1.0.0",
+  "description": "AppNexus Api Wrapper",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "AppNexus"
+  ],
+  "author": "Tim Santeford",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
