@@ -4,6 +4,7 @@
   "description": "AppNexus Api Wrapper",
   "main": "index.js",
   "scripts": {
+    "test": "mocha"
   },
   "keywords": [
     "AppNexus"
@@ -16,5 +17,7 @@
     "request": "^2.48.0"
   },
   "devDependencies": {
+    "mocha": "^2.0.1",
+    "nock": "^0.50.0"
   }
 }
