@@ -6,7 +6,20 @@
 
 ## Usage
 
-Coming soon
+	var Api = require('anx-api');
+
+	# Create a new instance with api target
+	var api = new Api({
+		target: 'https://api.appnexus.com'
+		token: 'SESSION_TOKEN' // (optional) see also api.login(...)
+	});
+
+	api.getJson(<serviceName>).then(function (res) {
+		...
+	}).catch(function (err) {
+		...
+	})
+
 
 ## Tests
 
@@ -26,7 +39,6 @@ Comming soon
 
 ## Todo
 
-* Add examples source files
-* Add examples in readme
+* Add method help
 * Add mocking examples to readme
 * Add Service Wrapper
