@@ -1,4 +1,4 @@
-var Api = require('../');
+var Api = require('anx-api');
 
 var api = new Api({
 	target: process.env.TARGET
