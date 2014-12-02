@@ -47,7 +47,7 @@ Issues a GET request
 
 #### Result
 
-Returns a promise that fulfills with the response from the api
+Returns a promise that fulfills with the response from the api.
 
 ### #getJson
 
@@ -68,7 +68,7 @@ Issues a POST request with a payload
 
 #### Result
 
-Returns a promise that fulfills with the response from the api
+Returns a promise that fulfills with the response from the api.
 
 ### #postJson
 
@@ -90,12 +90,31 @@ Issues a PUT request with a payload
 
 #### Result
 
-Returns a promise that fulfills with the response from the api
+Returns a promise that fulfills with the response from the api.
 
 ### #putJson
 
 Puts a json encoded object payload to the service url. Usage and parameters are
 the same as #put. Response body is parsed as json.
+
+### #delete
+
+Issues a DELETE request
+
+	api.delete('service url')
+	api.delete({ uri: 'service url' })
+
+#### Parameters
+
+* service uri - (string|object)
+
+#### Result
+
+Returns a promise that fulfills with the response from the api.
+
+### #deleteJson
+
+Usage and parameters are the same as #delete. Response body is parsed as json.
 
 ### #login
 
