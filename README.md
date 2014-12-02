@@ -134,7 +134,7 @@ Run this projects unit tests suite from project root:
 
 ### Mocking
 
-Comming soon
+Coming soon
 
 ## Todo
 
