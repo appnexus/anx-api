@@ -58,6 +58,33 @@ Issues a POST request with a payload
 
 Returns a promise that fulfills with the response from the api
 
+### #postJson
+
+Posts a json encoded object payload to the service url. Usage and parameters are
+the same as #post. Response body is parsed as json.
+
+### #put
+
+Issues a PUT request with a payload
+
+	api.put('service url', 'payload')
+	api.put({ uri: 'service url' }, { /* payload obj */ })
+	api.put({ uri: 'service url' , body: { /* payload obj */ } })
+
+#### Parameters
+
+* service uri - (string|object)
+* payload - (string|object)
+
+#### Result
+
+Returns a promise that fulfills with the response from the api
+
+### #putJson
+
+Puts a json encoded object payload to the service url. Usage and parameters are
+the same as #put. Response body is parsed as json.
+
 ## Tests
 
 ### Running unit tests
