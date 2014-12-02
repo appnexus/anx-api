@@ -4,7 +4,7 @@
 
 	npm install anx-api
 
-## Usage
+## Usage Example
 
 	var Api = require('anx-api');
 
@@ -20,7 +20,19 @@
 		...
 	})
 
-## Methods
+## Constructor
+
+	var api = new Api(config);
+
+#### Parameters
+
+* config
+	* target - (string) base api url
+	* token - (string) optional session token
+	* request - (object) optional request object
+	* userAgent - (string) optional user agent
+
+## Instance Methods
 
 ### #get
 
@@ -85,6 +97,10 @@ Returns a promise that fulfills with the response from the api
 Puts a json encoded object payload to the service url. Usage and parameters are
 the same as #put. Response body is parsed as json.
 
+### #login
+
+Coming soon
+
 ## Tests
 
 ### Running unit tests
@@ -103,6 +119,5 @@ Comming soon
 
 ## Todo
 
-* Add method help
 * Add mocking examples to readme
 * Add Service Wrapper
