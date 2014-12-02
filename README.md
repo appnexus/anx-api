@@ -39,7 +39,7 @@
 Issues a GET request
 
 	api.get('service url')
-	api.get({ uri: 'service url' })
+	api.get(opts) // see Request Options
 
 #### Parameters
 
@@ -58,8 +58,8 @@ Usage and parameters are the same as #get. Response body is parsed as json.
 Issues a POST request with a payload
 
 	api.post('service url', 'payload')
-	api.post({ uri: 'service url' }, { /* payload obj */ })
-	api.post({ uri: 'service url' , body: { /* payload obj */ } })
+	api.post(opts, { /* payload obj */ })
+	api.post(opts) // see Request Options
 
 #### Parameters
 
@@ -80,8 +80,8 @@ the same as #post. Response body is parsed as json.
 Issues a PUT request with a payload
 
 	api.put('service url', 'payload')
-	api.put({ uri: 'service url' }, { /* payload obj */ })
-	api.put({ uri: 'service url' , body: { /* payload obj */ } })
+	api.put(opts, { /* payload obj */ })
+	api.put(opts) // see Request Options
 
 #### Parameters
 
@@ -102,7 +102,7 @@ the same as #put. Response body is parsed as json.
 Issues a DELETE request
 
 	api.delete('service url')
-	api.delete({ uri: 'service url' })
+	api.delete(opts) // see Request Options
 
 #### Parameters
 
@@ -115,6 +115,25 @@ Returns a promise that fulfills with the response from the api.
 ### #deleteJson
 
 Usage and parameters are the same as #delete. Response body is parsed as json.
+
+## Request Options
+
+The get, post, put, and delete methods can be called with an opts object. The
+opts allows the configuration for the following request options.
+
+* uri - (string) service uri
+* startElement - (string) optional start index
+* numElements - (integer) optional number of records to return
+* params - (object) optional query string parameters
+
+### Example
+
+	// Fetch the third page of 25 creatives
+	api.get({
+		uri: 'creative',
+		startElement: 50,
+		numElements: 25
+	})
 
 ### #login
 
