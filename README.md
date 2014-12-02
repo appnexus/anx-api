@@ -20,6 +20,43 @@
 		...
 	})
 
+## Methods
+
+### #get
+
+Issues a GET request
+
+	api.get('service url')
+	api.get({ uri: 'service url' })
+
+#### Parameters
+
+* service uri - (string|object)
+
+#### Result
+
+Returns a promise that fulfills with the response from the api
+
+### #getJson
+
+Usage and parameters are the same as #get. Response body is parsed as json.
+
+### #post
+
+Issues a POST request with a payload
+
+	api.post('service url', 'payload')
+	api.post({ uri: 'service url' }, { /* payload obj */ })
+	api.post({ uri: 'service url' , body: { /* payload obj */ } })
+
+#### Parameters
+
+* service uri - (string|object)
+* payload - (string|object)
+
+#### Result
+
+Returns a promise that fulfills with the response from the api
 
 ## Tests
 
