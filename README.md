@@ -34,6 +34,17 @@
 
 ## Instance Methods
 
+### #login
+
+Authenticates with the API and returns a token to be used with future requests.
+
+  api.login('username', 'password').then(function (token) {
+
+  	// The api object is now logged in. Optionally store the token.
+    ...
+
+  })
+
 ### #get
 
 Issues a GET request
@@ -116,10 +127,15 @@ Returns a promise that fulfills with the response from the api.
 
 Usage and parameters are the same as #delete. Response body is parsed as json.
 
+
+### #switchUser
+
+	api.switchUser(userId).then(...)
+
 ## Request Options
 
 The get, post, put, and delete methods can be called with an opts object. The
-opts allows the configuration for the following request options.
+opts object has the following request options.
 
 * uri - (string) service uri
 * startElement - (string) optional start index
@@ -134,10 +150,6 @@ opts allows the configuration for the following request options.
 		startElement: 50,
 		numElements: 25
 	})
-
-### #login
-
-Coming soon
 
 ## Tests
 
