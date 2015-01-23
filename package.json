@@ -10,6 +10,10 @@
     "AppNexus"
   ],
   "author": "Tim Santeford",
+  "contributers": [{
+    "name": "Yanyi Luo",
+    "email": "me@yanyiluo.com"
+  }],
   "license": "MIT",
   "dependencies": {
     "lodash": "^2.4.1",
