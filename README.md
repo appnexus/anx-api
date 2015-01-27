@@ -20,6 +20,13 @@
 		...
 	})
 
+## Pull Request Rules
+
+* Limit PRs to one feature or bug fix
+* Create a separate PR for code cleanup, refactoring, removing extraneous whitespace, etc.
+* Run unit tests before submitting (See Running unit tests)
+* Write unit tests for new features
+
 ## Constructor
 
 	var api = new Api(config);
@@ -159,7 +166,7 @@ Install mocha globally:
 
 	npm install mocha -g
 
-Run this projects unit tests suite from project root:
+Run the unit test suite from the project root:
 
 	mocha
 
