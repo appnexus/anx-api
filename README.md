@@ -1,5 +1,8 @@
 # AppNexus Api Wrapper
 
+[![npm version](https://badge.fury.io/js/anx-api.svg)](http://badge.fury.io/js/anx-api)
+[![Build Status](https://travis-ci.org/adnexus/anx-api.svg?branch=master)](https://travis-ci.org/adnexus/anx-api)
+
 ## Installation
 
 	npm install anx-api
