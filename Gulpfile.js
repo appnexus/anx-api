@@ -7,7 +7,10 @@ gulp.task('default', ['lint']);
 gulp.task('lint', function () {
 	return gulp.src('./lib/*.js')
 		.pipe(jshint())
-		.pipe(jshint.reporter('default'));
+		.pipe(jshint.reporter('default'))
+		.pipe(jshint.reporter('fail'));
+});
+
 function mochaTest() {
 	return gulp.src('*/*.mspec.js', {
 			read: false
@@ -21,4 +24,6 @@ gulp.task('test', function () {
 	return mochaTest();
 });
 
+gulp.task('ci-test', ['lint'], function () {
+	return mochaTest();
 });

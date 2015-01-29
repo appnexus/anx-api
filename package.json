@@ -2,6 +2,8 @@
   "name": "anx-api",
   "version": "1.1.1",
   "description": "AppNexus Api Wrapper",
+  "homepage": "https://github.com/adnexus/anx-api",
+  "bugs": "https://github.com/adnexus/anx-api/issues",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
