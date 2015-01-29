@@ -1,6 +1,12 @@
 {
 	"node": true,
-	"globals": { "describe": true, "it": true, "before": true, "beforeEach": true },
+	"globals": {
+		"Promise": true,
+		"describe": true,
+		"it": true,
+		"before": true,
+		"beforeEach": true
+	},
 	"browser": true,
 	"es5": false,
 	"esnext": true,

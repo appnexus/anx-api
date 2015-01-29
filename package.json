@@ -24,6 +24,8 @@
     "request": "^2.48.0"
   },
   "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-jshint": "^1.9.0",
     "mocha": "^2.0.1",
     "nock": "^0.50.0"
   }
