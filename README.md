@@ -1,4 +1,4 @@
-# AppNexus Api Wrapper
+<img src="https://raw.githubusercontent.com/adnexus/anx-api/master/img/anx-api.png" alt="AppNexus Api Wrapper" width="300px">
 
 [![npm version](https://badge.fury.io/js/anx-api.svg)](http://badge.fury.io/js/anx-api)
 [![Build Status](https://travis-ci.org/adnexus/anx-api.svg?branch=master)](https://travis-ci.org/adnexus/anx-api)
