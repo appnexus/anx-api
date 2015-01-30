@@ -181,5 +181,6 @@ Coming soon
 
 ## Todo
 
+* Handle api call limits
 * Add mocking examples to readme
 * Add Service Wrapper
