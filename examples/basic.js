@@ -4,7 +4,7 @@ var api = new Api({
 	target: process.env.TARGET
 });
 
-api.login(process.env.USERNAME, process.env.PASSWORD).then(function (/* token */) {
+api.login(process.env.ANX_USERNAME, process.env.ANX_PASSWORD).then(function (/* token */) {
 	return api.getJson('creative').then(function (res) {
 		var response = res.body.response;
 

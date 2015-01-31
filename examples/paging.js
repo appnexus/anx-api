@@ -1,8 +1,8 @@
-var Api = require('../lib/api');
+var Api = require('anx-api');
 var Promise = require('q').Promise;
 
 var api = new Api({
-	target: process.env.TARGET,
+	target: process.env.ANX_TARGET,
 	token: 'SESSION_TOKEN'
 });
 

@@ -1,9 +1,8 @@
 var _ = require('lodash');
-var Api = require('../lib/api');
-
+var Api = require('anx-api');
 
 var api = new Api({
-	target: process.env.TARGET,
+	target: process.env.ANX_TARGET,
 	token: 'SESSION_TOKEN'
 });
 
@@ -16,7 +15,7 @@ return api.get({
 	uri: 'user',
 	startElement: 10
 }).then(function (res) {
-
+	console.log('DONE');
 });
 
 // Outputs:
