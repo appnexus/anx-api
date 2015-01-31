@@ -1,14 +1,15 @@
+var _ = require('lodash');
 var Api = require('../lib/api');
 
-function requestSpy(opts) {
-	console.log('[DEBUG]: ', opts);
-	return opts.defaultRequest(opts);
-}
 
 var api = new Api({
 	target: process.env.TARGET,
-	token: 'SESSION_TOKEN',
-	request: requestSpy
+	token: 'SESSION_TOKEN'
+});
+
+api._config.request = _.wrap(api._config.request, function (request, opts) {
+	console.log('DEBUG: ', opts);
+	return request.call(api, opts);
 });
 
 return api.get({
