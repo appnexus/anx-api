@@ -17,3 +17,14 @@ return api.get({
 }).then(function (res) {
 
 });
+
+// Outputs:
+//
+// [DEBUG]:  { uri: 'http://www.example.net/user?start_element=10',
+//   startElement: 10,
+//   method: 'GET',
+//   headers:
+//    { 'User-Agent': 'anx-api/1.1.1',
+//      Authorization: 'hbapi:8090:54aae62e63875:lax1' },
+//   params: { start_element: 10 } }
+
