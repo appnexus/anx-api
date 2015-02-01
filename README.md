@@ -163,6 +163,49 @@ opts object has the following request options.
 		numElements: 25
 	})
 
+## Custom Requests and Debugging
+
+The following are two different methods of modifying and or spying on requests
+made to the api.
+
+### Wrap the interal request function
+
+	api._config.request = _.wrap(api._config.request, function (request, opts) {
+		console.log('DEBUG: ', opts);
+		return request.call(api, opts);
+	});
+
+### Pass in a custom request object
+
+	var request = require('request');
+
+	function customRequest(opts) {
+		return new Promise(function (resolve, reject) {
+
+			// Customize the request
+
+			request(opts, function (err, res) {
+				if (err) {
+
+					// Add additional error handling
+
+					reject(err);
+				} else {
+
+					// Customize the response
+
+					resolve(res);
+				}
+			});
+		});
+	}
+
+	var api = new Api({
+		target: process.env.ANX_TARGET,
+		token: 'SESSION_TOKEN',
+		request: customRequest
+	});
+
 ## Tests
 
 ### Running unit tests
