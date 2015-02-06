@@ -1,7 +1,7 @@
 var Api = require('anx-api');
 
 var api = new Api({
-	target: process.env.TARGET
+	target: process.env.ANX_TARGET
 });
 
 api.login(process.env.ANX_USERNAME, process.env.ANX_PASSWORD).then(function (/* token */) {
