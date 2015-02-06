@@ -76,6 +76,13 @@ Returns a promise that fulfills with the response from the api.
 
 Usage and parameters are the same as #get. Response body is parsed as json.
 
+### #getAllJson
+
+** Experimental Feature **
+
+Usage and parameters are the same as #getJson accept it pages through api calls.
+Response body is parsed as json.
+
 ### #post
 
 Issues a POST request with a payload
