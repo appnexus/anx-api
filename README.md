@@ -6,23 +6,27 @@
 
 ## Installation
 
-	npm install anx-api
+```bash
+npm install anx-api
+```
 
 ## Usage Example
 
-	var Api = require('anx-api');
+```javascript
+var Api = require('anx-api');
 
-	# Create a new instance with api target
-	var api = new Api({
-		target: 'https://api.appnexus.com'
-		token: 'SESSION_TOKEN' // (optional) see also api.login(...)
-	});
+# Create a new instance with api target
+var api = new Api({
+	target: 'https://api.appnexus.com'
+	token: 'SESSION_TOKEN' // (optional) see also api.login(...)
+});
 
-	api.getJson(<serviceName>).then(function (res) {
-		...
-	}).catch(function (err) {
-		...
-	})
+api.getJson(<serviceName>).then(function (res) {
+	...
+}).catch(function (err) {
+	...
+})
+```
 
 ## Pull Request Rules
 
@@ -34,7 +38,9 @@
 
 ## Constructor
 
-	var api = new Api(config);
+```javascript
+var api = new Api(config);
+```
 
 #### Parameters
 
@@ -50,19 +56,23 @@
 
 Authenticates with the API and returns a token to be used with future requests.
 
-	api.login('username', 'password').then(function (token) {
+```javascript
+api.login('username', 'password').then(function (token) {
 
-		// The api object is now logged in. Optionally store the token.
-		...
+	// The api object is now logged in. Optionally store the token.
+	...
 
-	})
+})
+```
 
 ### #get
 
 Issues a GET request
 
-	api.get('service url')
-	api.get(opts) // see Request Options
+```javascript
+api.get('service url')
+api.get(opts) // see Request Options
+```
 
 #### Parameters
 
@@ -87,9 +97,11 @@ Response body is parsed as json.
 
 Issues a POST request with a payload
 
-	api.post('service url', 'payload')
-	api.post(opts, { /* payload obj */ })
-	api.post(opts) // see Request Options
+```javascript
+api.post('service url', 'payload')
+api.post(opts, { /* payload obj */ })
+api.post(opts) // see Request Options
+```
 
 #### Parameters
 
@@ -109,9 +121,11 @@ the same as #post. Response body is parsed as json.
 
 Issues a PUT request with a payload
 
-	api.put('service url', 'payload')
-	api.put(opts, { /* payload obj */ })
-	api.put(opts) // see Request Options
+```javascript
+api.put('service url', 'payload')
+api.put(opts, { /* payload obj */ })
+api.put(opts) // see Request Options
+```
 
 #### Parameters
 
@@ -131,8 +145,10 @@ the same as #put. Response body is parsed as json.
 
 Issues a DELETE request
 
-	api.delete('service url')
-	api.delete(opts) // see Request Options
+```javascript
+api.delete('service url')
+api.delete(opts) // see Request Options
+```
 
 #### Parameters
 
@@ -149,7 +165,9 @@ Usage and parameters are the same as #delete. Response body is parsed as json.
 
 ### #switchUser
 
-	api.switchUser(userId).then(...)
+```javascript
+api.switchUser(userId).then(...)
+```
 
 ## Request Options
 
@@ -163,12 +181,14 @@ opts object has the following request options.
 
 ### Example
 
-	// Fetch the third page of 25 creatives
-	api.get({
-		uri: 'creative',
-		startElement: 50,
-		numElements: 25
-	})
+```javascript
+// Fetch the third page of 25 creatives
+api.get({
+	uri: 'creative',
+	startElement: 50,
+	numElements: 25
+})
+```
 
 ## Custom Requests and Debugging
 
@@ -177,53 +197,56 @@ made to the api.
 
 ### Wrap the interal request function
 
-	api._config.request = _.wrap(api._config.request, function (request, opts) {
-		console.log('DEBUG: ', opts);
-		return request.call(api, opts);
-	});
+```javascript
+api._config.request = _.wrap(api._config.request, function (request, opts) {
+	console.log('DEBUG: ', opts);
+	return request.call(api, opts);
+});
+```
 
 ### Pass in a custom request object
 
-	var request = require('request');
+```javascript
+var request = require('request');
 
-	function customRequest(opts) {
-		return new Promise(function (resolve, reject) {
+function customRequest(opts) {
+	return new Promise(function (resolve, reject) {
 
-			// Customize the request
+		// Customize the request
 
-			request(opts, function (err, res) {
-				if (err) {
+		request(opts, function (err, res) {
+			if (err) {
 
-					// Add additional error handling
+				// Add additional error handling
 
-					reject(err);
-				} else {
+				reject(err);
+			} else {
 
-					// Customize the response
+				// Customize the response
 
-					resolve(res);
-				}
-			});
+				resolve(res);
+			}
 		});
-	}
-
-	var api = new Api({
-		target: process.env.ANX_TARGET,
-		token: 'SESSION_TOKEN',
-		request: customRequest
 	});
+}
+
+var api = new Api({
+	target: process.env.ANX_TARGET,
+	token: 'SESSION_TOKEN',
+	request: customRequest
+});
+```
 
 ## Tests
 
 ### Running unit tests
 
-Install mocha globally:
+Run the unit test suite from the project root, make sure you've run `npm
+install` first:
 
-	npm install mocha -g
-
-Run the unit test suite from the project root:
-
-	mocha
+```bash
+npm test
+```
 
 ### Mocking
 
@@ -234,3 +257,4 @@ Coming soon
 * Handle api call limits
 * Add mocking examples to readme
 * Add Service Wrapper
+
