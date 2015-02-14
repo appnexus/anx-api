@@ -5,6 +5,10 @@
   "homepage": "https://github.com/adnexus/anx-api",
   "bugs": "https://github.com/adnexus/anx-api/issues",
   "main": "index.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/adnexus/anx-api.git"
+  },
   "scripts": {
     "test": "mocha"
   },
@@ -12,7 +16,7 @@
     "AppNexus"
   ],
   "author": "Tim Santeford",
-  "contributers": [
+  "contributors": [
     {
       "name": "Yanyi Luo",
       "email": "me@yanyiluo.com"
