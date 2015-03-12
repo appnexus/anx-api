@@ -1,8 +1,8 @@
-<img src="https://raw.githubusercontent.com/adnexus/anx-api/master/img/anx-api.png" alt="AppNexus Api Wrapper" width="300px">
+<img src="https://raw.githubusercontent.com/appnexus/anx-api/master/img/anx-api.png" alt="AppNexus Api Wrapper" width="300px">
 
 [![npm version](https://badge.fury.io/js/anx-api.svg)](http://badge.fury.io/js/anx-api)
-[![Build Status](https://travis-ci.org/adnexus/anx-api.svg?branch=master)](https://travis-ci.org/adnexus/anx-api)
-[![Build Dependencies](https://david-dm.org/adnexus/anx-api.png)](https://david-dm.org/adnexus/anx-api)
+[![Build Status](https://travis-ci.org/appnexus/anx-api.svg?branch=master)](https://travis-ci.org/appnexus/anx-api)
+[![Build Dependencies](https://david-dm.org/appnexus/anx-api.png)](https://david-dm.org/appnexus/anx-api)
 
 ## Installation
 
@@ -258,3 +258,6 @@ Coming soon
 * Add mocking examples to readme
 * Add Service Wrapper
 
+## License
+
+See LICENSE file

@@ -2,12 +2,12 @@
   "name": "anx-api",
   "version": "2.0.1",
   "description": "AppNexus Api Wrapper",
-  "homepage": "https://github.com/adnexus/anx-api",
-  "bugs": "https://github.com/adnexus/anx-api/issues",
+  "homepage": "https://github.com/appnexus/anx-api",
+  "bugs": "https://github.com/appnexus/anx-api/issues",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adnexus/anx-api.git"
+    "url": "https://github.com/appnexus/anx-api.git"
   },
   "scripts": {
     "test": "mocha"
@@ -24,9 +24,16 @@
     {
       "name": "Jon de la Motte",
       "email": "jdelamotte@appnexus.com"
+    },
+    {
+      "name": "Tim Santeford",
+      "email": "tsantef@gmail.com"
     }
   ],
-  "license": "MIT",
+  "licenses": [{
+    "type": "Apache-2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0"
+  }],
   "dependencies": {
     "lodash": "^2.4.1",
     "q": "^1.1.1",
