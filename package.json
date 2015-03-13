@@ -1,6 +1,6 @@
 {
   "name": "anx-api",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "AppNexus Api Wrapper",
   "homepage": "https://github.com/appnexus/anx-api",
   "bugs": "https://github.com/appnexus/anx-api/issues",
@@ -30,10 +30,12 @@
       "email": "tsantef@gmail.com"
     }
   ],
-  "licenses": [{
-    "type": "Apache-2.0",
-    "url": "http://www.apache.org/licenses/LICENSE-2.0"
-  }],
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
   "dependencies": {
     "lodash": "^2.4.1",
     "q": "^1.1.1",
