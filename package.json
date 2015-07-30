@@ -10,7 +10,9 @@
     "url": "https://github.com/appnexus/anx-api.git"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "gulp test",
+    "lint": "gulp lint",
+    "cover": "istanbul cover --include-all-sources _mocha"
   },
   "keywords": [
     "AppNexus"
@@ -45,8 +47,9 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-jshint": "^1.9.0",
-    "gulp-mocha": "^2.0.0",
-    "mocha": "^2.0.1",
-    "nock": "^0.50.0"
+    "gulp-mocha": "^2.1.3",
+    "mocha": "^2.2.5",
+    "nock": "^0.50.0",
+    "istanbul": "^0.3.17"
   }
 }
