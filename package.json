@@ -18,6 +18,7 @@
     "AppNexus"
   ],
   "author": "Tim Santeford",
+  "license": "Apache-2.0",
   "contributors": [
     {
       "name": "Yanyi Luo",
