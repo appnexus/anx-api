@@ -40,8 +40,8 @@
   ],
   "dependencies": {
     "lodash": "^3.10.1",
-    "q": "^1.1.1",
-    "qs": "^2.3.3",
+    "q": "^1.4.1",
+    "qs": "^5.1.0",
     "request": "^2.48.0"
   },
   "devDependencies": {
