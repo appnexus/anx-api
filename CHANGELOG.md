@@ -2,6 +2,8 @@
 
 ## Latest
 
+## v2.2.0
+
 * Upgraded `qs` and `lodash`
 * Allows null or undefined urls
 * Allows unsetting 'User-Agent' with config.userAgent = null
