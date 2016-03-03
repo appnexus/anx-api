@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Upgraded `qs` and `lodash`
 * Allows null or undefined urls
 * Allows unsetting 'User-Agent' with config.userAgent = null
 * Added `beforeRequest` config function to filter request objects

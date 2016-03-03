@@ -44,10 +44,10 @@
     }
   ],
   "dependencies": {
-    "lodash": "^3.10.1",
+    "lodash": "^4.6.1",
     "q": "^1.4.1",
-    "qs": "^5.1.0",
     "request": "^2.48.0"
+    "qs": "^5.2.0",
   },
   "devDependencies": {
     "gulp": "^3.8.10",
