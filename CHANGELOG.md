@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Methods now allow the format .method(url[string], opts[object]);
 * Added error types SystemServiceUnavailableError and SystemServiceUnavailableError
 * Removed `request` and added `axios` adapter to make anx-api isomorphic
 
