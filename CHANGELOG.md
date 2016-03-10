@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Added error types SystemServiceUnavailableError and SystemServiceUnavailableError
 * Removed `request` and added `axios` adapter to make anx-api isomorphic
 
 ## v2.2.0
