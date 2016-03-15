@@ -2,7 +2,4 @@ language: node_js
 node_js:
   - "0.12"
 
-before_script:
-  - npm install -g gulp
-
-script: gulp ci-test
+script: npm run ci-test
