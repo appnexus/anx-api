@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Added error type RateLimitExceededError
 * Removed gulp
 * Added eslint
 * Methods now allow the format .method(url[string], opts[object]);
