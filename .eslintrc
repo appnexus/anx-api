@@ -97,7 +97,7 @@
     "no-multiple-empty-lines": [2, { // http://eslint.org/docs/rules/no-multiple-empty-lines
       "max": 2
     }],
-    "no-extra-parens": 1, // http://eslint.org/docs/rules/no-extra-parens
+    "no-extra-parens": 0, // http://eslint.org/docs/rules/no-extra-parens
     "no-nested-ternary": 2, // http://eslint.org/docs/rules/no-nested-ternary
     "no-new-object": 2, // http://eslint.org/docs/rules/no-new-object
     "no-spaced-func": 2, // http://eslint.org/docs/rules/no-spaced-func
@@ -110,7 +110,7 @@
       "before": false,
       "after": true
     }],
-    "keyword-spacing": 2, // http://eslint.org/docs/rules/keyword-spacing
+    // "keyword-spacing": 2, // http://eslint.org/docs/rules/keyword-spacing
     "space-before-blocks": 2, // http://eslint.org/docs/rules/space-before-blocks
     "space-before-function-paren": [1, "never"], // http://eslint.org/docs/rules/space-before-function-paren
     "space-infix-ops": 2, // http://eslint.org/docs/rules/space-infix-ops
