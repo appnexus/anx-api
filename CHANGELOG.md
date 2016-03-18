@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Replaced `q` with `es6-promise`
 * Added error type RateLimitExceededError
 * Removed gulp
 * Added eslint

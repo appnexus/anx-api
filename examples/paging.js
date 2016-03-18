@@ -1,5 +1,5 @@
 var Api = require('anx-api');
-var Promise = require('q').Promise;
+var Promise = require('es6-promise').Promise;
 
 var api = new Api({
 	target: process.env.ANX_TARGET,
