@@ -78,6 +78,10 @@ api.get(opts) // see Request Options
 
 * service uri - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept header. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
@@ -108,6 +112,10 @@ api.post(opts) // see Request Options
 * service uri - (string|object)
 * payload - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept and Content-Type headers. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
@@ -132,6 +140,10 @@ api.put(opts) // see Request Options
 * service uri - (string|object)
 * payload - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept and Content-Type headers. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
@@ -153,6 +165,10 @@ api.delete(opts) // see Request Options
 #### Parameters
 
 * service uri - (string|object)
+
+#### Options
+
+* mimeType: (string) optional override for the Accept header. Example: 'text/csv'
 
 #### Result
 

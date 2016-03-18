@@ -2,6 +2,9 @@
 
 ## Latest
 
+* Added `mimeType` option
+* Setting `opts.headers.Accept` and `opts.headers['Contenty-Type']` override json defaults
+* Fix: Does not send `Contenty-Type` for `get` and `delete`
 * Replaced `q` with `es6-promise`
 * Added error type RateLimitExceededError
 * Removed gulp
