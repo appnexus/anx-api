@@ -21,20 +21,14 @@ var api = new Api({
 	token: 'SESSION_TOKEN' // (optional) see also api.login(...)
 });
 
-api.getJson(<serviceName>).then(function (res) {
+api.get(<serviceName>).then(function (res) {
 	...
 }).catch(function (err) {
 	...
 })
 ```
 
-## Pull Request Rules
 
-* Limit PRs to one feature or bug fix.
-* Create a separate PR for code cleanup, refactoring, removing extraneous whitespace, etc.
-* Run unit tests before submitting (See Running unit tests).
-* Write unit tests for new features.
-* Update README.md with new feature usage if applicable.
 
 ## Constructor
 
@@ -44,11 +38,11 @@ var api = new Api(config);
 
 #### Parameters
 
-* config
-	* target - (string) base api url
-	* token - (string) optional session token
-	* request - (object) optional request object
-	* userAgent - (string) optional user agent
+config[object]:
+* .target - (string) base api url
+* .token - (string) optional session token
+* .request - (object) optional request object
+* .userAgent - (string) optional user agent
 
 ## Instance Methods
 
@@ -86,15 +80,12 @@ api.get(opts) // see Request Options
 
 Returns a promise that fulfills with the response from the api.
 
-### #getJson
-
-Usage and parameters are the same as #get. Response body is parsed as json.
 
 ### #getAllJson
 
 ** Experimental Feature **
 
-Usage and parameters are the same as #getJson accept it pages through api calls.
+Usage and parameters are the same as #get accept it pages through api calls.
 Response body is parsed as json.
 
 ### #post
@@ -148,11 +139,6 @@ api.put(opts) // see Request Options
 
 Returns a promise that fulfills with the response from the api.
 
-### #putJson
-
-Puts a json encoded object payload to the service url. Usage and parameters are
-the same as #put. Response body is parsed as json.
-
 ### #delete
 
 Issues a DELETE request
@@ -173,11 +159,6 @@ api.delete(opts) // see Request Options
 #### Result
 
 Returns a promise that fulfills with the response from the api.
-
-### #deleteJson
-
-Usage and parameters are the same as #delete. Response body is parsed as json.
-
 
 ### #switchUser
 

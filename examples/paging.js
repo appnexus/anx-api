@@ -13,7 +13,7 @@ function getAllCurrencies() {
 		var currencies = [];
 
 		function _page(startElement) {
-			return api.getJson({
+			return api.get({
 				uri: 'currency',
 				startElement: startElement,
 				numElements: 5
