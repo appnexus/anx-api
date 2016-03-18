@@ -1,3 +1,5 @@
+/* eslint func-names: 0, no-console: 0 */
+
 var Api = require('anx-api');
 var Promise = require('es6-promise').Promise;
 
@@ -7,7 +9,7 @@ var api = new Api({
 });
 
 function getAllCurrencies() {
-	return new Promise(function (resolve, reject) {
+	return new Promise(function(resolve, reject) {
 		var currencies = [];
 
 		function _page(startElement) {
@@ -15,7 +17,7 @@ function getAllCurrencies() {
 				uri: 'currency',
 				startElement: startElement,
 				numElements: 5
-			}).then(function (res) {
+			}).then(function(res) {
 				var response = res.body.response;
 				currencies = currencies.concat(response.currencies);
 
@@ -31,8 +33,8 @@ function getAllCurrencies() {
 	});
 }
 
-return getAllCurrencies().then(function (currencies) {
+return getAllCurrencies().then(function(currencies) {
 	console.log(currencies);
-}).catch(function (err) {
+}).catch(function(err) {
 	console.log(err);
 });
