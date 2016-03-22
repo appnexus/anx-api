@@ -43,6 +43,7 @@ config[object]:
 * .token - (string) optional session token
 * .request - (object) optional request object
 * .userAgent - (string) optional user agent
+	.rateLimit - (boolean) optional rate limiting
 
 ## Instance Methods
 
@@ -251,7 +252,6 @@ Coming soon
 
 ## Todo
 
-* Handle api call limits
 * Add mocking examples to readme
 * Add Service Wrapper
 
