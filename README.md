@@ -28,7 +28,11 @@ api.get(<serviceName>).then(function (res) {
 })
 ```
 
+## Links
 
+* [Upgrading from 2.x to 3.x](blob/master/docs/upgradin-2.x-to-3.x.md)
+* [Change Log](blob/master/CHANGELOG.md)
+* [Contributing](blob/master/CONTRIBUTING.md)
 
 ## Constructor
 
@@ -112,10 +116,6 @@ api.post(opts) // see Request Options
 
 Returns a promise that fulfills with the response from the api.
 
-### #postJson
-
-Posts a json encoded object payload to the service url. Usage and parameters are
-the same as #post. Response body is parsed as json.
 
 ### #put
 
@@ -250,9 +250,11 @@ npm test
 
 Coming soon
 
-## Todo
+## Todos
 
-* Add mocking examples to readme
+* Document before and after request events
+* Update docs with new method signatures
+* Add mocking examples to README.md
 * Add Service Wrapper
 
 ## License
