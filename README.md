@@ -30,9 +30,9 @@ api.get(<serviceName>).then(function (res) {
 
 ## Links
 
-* [Upgrading from 2.x to 3.x](blob/master/docs/upgradin-2.x-to-3.x.md)
-* [Change Log](blob/master/CHANGELOG.md)
-* [Contributing](blob/master/CONTRIBUTING.md)
+* [Upgrading from 2.x to 3.x](docs/upgrading-2.x-to-3.x.md)
+* [Change Log](CHANGELOG.md)
+* [Contributing](CONTRIBUTING.md)
 
 ## Constructor
 
