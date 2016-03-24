@@ -7,24 +7,25 @@
 ## Installation
 
 ```bash
-npm install anx-api
+npm install anx-api --save
 ```
 
 ## Usage Example
 
 ```javascript
-var Api = require('anx-api');
+var AnxApi = require('anx-api');
 
-# Create a new instance with api target
-var api = new Api({
-	target: 'https://api.appnexus.com'
-	token: 'SESSION_TOKEN' // (optional) see also api.login(...)
+// Create a new instance with api target
+var anxApi = new AnxApi({
+    target: 'https://api.appnexus.com'
+    token: 'SESSION_TOKEN', // (optional) see also anxApi.login(...)
+    rateLimit: true
 });
 
-api.get(<serviceName>).then(function (res) {
-	...
+anxApi.get(<serviceName>).then(function (res) {
+    ...
 }).catch(function (err) {
-	...
+    ...
 })
 ```
 
@@ -37,54 +38,34 @@ api.get(<serviceName>).then(function (res) {
 ## Constructor
 
 ```javascript
-var api = new Api(config);
+var anxApi = new AnxApi(config);
 ```
 
 #### Parameters
 
 config[object]:
-* .target - (string) base api url
-* .token - (string) optional session token
-* .request - (object) optional request object
-* .userAgent - (string) optional user agent
-	.rateLimit - (boolean) optional rate limiting
+* `target` - (string) base api url
+* `token` - (string) optional session token
+* `request` - (object) optional request object
+* `userAgent` - (string) optional user agent
+* `rateLimit` - (boolean) optional rate limiting
 
 ## Instance Methods
-
-### #login
-
-Authenticates with the API and returns a token to be used with future requests.
-
-```javascript
-api.login('username', 'password').then(function (token) {
-
-	// The api object is now logged in. Optionally store the token.
-	...
-
-})
-```
 
 ### #get
 
 Issues a GET request
 
 ```javascript
-api.get('service url')
-api.get(opts) // see Request Options
+anxApi.get('service url')
+anxApi.get('service url', opts)
+anxApi.get(opts)
 ```
 
 #### Parameters
 
-* service uri - (string|object)
-
-#### Options
-
-* mimeType: (string) optional override for the Accept header. Example: 'text/csv'
-
-#### Result
-
-Returns a promise that fulfills with the response from the api.
-
+* service uri - (string)
+* opts - (object) see [Request Options](#request-options)
 
 ### #getAllJson
 
@@ -98,73 +79,67 @@ Response body is parsed as json.
 Issues a POST request with a payload
 
 ```javascript
-api.post('service url', 'payload')
-api.post(opts, { /* payload obj */ })
-api.post(opts) // see Request Options
+anxApi.post('service url', <payload>)
+anxApi.post('service url', <payload>, opts)
+anxApi.post(opts)
 ```
 
 #### Parameters
 
-* service uri - (string|object)
+* service uri - (string)
 * payload - (string|object)
-
-#### Options
-
-* mimeType: (string) optional override for the Accept and Content-Type headers. Example: 'text/csv'
-
-#### Result
-
-Returns a promise that fulfills with the response from the api.
-
+* opts - (object) see [Request Options](#request-options)
 
 ### #put
 
 Issues a PUT request with a payload
 
 ```javascript
-api.put('service url', 'payload')
-api.put(opts, { /* payload obj */ })
-api.put(opts) // see Request Options
+anxApi.put('service url', <payload>)
+anxApi.put('service url', <payload>, opts)
+anxApi.put(opts)
 ```
 
 #### Parameters
 
-* service uri - (string|object)
+* service uri - (string)
 * payload - (string|object)
+* opts - (object) see [Request Options](#request-options)
 
-#### Options
-
-* mimeType: (string) optional override for the Accept and Content-Type headers. Example: 'text/csv'
-
-#### Result
-
-Returns a promise that fulfills with the response from the api.
 
 ### #delete
 
 Issues a DELETE request
 
 ```javascript
-api.delete('service url')
-api.delete(opts) // see Request Options
+anxApi.delete('service url')
+anxApi.delete('service url', opts)
+anxApi.delete(opts)
 ```
 
 #### Parameters
 
-* service uri - (string|object)
+* service uri - (string)
+* opts - (object) see [Request Options](#request-options)
 
-#### Options
 
-* mimeType: (string) optional override for the Accept header. Example: 'text/csv'
+### #login
 
-#### Result
+Authenticates with the API and returns a token. The token will be reused for future requests.
 
-Returns a promise that fulfills with the response from the api.
+```javascript
+anxApi.login('username', 'password').then(function (token) {
+
+    // The api object is now logged in. Optionally store the token.
+    ...
+
+})
+```
 
 ### #switchUser
 
 ```javascript
-api.switchUser(userId).then(...)
+anxApi.switchUser(userId).then(...)
 ```
 
 ## Request Options
@@ -172,19 +147,21 @@ api.switchUser(userId).then(...)
 The get, post, put, and delete methods can be called with an opts object. The
 opts object has the following request options.
 
-* uri - (string) service uri
-* startElement - (string) optional start index
-* numElements - (integer) optional number of records to return
-* params - (object) optional query string parameters
+* `uri` - (string) service uri
+* `body` - (object) options payload for `.post` and `.put`
+* `startElement` - (string) optional start index
+* `numElements` - (integer) optional number of records to return
+* `params` - (object) optional query string parameters
+* `mimeType` - (string) optional mimetype
 
 ### Example
 
 ```javascript
 // Fetch the third page of 25 creatives
-api.get({
-	uri: 'creative',
-	startElement: 50,
-	numElements: 25
+anxApi.get({
+    uri: 'creative',
+    startElement: 50,
+    numElements: 25
 })
 ```
 
@@ -196,9 +173,9 @@ made to the api.
 ### Wrap the interal request function
 
 ```javascript
-api._config.request = _.wrap(api._config.request, function (request, opts) {
-	console.log('DEBUG: ', opts);
-	return request.call(api, opts);
+anxApi._config.request = _.wrap(anxApi._config.request, function (request, opts) {
+    console.log('DEBUG: ', opts);
+    return request.call(api, opts);
 });
 ```
 
@@ -208,30 +185,30 @@ api._config.request = _.wrap(api._config.request, function (request, opts) {
 var request = require('request');
 
 function customRequest(opts) {
-	return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
 
-		// Customize the request
+        // Customize the request
 
-		request(opts, function (err, res) {
-			if (err) {
+        request(opts, function (err, res) {
+            if (err) {
 
-				// Add additional error handling
+                // Add additional error handling
 
-				reject(err);
-			} else {
+                reject(err);
+            } else {
 
-				// Customize the response
+                // Customize the response
 
-				resolve(res);
-			}
-		});
-	});
+                resolve(res);
+            }
+        });
+    });
 }
 
-var api = new Api({
-	target: process.env.ANX_TARGET,
-	token: 'SESSION_TOKEN',
-	request: customRequest
+var anxApi = new AnxApi({
+    target: process.env.ANX_TARGET,
+    token: 'SESSION_TOKEN',
+    request: customRequest
 });
 ```
 
@@ -253,10 +230,11 @@ Coming soon
 ## Todos
 
 * Document before and after request events
+* Document advanced error handling
 * Update docs with new method signatures
 * Add mocking examples to README.md
 * Add Service Wrapper
 
 ## License
 
-See LICENSE file
+See [LICENSE](LICENSE) file
