@@ -49,6 +49,7 @@ config[object]:
 * `request` - (object) optional request object
 * `userAgent` - (string) optional user agent
 * `rateLimiting` - (boolean) optional rate limiting
+* `concurrencyLimit` - (integer) optional max concurrent requests
 
 ## Instance Methods
 
