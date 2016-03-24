@@ -1,4 +1,4 @@
-var Api = require('anx-api');
+var AnxApi = require('anx-api');
 var request = require('request');
 var Promise = require('es6-promise').Promise;
 
@@ -23,13 +23,13 @@ function customRequest(opts) {
 	});
 }
 
-var api = new Api({
+var anxApi = new AnxApi({
 	target: process.env.ANX_TARGET,
 	token: 'SESSION_TOKEN',
 	request: customRequest
 });
 
-return api.get({
+return anxApi.get({
 	uri: 'user',
 	startElement: 10
 }).then(function (res) {

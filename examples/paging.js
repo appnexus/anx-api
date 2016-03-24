@@ -1,9 +1,9 @@
 /* eslint func-names: 0, no-console: 0 */
 
-var Api = require('anx-api');
+var AnxApi = require('anx-api');
 var Promise = require('es6-promise').Promise;
 
-var api = new Api({
+var anxApi = new AnxApi({
 	target: process.env.ANX_TARGET,
 	token: 'SESSION_TOKEN'
 });
@@ -13,7 +13,7 @@ function getAllCurrencies() {
 		var currencies = [];
 
 		function _page(startElement) {
-			return api.get({
+			return anxApi.get({
 				uri: 'currency',
 				startElement: startElement,
 				numElements: 5

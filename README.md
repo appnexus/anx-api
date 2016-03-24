@@ -231,7 +231,6 @@ Coming soon
 
 * Document before and after request events
 * Document advanced error handling
-* Update docs with new method signatures
 * Add mocking examples to README.md
 * Add Service Wrapper
 

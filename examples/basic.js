@@ -1,25 +1,24 @@
-var Api = require('anx-api');
+var AnxApi = require('anx-api');
 
-var api = new Api({
-	target: process.env.ANX_TARGET
+var anxApi = new AnxApi({
+	target: process.env.ANX_TARGET,
+	rateLimit: true
 });
 
-api.login(process.env.ANX_USERNAME, process.env.ANX_PASSWORD).then(function (/* token */) {
-	return api.getJson('creative').then(function (res) {
+anxApi.login(process.env.ANX_USERNAME, process.env.ANX_PASSWORD).then(function (/* token */) {
+	return anxApi.get('creative').then(function (res) {
 		var response = res.body.response;
 
 		console.log(response);
 
 		/*
-
 		response = {
 			status: 'OK',
 			count: 1097,
 			start_element: 0,
 			num_elements: 100,
-			users: [...]
+			creative: [...]
 		}
-
 		*/
 	});
 }).catch(function (err) {
