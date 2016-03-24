@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Added concurrency limit
 * Updated `qs`
 
 ## v3.0.0

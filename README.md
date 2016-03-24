@@ -49,6 +49,7 @@ config[object]:
 * `request` - (object) optional request object
 * `userAgent` - (string) optional user agent
 * `rateLimiting` - (boolean) optional rate limiting
+* `concurrencyLimit` - (integer) optional max concurrent requests
 * `beforeRequest` - (function) optional before request opts filter (see [beforeRequest](#beforerequest))
 * `afterRequest` - (function) optional after request response filter (see [afterRequest](#afterrequest))
 
