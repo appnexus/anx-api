@@ -2,6 +2,8 @@
 
 ## Latest
 
+* Updated `qs`
+
 ## v3.0.0
 
 * Added `rateLimit` option to the constructor.
