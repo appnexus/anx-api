@@ -2,6 +2,8 @@
 
 ## Latest
 
+## v3.0.0
+
 * Added `rateLimit` option to the constructor.
 * Added `mimeType` option
 * Setting `opts.headers.Accept` and `opts.headers['Contenty-Type']` override json defaults
