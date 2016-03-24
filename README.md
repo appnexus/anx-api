@@ -19,7 +19,7 @@ var AnxApi = require('anx-api');
 var anxApi = new AnxApi({
     target: 'https://api.appnexus.com'
     token: 'SESSION_TOKEN', // (optional) see also anxApi.login(...)
-    rateLimit: true
+    rateLimiting: true
 });
 
 anxApi.get(<serviceName>).then(function (res) {
@@ -48,7 +48,7 @@ config[object]:
 * `token` - (string) optional session token
 * `request` - (object) optional request object
 * `userAgent` - (string) optional user agent
-* `rateLimit` - (boolean) optional rate limiting
+* `rateLimiting` - (boolean) optional rate limiting
 
 ## Instance Methods
 
