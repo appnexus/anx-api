@@ -32,7 +32,7 @@ anxApi.get(<serviceName>).then(function (res) {
 ## Links
 
 * [Upgrading from 2.x to 3.x](docs/upgrading-2.x-to-3.x.md)
-* [Change Log](CHANGELOG.md)
+* [Changelog](CHANGELOG.md)
 * [Contributing](CONTRIBUTING.md)
 
 ## Constructor
@@ -150,13 +150,14 @@ The get, post, put, and delete methods can be called with an opts object. The
 opts object has the following request options.
 
 * `uri` - (string) service uri
-* `body` - (object) options payload for `.post` and `.put`
+* `body` - (object) required payload for `.post` and `.put`
+* `headers` - (object) optional request header overrides
 * `startElement` - (string) optional start index
 * `numElements` - (integer) optional number of records to return
 * `params` - (object) optional query string parameters
 * `mimeType` - (string) optional mimetype
 
-### Example
+### Examples
 
 ```javascript
 // Fetch the third page of 25 creatives
@@ -165,7 +166,17 @@ anxApi.get({
     startElement: 50,
     numElements: 25
 })
+
+anxApi.get('creative', {
+    params: {
+        start_element: 50,
+        num_elements: 25
+    }
+})
+
+anxApi.get('creative?start_element=50&num_elements=25')
 ```
+
 # Transforming Request Options and Responses
 
 ## beforeRequest
@@ -261,16 +272,6 @@ install` first:
 ```bash
 npm test
 ```
-
-### Mocking
-
-Coming soon
-
-## Todos
-
-* Document advanced error handling
-* Add mocking examples to README.md
-* Add Service Wrapper
 
 ## License
 
