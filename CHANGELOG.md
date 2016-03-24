@@ -2,6 +2,18 @@
 
 ## Latest
 
+* Added `rateLimit` option to the constructor.
+* Added `mimeType` option
+* Setting `opts.headers.Accept` and `opts.headers['Contenty-Type']` override json defaults
+* Fix: Does not send `Contenty-Type` for `get` and `delete`
+* Replaced `q` with `es6-promise`
+* Added error type RateLimitExceededError
+* Removed gulp
+* Added eslint
+* Methods now allow the format .method(url[string], opts[object]);
+* Added error types SystemServiceUnavailableError and SystemServiceUnavailableError
+* Removed `request` and added `axios` adapter to make anx-api isomorphic
+
 ## v2.2.0
 
 * Upgraded `qs` and `lodash`

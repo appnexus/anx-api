@@ -21,20 +21,18 @@ var api = new Api({
 	token: 'SESSION_TOKEN' // (optional) see also api.login(...)
 });
 
-api.getJson(<serviceName>).then(function (res) {
+api.get(<serviceName>).then(function (res) {
 	...
 }).catch(function (err) {
 	...
 })
 ```
 
-## Pull Request Rules
+## Links
 
-* Limit PRs to one feature or bug fix.
-* Create a separate PR for code cleanup, refactoring, removing extraneous whitespace, etc.
-* Run unit tests before submitting (See Running unit tests).
-* Write unit tests for new features.
-* Update README.md with new feature usage if applicable.
+* [Upgrading from 2.x to 3.x](docs/upgrading-2.x-to-3.x.md)
+* [Change Log](CHANGELOG.md)
+* [Contributing](CONTRIBUTING.md)
 
 ## Constructor
 
@@ -44,11 +42,12 @@ var api = new Api(config);
 
 #### Parameters
 
-* config
-	* target - (string) base api url
-	* token - (string) optional session token
-	* request - (object) optional request object
-	* userAgent - (string) optional user agent
+config[object]:
+* .target - (string) base api url
+* .token - (string) optional session token
+* .request - (object) optional request object
+* .userAgent - (string) optional user agent
+	.rateLimit - (boolean) optional rate limiting
 
 ## Instance Methods
 
@@ -78,19 +77,20 @@ api.get(opts) // see Request Options
 
 * service uri - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept header. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
 
-### #getJson
-
-Usage and parameters are the same as #get. Response body is parsed as json.
 
 ### #getAllJson
 
 ** Experimental Feature **
 
-Usage and parameters are the same as #getJson accept it pages through api calls.
+Usage and parameters are the same as #get accept it pages through api calls.
 Response body is parsed as json.
 
 ### #post
@@ -108,14 +108,14 @@ api.post(opts) // see Request Options
 * service uri - (string|object)
 * payload - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept and Content-Type headers. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
 
-### #postJson
-
-Posts a json encoded object payload to the service url. Usage and parameters are
-the same as #post. Response body is parsed as json.
 
 ### #put
 
@@ -132,14 +132,13 @@ api.put(opts) // see Request Options
 * service uri - (string|object)
 * payload - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept and Content-Type headers. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
-
-### #putJson
-
-Puts a json encoded object payload to the service url. Usage and parameters are
-the same as #put. Response body is parsed as json.
 
 ### #delete
 
@@ -154,14 +153,13 @@ api.delete(opts) // see Request Options
 
 * service uri - (string|object)
 
+#### Options
+
+* mimeType: (string) optional override for the Accept header. Example: 'text/csv'
+
 #### Result
 
 Returns a promise that fulfills with the response from the api.
-
-### #deleteJson
-
-Usage and parameters are the same as #delete. Response body is parsed as json.
-
 
 ### #switchUser
 
@@ -252,10 +250,11 @@ npm test
 
 Coming soon
 
-## Todo
+## Todos
 
-* Handle api call limits
-* Add mocking examples to readme
+* Document before and after request events
+* Update docs with new method signatures
+* Add mocking examples to README.md
 * Add Service Wrapper
 
 ## License
