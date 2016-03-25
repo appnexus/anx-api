@@ -2,28 +2,39 @@
 
 ## Latest
 
-* Added concurrency limit
+* Fixed various bugs with error handling.
+* Added `DNSLookupError`
+
+## v3.1.0
+
+* Added `concurrencyLimit` option to the constructor
 * Updated `qs`
 
 ## v3.0.0
 
-* Added `rateLimit` option to the constructor.
-* Added `mimeType` option
-* Setting `opts.headers.Accept` and `opts.headers['Contenty-Type']` override json defaults
-* Fix: Does not send `Contenty-Type` for `get` and `delete`
+* Added `rateLimiting` option to the constructor
+* Added `mimeType` option to requests
+* Setting `opts.headers.Accept` and `opts.headers['Contenty-Type']` overrides json defaults
+* Fixed bug where `get` and `delete` set `Contenty-Type`
 * Replaced `q` with `es6-promise`
-* Added error type RateLimitExceededError
-* Removed gulp
-* Added eslint
+* Added error type `RateLimitExceededError`
+* Added `afterRequest` config function to transform response objects
+* Replaced `gulp` with npm scripts
+* Replaced `jshint` for `eslint`
 * Methods now allow the format .method(url[string], opts[object]);
-* Added error types SystemServiceUnavailableError and SystemServiceUnavailableError
-* Removed `request` and added `axios` adapter to make anx-api isomorphic
+* Added error types `SystemServiceUnavailableError` and `SystemServiceUnavailableError`
+* `getJson`, `postJson`, `putJson`, and `deleteJson` are deprecated
+* Replaced `request` with `axios` adapter to make `anx-api` isomorphic
 
 ## v2.2.0
 
-* Upgraded `qs` and `lodash`
+* Updated `qs` and `lodash`
 * Allows null or undefined urls
 * Allows unsetting 'User-Agent' with config.userAgent = null
-* Added `beforeRequest` config function to filter request objects
+* Added `beforeRequest` config function to transform request options
 * Added ability to set default headers in the config.
 * Added change log
+
+## v2.x
+
+* Methods return promises and callbacks are removed.

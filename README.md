@@ -216,6 +216,30 @@ var anxApi = new AnxApi({
 });
 ```
 
+# Error Handling
+
+```javascript
+anxApi.get('creative').then(function (res) {
+    ...
+}).catch(function (err) {
+    if (err instanceof NotAuthenticatedError) {
+        console.log('Your not logged in!');
+    }
+})
+```
+
+## Error Types
+
+* `Error` - generic error type
+* `ApiError` - base api error type
+    * `DNSLookupError` - target host could not be looked up
+    * `NotAuthenticatedError` - token is invalid or expired
+    * `NotAuthorizedError` - Unauthorized to make request
+    * `RateLimitExceededError`
+    * `SystemServiceUnavailableError`
+    * `SystemUnknownError`
+    * `TargetError` - target was not supplied
+
 # Custom Request and Debugging
 
 The following are two different methods of modifying and or spying on requests
