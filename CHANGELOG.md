@@ -1,7 +1,8 @@
 # Change Log
 
-## Latest
+## v3.1.1
 
+* Temporary fix for FireFox not supporting `Error.captureStackTrace`
 * Fixed various bugs with error handling.
 * Added `DNSLookupError`
 
