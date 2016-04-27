@@ -72,8 +72,6 @@ anxApi.get(opts)
 
 ### #getAllJson
 
-** Experimental Feature **
-
 Usage and parameters are the same as #get accept it pages through api calls.
 Response body is parsed as json.
 
