@@ -1,5 +1,9 @@
 # Change Log
 
+## Latest
+
+* Fixed paging in `getAllJson`
+
 ## v3.1.1
 
 * Temporary fix for FireFox not supporting `Error.captureStackTrace`
