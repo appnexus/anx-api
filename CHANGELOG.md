@@ -1,6 +1,6 @@
 # Change Log
 
-## Latest
+## v3.1.2
 
 * Deprecated `getAllJson` in favor of `getAll`
 * 'getAllJson' no longer designated as experimental.
