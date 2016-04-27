@@ -70,7 +70,7 @@ anxApi.get(opts)
 * service uri - (string)
 * opts - (object) see [Request Options](#request-options)
 
-### #getAllJson
+### #getAll
 
 Usage and parameters are the same as #get accept it pages through api calls.
 Response body is parsed as json.

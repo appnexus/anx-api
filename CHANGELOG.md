@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Deprecated `getAllJson` in favor of `getAll`
 * 'getAllJson' no longer designated as experimental.
 * Fixed paging in `getAllJson`
 
