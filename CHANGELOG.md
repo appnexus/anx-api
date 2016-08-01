@@ -1,6 +1,6 @@
 # Change Log
 
-## Latest
+## v3.2.0
 
 * Rate limiting on by default
 * Added support for retry-after header [API v1.17]
