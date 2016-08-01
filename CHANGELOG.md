@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Rate limiting on by default
 * Added support for retry-after header [API v1.17]
 * Added rate limit detection with status code 429 [API v1.17]
 
