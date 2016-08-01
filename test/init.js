@@ -1,0 +1,1 @@
+require('sinon-as-promised');
