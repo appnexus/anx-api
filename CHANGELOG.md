@@ -1,5 +1,9 @@
 # Change Log
 
+## Latest
+
+* Updated dependencies
+
 ## v3.2.0
 
 * Rate limiting on by default
