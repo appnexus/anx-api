@@ -3,6 +3,7 @@
 ## Latest
 
 * Updated dependencies
+* Added config unit test
 
 ## v3.2.0
 
