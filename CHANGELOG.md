@@ -1,9 +1,10 @@
 # Change Log
 
-## Latest
+## v3.2.1
 
 * Updated dependencies
 * Added config unit test
+* Fixed error handling for newer axios version
 
 ## v3.2.0
 
