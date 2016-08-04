@@ -70,6 +70,25 @@ anxApi.get(opts)
 * service uri - (string)
 * opts - (object) see [Request Options](#request-options)
 
+### #getById (Experimental)
+
+Issues a GET request by id. Supports one id or an array of ids.
+
+```javascript
+anxApi.get(1, 'service url')
+anxApi.get(2, 'service url', opts)
+anxApi.get(3, opts)
+anxApi.get([1,2,3], 'service url')
+anxApi.get([1,2,3], 'service url', opts)
+anxApi.get([1,2,3], opts)
+```
+
+#### Parameters
+
+* id - (number OR array(number))
+* service uri - (string)
+* opts - (object) see [Request Options](#request-options)
+
 ### #getAll
 
 Usage and parameters are the same as #get accept it pages through api calls.
