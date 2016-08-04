@@ -2,7 +2,8 @@
 
 ## Latest
 
-* Added experimental getById method
+* Refactored `getAll` and added unit tests for it
+* Added experimental `getById` method
 * Added ability to flag methods as experimental
 
 ## v3.2.1
