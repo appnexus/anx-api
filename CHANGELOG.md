@@ -2,9 +2,10 @@
 
 ## Latest
 
-* Refactored `getAll` and added unit tests for it
 * Added experimental `getById` method
 * Added ability to flag methods as experimental
+* Refactored `request` to eliminate unneeded function
+* Refactored `getAll` and added unit tests for it
 
 ## v3.2.1
 
