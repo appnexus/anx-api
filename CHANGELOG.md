@@ -1,5 +1,9 @@
 # Change Log
 
+## Latest
+
+* Added ability to flag methods as experimental
+
 ## v3.2.1
 
 * Updated dependencies
