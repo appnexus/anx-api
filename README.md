@@ -47,6 +47,7 @@ config[object]:
 * `target` - (string) required base api url
 * `token` - (string) optional session token
 * `request` - (object) optional request object
+* `timeout` - (integer) optional request timeout in milliseconds (default: 60000)
 * `userAgent` - (string) optional user agent
 * `rateLimiting` - (boolean) optional rate limiting
 * `concurrencyLimit` - (integer) optional max concurrent requests
@@ -174,6 +175,7 @@ opts object has the following request options.
 * `numElements` - (integer) optional number of records to return
 * `params` - (object) optional query string parameters
 * `mimeType` - (string) optional mimetype
+* `timeout` - (integer) optional request timeout in milliseconds (defaults to config timeout)
 
 ### Examples
 
