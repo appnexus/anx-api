@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Added default timeout to 60 seconds
 * Added experimental `getById` method
 * Added ability to flag methods as experimental
 * Refactored `request` to eliminate unneeded function
