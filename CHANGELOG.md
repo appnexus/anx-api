@@ -1,6 +1,6 @@
 # Change Log
 
-## Latest
+## v3.3.0
 
 * Added default timeout to 60 seconds
 * Added experimental `getById` method
