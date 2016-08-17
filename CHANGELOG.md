@@ -1,7 +1,8 @@
 # Change Log
 
-## Latest
+## 2.2.1
 
+* Patched default timeout to 60 seconds
 * Upgraded `qs` and `lodash`
 * Allows null or undefined urls
 * Allows unsetting 'User-Agent' with config.userAgent = null
