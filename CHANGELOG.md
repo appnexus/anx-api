@@ -1,5 +1,9 @@
 # Change Log
 
+## Latest
+
+* Fixed bug in axiosAdapter error handling
+
 ## v3.3.0
 
 * Added default timeout to 60 seconds
