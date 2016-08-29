@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Fixed formatting for DNS Lookup Errors
 * Fixed bug in axiosAdapter error handling
 
 ## v3.3.0
