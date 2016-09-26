@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Fixed bug in `getAll` where it did not fail on first api error
 * Fixed formatting for DNS Lookup Errors
 * Fixed bug in axiosAdapter error handling
 
