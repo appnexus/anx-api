@@ -6,6 +6,7 @@
 * Fixed formatting for DNS Lookup Errors
 * Fixed bug in axiosAdapter error handling
 * Added pre-push lint and dependency checks
+* [major] Removed deprecated methods `requestJson`, `getJson`, `getAllJson`, `postJson`, `putJson`, and `deleteJson`
 
 ## v3.3.0
 
