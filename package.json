@@ -14,8 +14,14 @@
     "lint": "eslint lib --quiet",
     "lint-fix": "eslint lib --fix",
     "ci-test": "npm run lint && npm test",
-    "cover": "istanbul cover _mocha"
+    "cover": "istanbul cover _mocha",
+    "dependency-check": "nsp check"
   },
+  "pre-push": [
+    "lint",
+    "test",
+    "dependency-check"
+  ],
   "keywords": [
     "AppNexus"
   ],
@@ -55,6 +61,8 @@
     "eslint": "^3.2.2",
     "istanbul": "^0.4.4",
     "mocha": "^3.0.0",
+    "nsp": "^2.6.1",
+    "pre-push": "^0.1.1",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.5",
     "sinon-as-promised": "^4.0.2"
