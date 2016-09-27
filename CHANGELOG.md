@@ -4,6 +4,10 @@
 
 ## v4.0.0
 
+* [minor] Added request options in the response object `res.req`
+* [minor] Added request options in the error object `err.req`
+* [minor] Added request response in the error object `err.res`
+* [major] Revamped internal error building, error api slightly changed
 * Updated dependencies
 * [minor] Added totalTime to response object
 * [major] Removed deprecated methods `requestJson`, `getJson`, `getAllJson`, `postJson`, `putJson`, and `deleteJson`

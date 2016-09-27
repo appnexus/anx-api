@@ -77,6 +77,7 @@ anxApi.get(opts)
 * statusCode - (number) Http response code
 * headers - (object) Response headers
 * body - (object) Response payload
+* req - (object) Request options
 * requestTime - (number) Actual on network request time in milliseconds
 * totalTime - (number) Total request time including concurrency and rate limiting delays in milliseconds
 
@@ -273,6 +274,8 @@ anxApi.get('creative').then(function (res) {
 * id - Api error id
 * code - Api error code
 * message - Brief error description
+* req - Request options used in failed request
+* res - Raw failed response
 
 # Custom Request and Debugging
 
