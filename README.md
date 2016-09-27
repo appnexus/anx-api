@@ -31,6 +31,7 @@ anxApi.get(<serviceName>).then(function (res) {
 
 ## Links
 
+* [Upgrading from 3.x to 4.x](docs/upgrading-3.x-to-4.x.md)
 * [Upgrading from 2.x to 3.x](docs/upgrading-2.x-to-3.x.md)
 * [Changelog](CHANGELOG.md)
 * [Contributing](CONTRIBUTING.md)
