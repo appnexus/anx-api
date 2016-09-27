@@ -4,6 +4,7 @@
 
 ## v4.0.0
 
+* Updated dependencies
 * [minor] Added totalTime to response object
 * [major] Removed deprecated methods `requestJson`, `getJson`, `getAllJson`, `postJson`, `putJson`, and `deleteJson`
 
