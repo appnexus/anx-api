@@ -17,8 +17,8 @@
 
 ## v3.3.0
 
-* Added default timeout to 60 seconds
-* Added experimental `getById` method
+* [minor] Added default timeout to 60 seconds
+* [minor] Added experimental `getById` method
 * Added ability to flag methods as experimental
 * Refactored `request` to eliminate unneeded function
 * Refactored `getAll` and added unit tests for it
@@ -26,13 +26,13 @@
 ## v3.2.1
 
 * Updated dependencies
-* Added config unit test
+* [minor] Added config unit test
 * Fixed error handling for newer axios version
 
 ## v3.2.0
 
-* Rate limiting on by default
-* Added support for retry-after header [API v1.17]
+* [minor] Rate limiting on by default
+* [minor] Added support for retry-after header [API v1.17]
 * Added rate limit detection with status code 429 [API v1.17]
 
 ## v3.1.2
@@ -49,7 +49,7 @@
 
 ## v3.1.0
 
-* Added `concurrencyLimit` option to the constructor
+* [minor] Added `concurrencyLimit` option to the constructor
 * Updated `qs`
 
 ## v3.0.0
