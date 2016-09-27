@@ -2,11 +2,16 @@
 
 ## Latest
 
+## v4.0.0
+
+* [major] Removed deprecated methods `requestJson`, `getJson`, `getAllJson`, `postJson`, `putJson`, and `deleteJson`
+
+## v3.3.1
+
 * Fixed bug in `getAll` where it did not fail on first api error
 * Fixed formatting for DNS Lookup Errors
 * Fixed bug in axiosAdapter error handling
 * Added pre-push lint and dependency checks
-* [major] Removed deprecated methods `requestJson`, `getJson`, `getAllJson`, `postJson`, `putJson`, and `deleteJson`
 
 ## v3.3.0
 
