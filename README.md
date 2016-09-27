@@ -72,6 +72,15 @@ anxApi.get(opts)
 * service uri - (string)
 * opts - (object) see [Request Options](#request-options)
 
+#### Response Object
+
+* statusCode - (number) Http response code
+* headers - (object) Response headers
+* body - (object) Response payload
+* req - (object) Request options
+* requestTime - (number) Actual on network request time in milliseconds
+* totalTime - (number) Total request time including concurrency and rate limiting delays in milliseconds
+
 ### #getById (Experimental)
 
 Issues a GET request by id. Supports one id or an array of ids.
@@ -248,7 +257,7 @@ anxApi.get('creative').then(function (res) {
 })
 ```
 
-## Error Types
+## Error Object Types
 
 * `Error` - generic error type
 * `ApiError` - base api error type
@@ -259,6 +268,14 @@ anxApi.get('creative').then(function (res) {
     * `SystemServiceUnavailableError`
     * `SystemUnknownError`
     * `TargetError` - target was not supplied
+
+## Error Object Properties
+
+* id - Api error id
+* code - Api error code
+* message - Brief error description
+* req - Request options used in failed request
+* res - Raw failed response
 
 # Custom Request and Debugging
 

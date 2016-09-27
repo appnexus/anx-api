@@ -52,19 +52,19 @@
     }
   ],
   "dependencies": {
-    "axios": "^0.13.1",
-    "es6-promise": "^3.1.2",
-    "lodash": "^4.6.1",
-    "qs": "^6.1.0"
+    "axios": "^0.14.0",
+    "es6-promise": "^3.3.1",
+    "lodash": "^4.16.2",
+    "qs": "^6.2.1"
   },
   "devDependencies": {
-    "eslint": "^3.2.2",
-    "istanbul": "^0.4.4",
-    "mocha": "^3.0.0",
+    "eslint": "^3.6.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.0.2",
     "nsp": "^2.6.1",
     "pre-push": "^0.1.1",
     "proxyquire": "^1.7.10",
-    "sinon": "^1.17.5",
+    "sinon": "^1.17.6",
     "sinon-as-promised": "^4.0.2"
   }
 }
