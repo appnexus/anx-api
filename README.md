@@ -81,17 +81,38 @@ anxApi.get(opts)
 * requestTime - (number) Actual on network request time in milliseconds
 * totalTime - (number) Total request time including concurrency and rate limiting delays in milliseconds
 
+### #getBy (Experimental)
+
+Issues a GET request by field name. Supports one value or an array of values.
+
+```javascript
+anxApi.getBy('name', 'bill', 'service url')
+anxApi.getBy('name', 'bill', 'service url', opts)
+anxApi.getBy('name', 'bill', opts)
+anxApi.getBy('name', ['bob', 'bill', 'ben'], 'service url')
+anxApi.getBy('name', ['bob', 'bill', 'ben'], 'service url', opts)
+anxApi.getBy('name', ['bob', 'bill', 'ben'], opts)
+```
+
+#### Parameters
+
+* field name - (string)
+* value - (string/number OR array(string/number))
+* service uri - (string)
+* opts - (object) see [Request Options](#request-options)
+>>>>>>> 00440a1... Added getBy method
+
 ### #getById (Experimental)
 
 Issues a GET request by id. Supports one id or an array of ids.
 
 ```javascript
-anxApi.get(1, 'service url')
-anxApi.get(2, 'service url', opts)
-anxApi.get(3, opts)
-anxApi.get([1,2,3], 'service url')
-anxApi.get([1,2,3], 'service url', opts)
-anxApi.get([1,2,3], opts)
+anxApi.getById(1, 'service url')
+anxApi.getById(2, 'service url', opts)
+anxApi.getById(3, opts)
+anxApi.getById([1, 2, 3], 'service url')
+anxApi.getById([1, 2, 3], 'service url', opts)
+anxApi.getById([1, 2, 3], opts)
 ```
 
 #### Parameters

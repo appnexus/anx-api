@@ -4,6 +4,7 @@
 
 ## v4.0.0
 
+* [minor] Added experimental `getBy` method
 * [minor] Added request options in the response object `res.req`
 * [minor] Added request options in the error object `err.req`
 * [minor] Added request response in the error object `err.res`
