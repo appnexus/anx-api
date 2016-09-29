@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v4.0.1
+
+* Fixed bug in error response
+
 ## v4.0.0
 
 * [minor] Added experimental `getBy` method
