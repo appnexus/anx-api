@@ -2,6 +2,7 @@
 
 ## Latest
 
+* [minor] Added `NetworkError`, with `ConnectionAbortedError`, `SocketTimeoutError`, `ConnectionTimeoutError`, `ConnectionRefusedError` sub classes.
 * Fixed undefined err object
 
 ## v4.0.1
