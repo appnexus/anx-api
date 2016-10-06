@@ -48,7 +48,7 @@ config[object]:
 * `target` - (string) required base api url
 * `token` - (string) optional session token
 * `request` - (object) optional request object
-* `timeout` - (integer) optional request timeout in milliseconds (default: 60000)
+* `timeout` - (integer) optional request timeout in milliseconds (default: 60000) Triggers `ConnectionAbortedError` error.
 * `userAgent` - (string) optional user agent
 * `rateLimiting` - (boolean) optional rate limiting
 * `concurrencyLimit` - (integer) optional max concurrent requests
@@ -281,8 +281,14 @@ anxApi.get('creative').then(function (res) {
 ## Error Object Types
 
 * `Error` - generic error type
+* `NetworkError`
+    * `DNSLookupError` - target host could not be looked up [ENOTFOUND]
+    * `ConnectionAbortedError` - request timeout was reached [ECONNABORTED]
+    * `ConnectionRefusedError` - [ECONNREFUSED]
+    * `ConnectionResetError` - [ECONNRESET]
+    * `ConnectionTimeoutError` - [ETIMEDOUT]
+    * `SocketTimeoutError` - [ESOCKETTIMEDOUT]
 * `ApiError` - base api error type
-    * `DNSLookupError` - target host could not be looked up
     * `NotAuthenticatedError` - token is invalid or expired
     * `NotAuthorizedError` - Unauthorized to make request
     * `RateLimitExceededError`
