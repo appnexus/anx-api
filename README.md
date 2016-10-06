@@ -282,13 +282,13 @@ anxApi.get('creative').then(function (res) {
 
 * `Error` - generic error type
 * `NetworkError`
+    * `DNSLookupError` - target host could not be looked up [ENOTFOUND]
     * `ConnectionAbortedError` - request timeout was reached [ECONNABORTED]
     * `ConnectionRefusedError` - [ECONNREFUSED]
     * `ConnectionResetError` - [ECONNRESET]
     * `ConnectionTimeoutError` - [ETIMEDOUT]
     * `SocketTimeoutError` - [ESOCKETTIMEDOUT]
 * `ApiError` - base api error type
-    * `DNSLookupError` - target host could not be looked up
     * `NotAuthenticatedError` - token is invalid or expired
     * `NotAuthorizedError` - Unauthorized to make request
     * `RateLimitExceededError`

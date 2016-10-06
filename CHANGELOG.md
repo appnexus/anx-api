@@ -2,6 +2,9 @@
 
 ## Latest
 
+## v4.1.0
+
+* 'DNSLookupError' now inherits from 'NetworkError'
 * [minor] Added `NetworkError`, with `ConnectionAbortedError`, `SocketTimeoutError`, `ConnectionTimeoutError`, `ConnectionRefusedError` sub classes.
 * Fixed undefined err object
 
