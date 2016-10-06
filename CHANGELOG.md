@@ -2,6 +2,8 @@
 
 ## Latest
 
+* Fixed undefined err object
+
 ## v4.0.1
 
 * Fixed bug in error response
