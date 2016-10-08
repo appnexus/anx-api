@@ -53,7 +53,7 @@
   ],
   "dependencies": {
     "axios": "^0.14.0",
-    "es6-promise": "^3.3.1",
+    "es6-promise": "^4.0.5",
     "lodash": "^4.16.2",
     "qs": "^6.2.1"
   },
