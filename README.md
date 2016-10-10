@@ -100,7 +100,6 @@ anxApi.getBy('name', ['bob', 'bill', 'ben'], opts)
 * value - (string/number OR array(string/number))
 * service uri - (string)
 * opts - (object) see [Request Options](#request-options)
->>>>>>> 00440a1... Added getBy method
 
 ### #getById (Experimental)
 
