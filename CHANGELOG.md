@@ -2,6 +2,8 @@
 
 ## Latest
 
+ * Fixed rate limiting
+
 ## v4.1.0
 
 * 'DNSLookupError' now inherits from 'NetworkError'
