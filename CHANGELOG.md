@@ -2,7 +2,10 @@
 
 ## Latest
 
+## v4.1.1
+
  * Fixed rate limiting
+ * Updated Axios@0.15.0
 
 ## v4.1.0
 
