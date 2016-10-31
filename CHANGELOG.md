@@ -2,6 +2,9 @@
 
 ## Latest
 
+* Added coveralls.io
+* Upgraded nock
+
 ## v4.1.0
 
 * Fixed rate limiting
