@@ -13,8 +13,7 @@
     "test": "mocha ./**/*.mspec.js",
     "lint": "eslint lib --quiet",
     "lint-fix": "eslint lib --fix",
-    "ci-test": "npm run lint && npm test",
-    "cover": "istanbul cover _mocha",
+    "cover": "istanbul cover -x 'src/**/*.mspec.js' _mocha -- 'src/**/*.mspec.js'",
     "dependency-check": "nsp check"
   },
   "pre-push": [
@@ -59,6 +58,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "coveralls": "^2.11.14",
     "eslint": "^3.6.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",

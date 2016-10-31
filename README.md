@@ -3,6 +3,7 @@
 [![npm version](https://badge.fury.io/js/anx-api.svg)](http://badge.fury.io/js/anx-api)
 [![Build Status](https://travis-ci.org/appnexus/anx-api.svg?branch=master)](https://travis-ci.org/appnexus/anx-api)
 [![Build Dependencies](https://david-dm.org/appnexus/anx-api.png)](https://david-dm.org/appnexus/anx-api)
+[![Coverage Status](https://coveralls.io/repos/github/appnexus/anx-api/badge.svg?branch=master)](https://coveralls.io/github/appnexus/anx-api?branch=master)
 
 ## Installation
 
