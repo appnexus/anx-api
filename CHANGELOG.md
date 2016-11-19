@@ -2,6 +2,8 @@
 
 ## Latest
 
+* Added eslint-config-appnexus
+* Fixed missing content in request queue
 * Added coveralls.io
 * Upgraded nock
 
