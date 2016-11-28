@@ -2,6 +2,7 @@
 
 ## Latest
 
+* Converted from Mocha to Jest
 * Added eslint-config-appnexus
 * Fixed missing content in request queue
 * Added coveralls.io

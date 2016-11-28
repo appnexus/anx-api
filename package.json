@@ -10,10 +10,10 @@
     "url": "https://github.com/appnexus/anx-api.git"
   },
   "scripts": {
-    "test": "mocha ./**/*.mspec.js",
+    "test": "jest",
     "lint": "eslint lib --quiet",
     "lint-fix": "eslint lib --fix",
-    "cover": "istanbul cover -x 'src/**/*.mspec.js' _mocha -- 'src/**/*.mspec.js'",
+    "cover": "jest --coverage",
     "dependency-check": "nsp check"
   },
   "pre-push": [
@@ -57,20 +57,20 @@
     "qs": "^6.2.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
     "coveralls": "^2.11.14",
     "eslint": "^3.6.0",
     "eslint-config-appnexus": "^1.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-lodash": "^2.2.0",
     "eslint-plugin-promise": "^3.4.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^3.0.2",
+    "jest-cli": "^17.0.3",
     "nock": "^9.0.0",
     "nsp": "^2.6.1",
     "pre-push": "^0.1.1",
-    "proxyquire": "^1.7.10",
     "sinon": "^1.17.6",
     "sinon-as-promised": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
