@@ -60,7 +60,7 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.14",
     "eslint": "^3.6.0",
-    "eslint-config-appnexus": "^1.0.0",
+    "eslint-config-appnexus": "^1.0.2",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-lodash": "^2.2.0",
     "eslint-plugin-promise": "^3.4.0",
