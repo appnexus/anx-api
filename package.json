@@ -63,7 +63,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-lodash": "^2.2.0",
     "eslint-plugin-promise": "^3.4.0",
-    "jest-cli": "^17.0.3",
+    "jest-cli": "^18.1.0",
     "nock": "^9.0.0",
     "nsp": "^2.6.1",
     "pre-push": "^0.1.1",
