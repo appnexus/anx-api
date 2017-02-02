@@ -2,6 +2,7 @@
 
 ## Latest
 
+* [minor] Added original request options to the response `res.req`
 * Converted from Mocha to Jest
 * Added eslint-config-appnexus
 * Fixed missing content in request queue
