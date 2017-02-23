@@ -26,24 +26,6 @@
   ],
   "author": "Tim Santeford",
   "license": "Apache-2.0",
-  "contributors": [
-    {
-      "name": "Yanyi Luo",
-      "email": "me@yanyiluo.com"
-    },
-    {
-      "name": "Jon de la Motte",
-      "email": "jdelamotte@appnexus.com"
-    },
-    {
-      "name": "Tim Santeford",
-      "email": "tsantef@gmail.com"
-    },
-    {
-      "name": "Tarun Kothuri",
-      "email": "tkothuri@appnexus.com"
-    }
-  ],
   "licenses": [
     {
       "type": "Apache-2.0",
@@ -57,17 +39,17 @@
     "qs": "^6.2.1"
   },
   "devDependencies": {
-    "coveralls": "^2.11.14",
-    "eslint": "^3.6.0",
-    "eslint-config-appnexus": "^1.0.2",
+    "coveralls": "^2.11.16",
+    "eslint": "^3.16.1",
+    "eslint-config-appnexus": "^1.6.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-lodash": "^2.2.0",
-    "eslint-plugin-promise": "^3.4.0",
-    "jest-cli": "^19.0.1",
-    "nock": "^9.0.0",
-    "nsp": "^2.6.1",
+    "eslint-plugin-lodash": "^2.3.5",
+    "eslint-plugin-promise": "^3.4.2",
+    "jest-cli": "^19.0.2",
+    "nock": "^9.0.7",
+    "nsp": "^2.6.2",
     "pre-push": "^0.1.1",
-    "sinon": "^1.17.6",
+    "sinon": "^1.17.7",
     "sinon-as-promised": "^4.0.2"
   },
   "jest": {

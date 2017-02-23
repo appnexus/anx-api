@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v4.3.0
+
+	[minor] Added `encodeParams` option for params 
+
 ## v4.2.0
 
 * [minor] Added original request options to the response `res.req`
