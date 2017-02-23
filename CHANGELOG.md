@@ -2,6 +2,8 @@
 
 ## Latest
 
+## v4.2.0
+
 * [minor] Added original request options to the response `res.req`
 * Converted from Mocha to Jest
 * Added eslint-config-appnexus
