@@ -52,7 +52,6 @@ config[object]:
 * `timeout` - (integer) optional request timeout in milliseconds (default: 60000) Triggers `ConnectionAbortedError` error.
 * `userAgent` - (string) optional user agent
 * `rateLimiting` - (boolean) optional rate limiting
-* `encodeParams` - (boolean) optional whether or not params should be encoded. (default: false)
 * `concurrencyLimit` - (integer) optional max concurrent requests
 * `beforeRequest` - (function) optional before request opts filter (see [beforeRequest](#beforerequest))
 * `afterRequest` - (function) optional after request response filter (see [afterRequest](#afterrequest))
@@ -208,6 +207,7 @@ opts object has the following request options.
 * `params` - (object) optional query string parameters
 * `mimeType` - (string) optional mimetype
 * `timeout` - (integer) optional request timeout in milliseconds (defaults to config timeout)
+* `encodeParams` - (boolean) optional whether or not params object should be encoded. (default: false)
 
 ### Examples
 
