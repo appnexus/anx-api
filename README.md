@@ -55,6 +55,7 @@ config[object]:
 * `concurrencyLimit` - (integer) optional max concurrent requests
 * `beforeRequest` - (function) optional before request opts filter (see [beforeRequest](#beforerequest))
 * `afterRequest` - (function) optional after request response filter (see [afterRequest](#afterrequest))
+* `environment` - (enum:node|browser) optional. node - force axios to run as if in node and not the browser (usefull for testing with jest/jasmine).
 
 ## Instance Methods
 
