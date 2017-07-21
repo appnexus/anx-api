@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v4.4.1
+
+	Fixed rate limiting to abort if retry-after header is missing
+
 ## v4.4.0
 
 	[minor] Added optional `environment` config option
