@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.16",
-    "eslint": "^3.16.1",
+    "eslint": "^3.18.0",
     "eslint-config-appnexus": "^1.6.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-lodash": "^2.3.5",
