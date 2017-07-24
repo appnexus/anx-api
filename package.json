@@ -47,7 +47,7 @@
     "eslint-plugin-lodash": "^2.3.5",
     "eslint-plugin-promise": "^3.4.2",
     "jest-cli": "^19.0.2",
-    "nock": "^9.0.7",
+    "nock": "^9.0.9",
     "nsp": "^2.6.2",
     "pre-push": "^0.1.1",
     "sinon": "^1.17.7",
