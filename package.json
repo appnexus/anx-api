@@ -51,7 +51,7 @@
     "nsp": "^2.6.2",
     "pre-push": "^0.1.1",
     "sinon": "^1.17.7",
-    "sinon-as-promised": "^4.0.2"
+    "sinon-as-promised": "^4.0.3"
   },
   "jest": {
     "testEnvironment": "node"
