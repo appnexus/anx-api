@@ -1,6 +1,5 @@
 var AnxApi = require('anx-api');
 var request = require('request');
-var Promise = require('es6-promise').Promise;
 
 function customRequest(opts) {
 	return new Promise(function (resolve, reject) {
