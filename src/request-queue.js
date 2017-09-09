@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var errors = require('./errors');
+import _ from 'lodash';
+import errors from './errors';
 
 var DEFAULT_LIMIT = 60;
 var DEFAULT_LIMIT_SECONDS = 60;

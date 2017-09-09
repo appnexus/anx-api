@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var util = require('util');
+import _  from 'lodash';
+import util from 'util';
 
 function ApiError(req, res) {
 	Error.apply(this);

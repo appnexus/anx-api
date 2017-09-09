@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var PromiseQueue = require('./request-queue');
+import _ from 'lodash';
+import PromiseQueue from './request-queue';
 
 var DEFAULT_READ_LIMIT = 100;
 var DEFAULT_READ_LIMIT_SECONDS = 60;

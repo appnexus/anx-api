@@ -1,13 +1,13 @@
-var _ = require('lodash');
-var url = require('url');
-var query = require('qs');
-var Promise = require('es6-promise').Promise;
-var errors = require('./errors');
-var stability = require('./stability');
-var packageJson = require('../package.json');
-var axiosAdapter = require('./axiosAdapter');
-var rateLimitAdapter = require('./rateLimitAdapter');
-var concurrencyAdapter = require('./concurrencyAdapter');
+import _ from 'lodash';
+import url from 'url';
+import query from 'qs';
+import { Promise } from 'es6-promise';
+import errors from './errors';
+import stability from './stability';
+import packageJson from '../package.json';
+import axiosAdapter from './axiosAdapter';
+import rateLimitAdapter from './rateLimitAdapter';
+import concurrencyAdapter from './concurrencyAdapter';
 
 var DEFAULT_CHUNK_SIZE = 100;
 
@@ -225,24 +225,22 @@ AnxApi.prototype.getBy = function _getBy(fieldName, value, opts, extendOpts) {
 		return this.get(newOpts);
 	}
 
-	return Promise.all(_.chain(value)
-		.chunk(this._config.chunkSize)
-		.map(function joinIds(values) {
-			return values.join(',');
-		})
-		.map(function makeChunkedRequests(fieldValues) {
-			fieldParam = {};
-			fieldParam[fieldName] = fieldValues;
-			newOpts.params = _.assign({}, newOpts.params, fieldParam);
-			return this.get(newOpts);
-		}.bind(this)).value()
-	).then(function reduceResponses(responses) {
+	const chunkedRequests = _.map(_.map(_.chunk(value, this._config.chunkSize), function joinIds(values) {
+		return values.join(',');
+	}), function makeChunkedRequests(fieldValues) {
+		fieldParam = {};
+		fieldParam[fieldName] = fieldValues;
+		newOpts.params = _.assign({}, newOpts.params, fieldParam);
+		return this.get(newOpts);
+	}.bind(this));
+
+	return Promise.all(chunkedRequests).then(function reduceResponses(responses) {
 		var res = _.head(responses);
 		var firstOutputTerm = res.body.response.dbg_info.output_term;
-		var objects = _.chain(responses).map('body').map('response').map(function reduceRecords(response) {
+		var objects = _.flatten(_.map(_.map(responses, 'body.response'), function reduceRecords(response) {
 			var outputTerm = response.dbg_info.output_term;
 			return response[outputTerm];
-		}).flatten().value();
+		}));
 		var newRes =  _.assign({}, res);
 		newRes.body.response = _.assign({}, res.body.response, { count: objects.length });
 		newRes.body.response[firstOutputTerm] = objects;
