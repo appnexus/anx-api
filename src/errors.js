@@ -165,7 +165,7 @@ function buildError(req, res) {
 		var errorId;
 		var errorCode;
 
-		if (res instanceof Error) {
+		if (res instanceof Error || res.errno) {
 			if (res.code === 'ENOTFOUND') {
 				ErrorType = DNSLookupError;
 			}

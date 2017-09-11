@@ -1,6 +1,4 @@
 /* eslint func-names: 0, padded-blocks: 0 */
-
-var _ = require('lodash');
 var nock = require('nock');
 var assert = require('assert');
 
@@ -192,37 +190,34 @@ describe('Error Types', function() {
 
 	describe('Network Errors', function() {
 
-		it('Should handle dns lookup errors', function(done) {
-
+		it('Should handle dns lookup errors', function() {
 			var api = new AnxApi({
 				target: 'http://.com',
+				rateLimiting: false,
 			});
 
-			api.get('junk').then(function() {
-				return done(new Error('expected error'));
+			return api.get('junk').then(function() {
+				return new Error('expected error');
 			}).catch(function(err) {
-				done(_.attempt(function() {
-					assert(err instanceof AnxApi.NetworkError, 'not instance of NetworkError');
-					assert(err instanceof AnxApi.DNSLookupError, 'not instance of DNSLookupError');
-				}));
+				expect(err).toBeInstanceOf(AnxApi.NetworkError);
+				expect(err).toBeInstanceOf(AnxApi.DNSLookupError);
 			});
 		});
 
-		it('Should handle software timeouts', function(done) {
+		it('Should handle software timeouts', function() {
 			nock('http://api.example.com').get('/timeout').delayConnection(2000).reply(200);
 
 			var api = new AnxApi({
 				target: 'http://api.example.com',
 				timeout: 500,
+				rateLimiting: false,
 			});
 
-			api.get('timeout').then(function() {
-				return done(new Error('expected error'));
+			return api.get('timeout').then(function() {
+				return new Error('expected error');
 			}).catch(function(err) {
-				done(_.attempt(function() {
-					assert(err instanceof AnxApi.NetworkError, 'not instance of NetworkError');
-					assert(err instanceof AnxApi.ConnectionAbortedError, 'not instance of ConnectionAbortedError');
-				}));
+				expect(err).toBeInstanceOf(AnxApi.NetworkError);
+				expect(err).toBeInstanceOf(AnxApi.ConnectionAbortedError);
 			});
 		});
 

@@ -1,8 +1,10 @@
-var axios = jest.fn();
+var axios = require('axios');
 
-axios.resolvesOnce = function(returnValue) {
-	axios.mockReturnValueOnce(Promise.resolve(returnValue));
-	return axios;
+var axiosMock = jest.spyOn(axios, 'default');
+
+axiosMock.resolvesOnce = function(returnValue) {
+	axiosMock.mockReturnValueOnce(Promise.resolve(returnValue));
+	return axiosMock;
 };
 
-module.exports = axios;
+module.exports = axiosMock;
