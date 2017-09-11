@@ -15,6 +15,7 @@
     "dependency-check": "nsp check",
     "lint": "eslint src --quiet",
     "lint-fix": "eslint src --fix",
+    "preversion": "npm run build",
     "test": "jest src",
     "watch": "jest src --watch"
   },
