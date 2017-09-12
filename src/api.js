@@ -2,7 +2,6 @@ import _ from 'lodash';
 import url from 'url';
 import query from 'qs';
 import errors from './errors';
-import stability from './stability';
 import packageJson from '../package.json';
 import axiosAdapter from './axiosAdapter';
 import rateLimitAdapter from './rateLimitAdapter';
