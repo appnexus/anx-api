@@ -9,15 +9,15 @@
 
 ## v4.4.1
 
-	Fixed rate limiting to abort if retry-after header is missing
+* Fixed rate limiting to abort if retry-after header is missing
 
 ## v4.4.0
 
-	[minor] Added optional `environment` config option
+* [minor] Added optional `environment` config option
 
 ## v4.3.0
 
-	[minor] Added `encodeParams` option for params
+* [minor] Added `encodeParams` option for params
 
 ## v4.2.0
 
