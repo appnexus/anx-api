@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v5.0.2
+
+* [patch] Removes experimental `getBy` and `getById` methods.
+
 ## v5.0.1
 
 * [minor] Adds `.npmignore` file to fix npm published version.

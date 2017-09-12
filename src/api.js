@@ -203,50 +203,6 @@ AnxApi.prototype.get = function _get(opts, extendOpts) {
 	return this._request('GET', opts, extendOpts);
 };
 
-AnxApi.prototype.getById = function _getById(id, opts, extendOpts) {
-	stability.experimental.method('getById', 'AnxApi');
-	return this.getBy('id', id, opts, extendOpts);
-};
-
-AnxApi.prototype.getBy = function _getBy(fieldName, value, opts, extendOpts) {
-	stability.experimental.method('getBy', 'AnxApi');
-	var newOpts = _normalizeOpts(opts, extendOpts);
-	var fieldValue;
-	var fieldParam;
-
-	if (!_.isNumber(value) && _.isEmpty(value)) {
-		return Promise.reject(new errors.ArgumentError('Invalid value'));
-	} else if (!_.isArray(value) || value.length === 1) {
-		fieldValue = !_.isArray(value) ? value : value[0];
-		fieldParam = {};
-		fieldParam[fieldName] = fieldValue;
-		newOpts.params = _.assign({}, newOpts.params, fieldParam);
-		return this.get(newOpts);
-	}
-
-	const chunkedRequests = _.map(_.map(_.chunk(value, this._config.chunkSize), function joinIds(values) {
-		return values.join(',');
-	}), function makeChunkedRequests(fieldValues) {
-		fieldParam = {};
-		fieldParam[fieldName] = fieldValues;
-		newOpts.params = _.assign({}, newOpts.params, fieldParam);
-		return this.get(newOpts);
-	}.bind(this));
-
-	return Promise.all(chunkedRequests).then(function reduceResponses(responses) {
-		var res = _.head(responses);
-		var firstOutputTerm = res.body.response.dbg_info.output_term;
-		var objects = _.flatten(_.map(_.map(responses, 'body.response'), function reduceRecords(response) {
-			var outputTerm = response.dbg_info.output_term;
-			return response[outputTerm];
-		}));
-		var newRes =  _.assign({}, res);
-		newRes.body.response = _.assign({}, res.body.response, { count: objects.length });
-		newRes.body.response[firstOutputTerm] = objects;
-		return newRes;
-	});
-};
-
 AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
 	var _self = this;
 
