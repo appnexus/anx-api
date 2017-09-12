@@ -1,4 +1,4 @@
-var _ = require('lodash');
+import _ from 'lodash';
 
 function ConcurrencyQueue(options) {
 	this.options = _.assign({}, options);

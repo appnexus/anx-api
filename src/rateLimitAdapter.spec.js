@@ -1,6 +1,4 @@
 /* eslint func-names: 0, padded-blocks: 0 */
-
-var sinon = require('sinon');
 var axios = require('axios');
 
 var AnxApi = require('./api');
@@ -12,15 +10,15 @@ describe('Rate Limit Adapter', function() {
 	var onRateLimitResumeStub;
 
 	beforeAll(function() {
-		onRateLimitExceededStub = sinon.stub();
-		onRateLimitPauseStub = sinon.stub();
-		onRateLimitResumeStub = sinon.stub();
+		onRateLimitExceededStub = jest.fn();
+		onRateLimitPauseStub = jest.fn();
+		onRateLimitResumeStub = jest.fn();
 	});
 
 	beforeEach(function() {
-		onRateLimitExceededStub.reset();
-		onRateLimitPauseStub.reset();
-		onRateLimitResumeStub.reset();
+		onRateLimitExceededStub.mockReset();
+		onRateLimitPauseStub.mockReset();
+		onRateLimitResumeStub.mockReset();
 	});
 
 	it('should handle RateLimitExceededError', function() {
@@ -51,9 +49,9 @@ describe('Rate Limit Adapter', function() {
 		expect.assertions(3);
 
 		return api.get('/limit').then(function() {
-			expect(onRateLimitExceededStub.calledOnce, 'onRateLimitExceededStub called once').toBe(true);
-			expect(onRateLimitPauseStub.calledOnce, 'onRateLimitPauseStub called once').toBe(true);
-			expect(onRateLimitResumeStub.calledOnce, 'onRateLimitResumeStub called once').toBe(true);
+			expect(onRateLimitExceededStub).toHaveBeenCalledTimes(1);
+			expect(onRateLimitPauseStub).toHaveBeenCalledTimes(1);
+			expect(onRateLimitResumeStub).toHaveBeenCalledTimes(1);
 			return null;
 		});
 
@@ -82,9 +80,9 @@ describe('Rate Limit Adapter', function() {
 		expect.assertions(3);
 
 		return api.get('/limit-bad').catch(function() {
-			expect(onRateLimitExceededStub.calledOnce, 'onRateLimitExceededStub called once').toBe(true);
-			expect(onRateLimitPauseStub.calledOnce, 'onRateLimitPauseStub called once').toBe(false);
-			expect(onRateLimitResumeStub.calledOnce, 'onRateLimitResumeStub called once').toBe(false);
+			expect(onRateLimitExceededStub).toHaveBeenCalledTimes(1);
+			expect(onRateLimitPauseStub).not.toHaveBeenCalled();
+			expect(onRateLimitResumeStub).not.toHaveBeenCalled();
 		});
 
 	});
@@ -118,9 +116,9 @@ describe('Rate Limit Adapter', function() {
 
 		return api.get('/limit').then(function() {
 			return api.get('/limit').then(function() {
-				expect(onRateLimitExceededStub.calledOnce, 'onRateLimitExceededStub called once').toBe(false);
-				expect(onRateLimitPauseStub.calledOnce, 'onRateLimitPauseStub called once').toBe(false);
-				expect(onRateLimitResumeStub.calledOnce, 'onRateLimitResumeStub called once').toBe(false);
+				expect(onRateLimitExceededStub).not.toHaveBeenCalled();
+				expect(onRateLimitPauseStub).not.toHaveBeenCalled();
+				expect(onRateLimitResumeStub).not.toHaveBeenCalled();
 				return null;
 			});
 		});
@@ -156,9 +154,9 @@ describe('Rate Limit Adapter', function() {
 
 		return api.get('/limit').then(function() {
 			return api.get('/limit').then(function() {
-				expect(onRateLimitExceededStub.calledOnce, 'onRateLimitExceededStub called once').toBe(false);
-				expect(onRateLimitPauseStub.calledOnce, 'onRateLimitPauseStub called once').toBe(true);
-				expect(onRateLimitResumeStub.calledOnce, 'onRateLimitResumeStub called once').toBe(true);
+				expect(onRateLimitExceededStub).not.toHaveBeenCalled();
+				expect(onRateLimitPauseStub).toHaveBeenCalledTimes(1);
+				expect(onRateLimitResumeStub).toHaveBeenCalledTimes(1);
 				return null;
 			});
 		});
@@ -198,10 +196,10 @@ describe('Rate Limit Adapter', function() {
 			api.get('/limit'),
 			api.get('/limit'),
 		]).then(function() {
-			expect(onRateLimitExceededStub.calledOnce, 'onRateLimitExceededStub called once').toBe(false);
-			expect(onRateLimitPauseStub.calledTwice, 'onRateLimitPauseStub called once twice').toBe(true);
-			expect(onRateLimitResumeStub.calledTwice, 'onRateLimitResumeStub called twice').toBe(true);
-			return null;
+			expect(onRateLimitExceededStub).not.toHaveBeenCalled();
+			expect(onRateLimitPauseStub).toHaveBeenCalledTimes(2);
+			expect(onRateLimitResumeStub).toHaveBeenCalledTimes(2);
+			return;
 		});
 
 	});

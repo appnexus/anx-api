@@ -1,6 +1,6 @@
-var _ = require('lodash');
-var axios = require('axios');
-var httpAdapter = require('axios/lib/adapters/http');
+import _ from 'lodash';
+import axios from 'axios';
+import httpAdapter from 'axios/lib/adapters/http';
 
 module.exports = function requestAdaptor(config) {
 	return function(opts) {
