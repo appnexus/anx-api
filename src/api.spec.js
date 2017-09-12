@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var assert = require('assert');
-var Promise = require('es6-promise').Promise;
 
 var AnxApi = require('./api');
 
@@ -404,7 +403,7 @@ describe('AnxApi', function() {
 						done();
 					},
 				});
-				api.get('user');
+				api.get('user').catch((error) => error);
 			});
 
 			it('method should be GET', function() {
@@ -614,7 +613,7 @@ describe('AnxApi', function() {
 						done();
 					},
 				});
-				api.post('user', { name: 'MyName' });
+				api.post('user', { name: 'MyName' }).catch((error) => error);
 			});
 
 			it('method should be POST', function() {
@@ -647,7 +646,7 @@ describe('AnxApi', function() {
 						done();
 					},
 				});
-				api.put('user', { name: 'MyName' });
+				api.put('user', { name: 'MyName' }).catch((error) => error);
 			});
 
 			it('method should be PUT', function() {
@@ -680,7 +679,7 @@ describe('AnxApi', function() {
 						done();
 					},
 				});
-				api.delete('user?id=1');
+				api.delete('user?id=1').catch((error) => error);
 			});
 
 			it('method should be DELETE', function() {

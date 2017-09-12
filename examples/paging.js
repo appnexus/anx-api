@@ -1,7 +1,6 @@
 /* eslint func-names: 0, no-console: 0 */
 
 var AnxApi = require('anx-api');
-var Promise = require('es6-promise').Promise;
 
 var anxApi = new AnxApi({
 	target: process.env.ANX_TARGET,

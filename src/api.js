@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import url from 'url';
 import query from 'qs';
-import { Promise } from 'es6-promise';
 import errors from './errors';
 import stability from './stability';
 import packageJson from '../package.json';

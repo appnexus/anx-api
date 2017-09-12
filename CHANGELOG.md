@@ -2,6 +2,11 @@
 
 ## Latest
 
+## v5.0.0
+
+* [major] Removed use of `es6-promise` library; native promises are used now.
+* [minor] Adds `lodash-babel-plugin` to optimize size for browser use case.
+
 ## v4.4.1
 
 	Fixed rate limiting to abort if retry-after header is missing

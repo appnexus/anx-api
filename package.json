@@ -37,9 +37,6 @@
   ],
   "dependencies": {
     "axios": "^0.15.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "es6-promise": "^4.0.5",
     "lodash": "^4.17.4",
     "qs": "^6.2.1"
   },
