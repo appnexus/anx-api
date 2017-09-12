@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var util = require('util');
+import _  from 'lodash';
+import util from 'util';
 
 function ApiError(req, res) {
 	Error.apply(this);
@@ -165,7 +165,7 @@ function buildError(req, res) {
 		var errorId;
 		var errorCode;
 
-		if (res instanceof Error) {
+		if (res instanceof Error || res.errno) {
 			if (res.code === 'ENOTFOUND') {
 				ErrorType = DNSLookupError;
 			}

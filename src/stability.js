@@ -1,6 +1,6 @@
 /* eslint no-console: 0 */
 
-var _ = require('lodash');
+import _ from 'lodash';
 
 var warnings = {
 	experimental: {},
