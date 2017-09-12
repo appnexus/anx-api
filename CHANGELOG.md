@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v5.0.1
+
+* [minor] Adds `.npmignore` file to fix npm published version.
+
 ## v5.0.0
 
 * [major] Removed use of `es6-promise` library; native promises are used now.
