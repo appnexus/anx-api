@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import url from 'url';
 import query from 'qs';
 import urljoin from 'url-join';
 import errors from './errors';
