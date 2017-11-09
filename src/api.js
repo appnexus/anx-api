@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import url from 'url';
 import query from 'qs';
+import urljoin from 'url-join';
 import errors from './errors';
 import packageJson from '../package.json';
 import axiosAdapter from './axiosAdapter';
@@ -83,7 +83,7 @@ function __request(opts) {
 
 		reqOpts.headers = _.assign({}, reqOpts.headers, opts.headers);
 
-		reqOpts.uri = url.resolve(_self._config.target, _.trimStart(opts.uri, '/'));
+		reqOpts.uri = urljoin(_self._config.target, _.trimStart(opts.uri, '/'));
 
 		// Configure Parameters
 		if (_hasValue(opts.startElement)) {

@@ -386,6 +386,50 @@ describe('AnxApi', function() {
 
 		});
 
+		describe('url formatting', () => {
+			it('should not alter the target URL', () => {
+				const finalRoute = 'http://example.com/route/sub-route';
+				const api = new AnxApi({
+					target: 'http://example.com/route',
+					rateLimiting: false,
+					request: function(opts) {
+						return Promise.resolve(opts);
+					},
+				});
+				return api.get('sub-route').then((opts) => {
+					return assert.equal(finalRoute, opts.uri);
+				});
+			});
+
+			it('should handle trailing slashes in the target URL', () => {
+				const finalRoute = 'http://example.com/route/sub-route';
+				const api = new AnxApi({
+					target: 'http://example.com/route/',
+					rateLimiting: false,
+					request: function(opts) {
+						return Promise.resolve(opts);
+					},
+				});
+				return api.get('sub-route').then((opts) => {
+					return assert.equal(finalRoute, opts.uri);
+				});
+			});
+
+			it('should trim off leading slashes on sub-routes', () => {
+				const finalRoute = 'http://example.com/route/sub-route';
+				const api = new AnxApi({
+					target: 'http://example.com/route',
+					rateLimiting: false,
+					request: function(opts) {
+						return Promise.resolve(opts);
+					},
+				});
+
+				return api.get('/sub-route').then((opts) => {
+					return assert.equal(finalRoute, opts.uri);
+				});
+			});
+		});
 	});
 
 	describe('#get', function() {
