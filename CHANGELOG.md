@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v6.0.0
+
+[major] Adds in the package `url-join` to properly concat URL's when building the request. This breaking change requires partial url segments to be used when making requests instead of specifying fully-qualified paths. See: https://github.com/appnexus/anx-api/issues/70
+
 ## v5.0.4
 
 * [patch] reverts changes made in v5.0.3 due to breaking change
