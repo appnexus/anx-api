@@ -2,6 +2,14 @@
 
 ## Latest
 
+## v5.0.4
+
+* [patch] reverts changes made in v5.0.3 due to breaking change
+
+## v5.0.3
+
+* [patch] Adds in the package `url-join` to properly concat URL's when building the request
+
 ## v5.0.2
 
 * [patch] Removes experimental `getBy` and `getById` methods.
