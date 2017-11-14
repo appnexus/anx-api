@@ -38,8 +38,7 @@
   "dependencies": {
     "axios": "^0.15.0",
     "lodash": "^4.17.4",
-    "qs": "^6.2.1",
-    "url-join": "^2.0.2"
+    "qs": "^6.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
