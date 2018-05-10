@@ -222,21 +222,21 @@ AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
 				}
 				var response = res.body.response;
 				var count = response.count || 0;
-				var outputTerm = response.dbg_info.output_term;
+				var outputTerm = response.dbg.output_term;
 				if (!firstOutputTerm) {
 					firstOutputTerm = outputTerm;
 				}
 
 				numElements = response.num_elements;
 
-				totalTime += response.dbg_info.time || 0;
+				totalTime += response.dbg.time || 0;
 				elements = elements.concat(response[outputTerm]);
 				if (count <= startElement + numElements) {
 					var newResponse = _.assign({}, {
 						count: elements.length,
 						start_element: 0,
 						num_elements: elements.length,
-						dbg_info: _.assign({}, response.dbg_info, {
+						dbg: _.assign({}, response.dbg, {
 							output_term: firstOutputTerm,
 							time: totalTime,
 						}),
