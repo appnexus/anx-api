@@ -1,7 +1,6 @@
 /* eslint func-names: 0, padded-blocks: 0 */
 
 var _ = require('lodash');
-var assert = require('assert');
 
 var AnxApi = require('./api');
 
@@ -43,7 +42,7 @@ describe('AnxApi', function() {
 				});
 
 				it('should use target', function() {
-					assert(_.includes(opts.uri, 'http://example.com/'));
+					expect(_.includes(opts.uri, 'http://example.com/')).toBe(true);
 				});
 
 				it('should use token', function() {
@@ -80,7 +79,7 @@ describe('AnxApi', function() {
 					});
 
 					api.get('/user').catch(function(err) {
-						assert(err instanceof AnxApi.TargetError);
+						expect(err).toBeInstanceOf(AnxApi.TargetError);
 						done();
 					});
 				});
@@ -203,7 +202,7 @@ describe('AnxApi', function() {
 				});
 
 				it('uri should encode params', function() {
-					assert(_.includes(opts.uri, 'myEncodedString=%25ssp'));
+					expect(_.includes(opts.uri, 'myEncodedString=%25ssp')).toBe(true);
 				});
 
 			});
@@ -231,7 +230,7 @@ describe('AnxApi', function() {
 					api.request(errOpts).then(function() {
 						return done(new Error('Expected error: ' + expected));
 					}).catch(function(err) {
-						assert(err instanceof AnxApi.ArgumentError);
+						expect(err).toBeInstanceOf(AnxApi.ArgumentError);
 						if (err.message !== expected) {
 							return done(new Error('Unexpected error message: ' + err.message + ' Expected: ' + expected));
 						}
@@ -281,7 +280,7 @@ describe('AnxApi', function() {
 								it(param + ' should accept ' + test.value, function() {
 									return api.request(newOpts).then(function() {
 										if (test.uriContains) {
-											assert(_.includes(reqOpts.uri, test.uriContains), 'Url (' + reqOpts.uri + ') did not contain: ' + test.uriContains);
+											expect(_.includes(reqOpts.uri, test.uriContains)).toBe(true);
 										}
 										return null;
 									});
@@ -352,42 +351,47 @@ describe('AnxApi', function() {
 			describe('json default', function() {
 
 				it('should set up GET request for json', function() {
+					expect.assertions(2);
 					return api.request({}).then(function(opts) {
-						assert.equal(opts.headers.Accept, 'application/json', 'bad or missing Accept');
-						assert(!opts.headers['Content-Type'], 'Content-Type should not be set');
+						expect(opts.headers.Accept).toBe('application/json');
+						expect(opts.headers['Content-Type']).toBeUndefined();
 						return null;
 					});
 				});
 
 				it('should set up POST request for json', function() {
+					expect.assertions(2);
 					return api.request({ method: 'POST' }).then(function(opts) {
-						assert.equal(opts.headers.Accept, 'application/json', 'bad or missing Accept');
-						assert.equal(opts.headers['Content-Type'], 'application/json', 'bad or missing Content-Type');
+						expect(opts.headers.Accept).toBe('application/json');
+						expect(opts.headers['Content-Type']).toBe('application/json');
 						return null;
 					});
 				});
 
 				it('should set up PUT request for json', function() {
+					expect.assertions(2);
 					return api.request({ method: 'PUT' }).then(function(opts) {
-						assert.equal(opts.headers.Accept, 'application/json', 'bad or missing Accept');
-						assert.equal(opts.headers['Content-Type'], 'application/json', 'bad or missing Content-Type');
+						expect(opts.headers.Accept).toBe('application/json');
+						expect(opts.headers['Content-Type']).toBe('application/json');
 						return null;
 					});
 				});
 
 				describe('header overrides', function() {
-					it('should allow overrideing Accept', function() {
+					it('should allow overriding Accept', function() {
+						expect.assertions(2);
 						return api.request({ method: 'DELETE' }).then(function(opts) {
-							assert.equal(opts.headers.Accept, 'application/json', 'bad or missing Accept');
-							assert(!opts.headers['Content-Type'], 'Content-Type should not be set');
+							expect(opts.headers.Accept).toBe('application/json');
+							expect(opts.headers['Content-Type']).toBeUndefined();
 							return null;
 						});
 					});
 
 					it('should allow overriding Content-Type', function() {
+						expect.assertions(2);
 						return api.request({ method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(function(opts) {
-							assert.equal(opts.headers.Accept, 'application/json', 'bad or missing Accept');
-							assert(opts.headers['Content-Type'], 'Content-Type should be set');
+							expect(opts.headers.Accept).toBe('application/json');
+							expect(opts.headers['Content-Type']).toBeDefined();
 							return null;
 						});
 					});
@@ -396,17 +400,19 @@ describe('AnxApi', function() {
 			});
 
 			it('should allow overriding json accept type', function() {
+				expect.assertions(2);
 				return api.request({ method: 'POST', headers: { Accept: 'text/csv', 'Content-Type': 'text/csv' }}).then(function(opts) {
-					assert.equal(opts.headers.Accept, 'text/csv', 'bad or missing Accept');
-					assert.equal(opts.headers['Content-Type'], 'text/csv', 'bad or missing Content-Type');
+					expect(opts.headers.Accept).toBe('text/csv', 'bad or missing Accept');
+					expect(opts.headers['Content-Type']).toBe('text/csv', 'bad or missing Content-Type');
 					return null;
 				});
 			});
 
 			it('should allow setting Accept and Content-Type with mimeType option', function() {
+				expect.assertions(2);
 				return api.request({ method: 'POST', mimeType: 'text/csv' }).then(function(opts) {
-					assert.equal(opts.headers.Accept, 'text/csv', 'bad or missing Accept');
-					assert.equal(opts.headers['Content-Type'], 'text/csv', 'bad or missing Content-Type');
+					expect(opts.headers.Accept).toBe('text/csv', 'bad or missing Accept');
+					expect(opts.headers['Content-Type']).toBe('text/csv', 'bad or missing Content-Type');
 					return null;
 				});
 			});
@@ -424,7 +430,7 @@ describe('AnxApi', function() {
 					},
 				});
 				return api.get('sub-route').then((opts) => {
-					return assert.equal(finalRoute, opts.uri);
+					return expect(finalRoute).toBe(opts.uri);
 				});
 			});
 
@@ -438,7 +444,7 @@ describe('AnxApi', function() {
 					},
 				});
 				return api.get('sub-route').then((opts) => {
-					return assert.equal(finalRoute, opts.uri);
+					return expect(finalRoute).toBe(opts.uri);
 				});
 			});
 
@@ -453,7 +459,7 @@ describe('AnxApi', function() {
 				});
 
 				return api.get('/sub-route').then((opts) => {
-					return assert.equal(finalRoute, opts.uri);
+					return expect(finalRoute).toBe(opts.uri);
 				});
 			});
 		});
@@ -478,11 +484,11 @@ describe('AnxApi', function() {
 			});
 
 			it('method should be GET', function() {
-				assert.equal(opts.method, 'GET');
+				expect(opts.method).toBe('GET');
 			});
 
 			it('should use string path', function() {
-				assert(_.includes(opts.uri, 'http://example.com/user'));
+				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
 		});
@@ -550,15 +556,15 @@ describe('AnxApi', function() {
 			});
 
 			it('method should be POST', function() {
-				assert.equal(opts.method, 'POST');
+				expect(opts.method).toBe('POST');
 			});
 
 			it('should use string path', function() {
-				assert(_.includes(opts.uri, 'http://example.com/user'));
+				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
 			it('should place the payload into the post body', function() {
-				assert.deepEqual(opts.body, { name: 'MyName' });
+				expect(opts.body).toEqual({ name: 'MyName' });
 			});
 
 		});
@@ -583,15 +589,15 @@ describe('AnxApi', function() {
 			});
 
 			it('method should be PUT', function() {
-				assert.equal(opts.method, 'PUT');
+				expect(opts.method).toBe('PUT');
 			});
 
 			it('should use string path', function() {
-				assert(_.includes(opts.uri, 'http://example.com/user'));
+				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
 			it('should place the payload into the put body', function() {
-				assert.deepEqual(opts.body, { name: 'MyName' });
+				expect(opts.body).toEqual({ name: 'MyName' });
 			});
 
 		});
@@ -616,11 +622,11 @@ describe('AnxApi', function() {
 			});
 
 			it('method should be DELETE', function() {
-				assert.equal(opts.method, 'DELETE');
+				expect(opts.method).toBe('DELETE');
 			});
 
 			it('should use string path', function() {
-				assert(_.includes(opts.uri, 'http://example.com/user'));
+				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
 		});
@@ -630,19 +636,19 @@ describe('AnxApi', function() {
 	describe('#statusOk', function() {
 
 		it('should return true when status is OK', function() {
-			assert.equal(AnxApi.statusOk({ response: { status: 'OK' } }), true);
+			expect(AnxApi.statusOk({ response: { status: 'OK' } })).toBe(true);
 		});
 
 		it('should return false when status is not OK', function() {
-			assert.equal(AnxApi.statusOk({ response: { status: '' } }), false);
+			expect(AnxApi.statusOk({ response: { status: '' } })).toBe(false);
 		});
 
 		it('should return false with no status field', function() {
-			assert.equal(AnxApi.statusOk({ response: {} }), false);
+			expect(AnxApi.statusOk({ response: {} })).toBe(false);
 		});
 
 		it('should return false with no response field', function() {
-			assert.equal(AnxApi.statusOk({}), false);
+			expect(AnxApi.statusOk({})).toBe(false);
 		});
 
 	});
@@ -683,10 +689,10 @@ describe('AnxApi', function() {
 			}).catch(function(err) {
 				// API treats bad apssword as Authentication instead of Authorization Error.
 				// assert(err instanceof AnxApi.NotAuthenticatedError, 'Api.NotAuthenticatedError');
-				assert(err instanceof AnxApi.NotAuthorizedError, 'Api.NotAuthorizedError');
+				expect(err).toBeInstanceOf(AnxApi.NotAuthorizedError);
 
-				assert.equal('UNAUTH', err.id);
-				assert.equal('No match found for user/pass', err.message);
+				expect('UNAUTH').toBe(err.id);
+				expect('No match found for user/pass').toBe(err.message);
 			});
 		});
 
@@ -701,7 +707,7 @@ describe('AnxApi', function() {
 				},
 			});
 			return api.login('test_user', 'test_password').then(function(token) {
-				assert.equal('hbapi:10340:55ba41134f752:lax1', token);
+				expect('hbapi:10340:55ba41134f752:lax1').toBe(token);
 				return null;
 			});
 		});
