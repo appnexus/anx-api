@@ -2,6 +2,8 @@
 
 ## Latest
 
+* [minor] Updated dependencies and converted from nsp to npm audit
+
 ## v6.0.0
 
 [major] Adds in the package `url-join` to properly concat URL's when building the request. This breaking change requires partial url segments to be used when making requests instead of specifying fully-qualified paths. See: https://github.com/appnexus/anx-api/issues/70

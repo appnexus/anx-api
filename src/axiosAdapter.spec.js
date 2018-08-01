@@ -6,7 +6,7 @@ var axios = require('axios');
 
 describe('Axios Adapter', function() {
 
-	it('should make correct axios request');
+	it.skip('should make correct axios request', () => {});
 
 	it('should transform axios response', function() {
 
