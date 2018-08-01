@@ -2,6 +2,8 @@
 
 ## Latest
 
+## v6.1.0
+
 * [minor] Updated dependencies and converted from nsp to npm audit
 
 ## v6.0.0
