@@ -10,6 +10,8 @@ describe('Axios Adapter', function() {
 
 	it('should transform axios response', function() {
 
+		expect.assertions(2);
+
 		axios.resolvesOnce({
 			status: 200,
 			headers: { someHeader: 1 },
@@ -41,6 +43,8 @@ describe('Axios Adapter', function() {
 	});
 
 	it('should handle axios error response', function() {
+
+		expect.assertions(4);
 
 		axios.resolvesOnce({
 			status: 401,
