@@ -4,8 +4,8 @@ import _ from 'lodash';
 
 module.exports = function requestAdaptor(config) {
 	return function(opts) {
-		let url = opts.uri;
-		let axiosOpts = {
+		const url = opts.uri;
+		const axiosOpts = {
 			timeout: opts.timeout,
 			method: opts.method.toLowerCase(),
 			headers: opts.headers,
@@ -19,7 +19,7 @@ module.exports = function requestAdaptor(config) {
 			axiosOpts.data = opts.body;
 		}
 
-		let startTime = new Date().getTime();
+		const startTime = new Date().getTime();
 
 		return axios(url, axiosOpts, opts.body).then(function requestSuccess(res) {
 			return {

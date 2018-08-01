@@ -18,7 +18,7 @@ describe('AnxApi', () => {
 					opts = null;
 					res = null;
 
-					let api = new AnxApi({
+					const api = new AnxApi({
 						target: 'http://example.com',
 						token: 'MySessionToken',
 						userAgent: 'MyAgent',
@@ -74,7 +74,7 @@ describe('AnxApi', () => {
 			describe('with invalid config', () => {
 
 				it('should throw on missing target', function(done) {
-					let api = new AnxApi({
+					const api = new AnxApi({
 						rateLimiting: false,
 					});
 
@@ -96,7 +96,7 @@ describe('AnxApi', () => {
 
 				beforeEach(() => {
 					opts = null;
-					let api = new AnxApi({
+					const api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
 						request(o) {
@@ -181,7 +181,7 @@ describe('AnxApi', () => {
 
 				beforeEach(function(done) {
 					opts = null;
-					let api = new AnxApi({
+					const api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
 						request(o) {
@@ -267,7 +267,7 @@ describe('AnxApi', () => {
 				}, function(tests, param) {
 					describe(param, () => {
 						tests.forEach(function(test) {
-							let newOpts = {};
+							const newOpts = {};
 							if (param !== 'uri') {
 								newOpts.uri = '/user';
 							}
@@ -472,7 +472,7 @@ describe('AnxApi', () => {
 
 			beforeEach(function(done) {
 				opts = null;
-				let api = new AnxApi({
+				const api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
 					request(o) {
@@ -544,7 +544,7 @@ describe('AnxApi', () => {
 			let opts;
 
 			beforeEach(function(done) {
-				let api = new AnxApi({
+				const api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
 					request(o) {
@@ -577,7 +577,7 @@ describe('AnxApi', () => {
 			let opts;
 
 			beforeEach(function(done) {
-				let api = new AnxApi({
+				const api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
 					request(o) {
@@ -610,7 +610,7 @@ describe('AnxApi', () => {
 			let opts;
 
 			beforeEach(function(done) {
-				let api = new AnxApi({
+				const api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
 					request(o) {
@@ -656,7 +656,7 @@ describe('AnxApi', () => {
 	describe('#login', () => {
 
 		function buildApi(responseData) {
-			let api = new AnxApi({
+			const api = new AnxApi({
 				// target: 'http://example.com',
 				target: 'https://sand.api.appnexus.com',
 				userAgent: 'MyAgent',
@@ -671,7 +671,7 @@ describe('AnxApi', () => {
 		}
 
 		it('should reject with NotAuthenticatedError if status is not ok', () => {
-			let api = buildApi({
+			const api = buildApi({
 				statusCode: 200, // 200 instead of 401 because thats what the service responds with
 				body: {
 					response: {
@@ -697,7 +697,7 @@ describe('AnxApi', () => {
 		});
 
 		it('should login give api auth token', () => {
-			let api = buildApi({
+			const api = buildApi({
 				statusCode: 200,
 				body: {
 					response: {

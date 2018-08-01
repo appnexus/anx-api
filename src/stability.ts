@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-let warnings = {
+const warnings = {
 	experimental: {},
 	deprecated: {},
 };
@@ -10,7 +10,7 @@ let warnings = {
 function experimentalMethod(methodName, className) {
 	if (!warnings.experimental[methodName + className]) {
 		warnings.experimental[methodName + className] = _.once(function warnOnce() {
-			let log = (console.warn || console.log || _.noop).bind(console);
+			const log = (console.warn || console.log || _.noop).bind(console);
 			log('Method ' + className + '.' + methodName + ' is experimental, use with caution.');
 		});
 	}
@@ -20,7 +20,7 @@ function experimentalMethod(methodName, className) {
 function deprecatedMethod(methodName, className, useName) {
 	if (!warnings.deprecated[methodName + className + useName]) {
 		warnings.deprecated[methodName + className + useName] = _.once(function warnOnce() {
-			let log = (console.warn || console.log || _.noop).bind(console);
+			const log = (console.warn || console.log || _.noop).bind(console);
 			log('Method ' + className + '.' + methodName + ' is deprecated, use `' + className + '.' + useName + '` instead');
 		});
 	}

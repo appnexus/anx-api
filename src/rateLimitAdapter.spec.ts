@@ -38,7 +38,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		let api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			onRateLimitExceeded: onRateLimitExceededStub,
@@ -69,7 +69,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		let api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			onRateLimitExceeded: onRateLimitExceededStub,
@@ -103,7 +103,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		let api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitReadSeconds: 1,
@@ -141,7 +141,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		let api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitReadSeconds: 2,
@@ -179,7 +179,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		let api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitRead: 1,

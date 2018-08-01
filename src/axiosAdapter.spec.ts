@@ -18,7 +18,7 @@ describe('Axios Adapter', () => {
 			data: { response: {} },
 		});
 
-		let opts = {
+		const opts = {
 			headers: {
 				'X-Proxy-Target': 'http://01-thorondor-hbapi-sor.envnxs.net',
 				Authorization: 'hbapi:191561:57a21e5581e67:lax1',
@@ -51,7 +51,7 @@ describe('Axios Adapter', () => {
 			data: { response: {} },
 		});
 
-		let opts = {
+		const opts = {
 			headers: {
 				'X-Proxy-Target': 'http://01-thorondor-hbapi-sor.envnxs.net',
 				Authorization: 'hbapi:191561:57a21e5581e67:lax1',

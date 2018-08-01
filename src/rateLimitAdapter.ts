@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import PromiseQueue from './request-queue';
 
-let DEFAULT_READ_LIMIT = 100;
-let DEFAULT_READ_LIMIT_SECONDS = 60;
-let DEFAULT_READ_LIMIT_HEADER = 'x-ratelimit-read';
-let DEFAULT_WRITE_LIMIT = 60;
-let DEFAULT_WRITE_LIMIT_SECONDS = 60;
-let DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
+const DEFAULT_READ_LIMIT = 100;
+const DEFAULT_READ_LIMIT_SECONDS = 60;
+const DEFAULT_READ_LIMIT_HEADER = 'x-ratelimit-read';
+const DEFAULT_WRITE_LIMIT = 60;
+const DEFAULT_WRITE_LIMIT_SECONDS = 60;
+const DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 
 // Rate Limit Options:
 // request
@@ -19,7 +19,7 @@ let DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 // onRateLimitResume
 
 module.exports = function rateLimitAdapter(options) {
-	let readQueue = new PromiseQueue({
+	const readQueue = new PromiseQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
 		limitSeconds: options.rateLimitReadSeconds || DEFAULT_READ_LIMIT_SECONDS,
@@ -29,7 +29,7 @@ module.exports = function rateLimitAdapter(options) {
 		onRateLimitResume: _.partial(options.onRateLimitResume || _.noop, 'READ'),
 	});
 
-	let writeQueue = new PromiseQueue({
+	const writeQueue = new PromiseQueue({
 		request: options.request,
 		limit: options.rateLimitWrite || DEFAULT_WRITE_LIMIT,
 		limitSeconds: options.rateLimitWriteSeconds || DEFAULT_WRITE_LIMIT_SECONDS,

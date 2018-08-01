@@ -6,7 +6,7 @@ let AnxApi = require('./api');
 describe('Error Types', () => {
 
 	['ApiError', 'NotAuthenticatedError', 'NotAuthorizedError', 'TargetError'].forEach(function(errorName) {
-		let CustomError = AnxApi[errorName];
+		const CustomError = AnxApi[errorName];
 
 		function assertAnxError(e) {
 			expect(e).toBeInstanceOf(Error);
@@ -54,7 +54,7 @@ describe('Error Types', () => {
 				check({ body: { response: { error_id: undefined } } });
 			});
 
-			let response = {
+			const response = {
 				error_id: 'xyz',
 				error_code: 'm-n-o-p',
 				error: 'something',
@@ -69,7 +69,7 @@ describe('Error Types', () => {
 			}
 
 			it('should accept just object as error data', () => {
-				let obj = response;
+				const obj = response;
 				try {
 					throw new CustomError({}, obj);
 				} catch (e) {
@@ -78,7 +78,7 @@ describe('Error Types', () => {
 			});
 
 			it('should accept body as error data', () => {
-				let obj = {
+				const obj = {
 					response,
 				};
 				try {
@@ -89,7 +89,7 @@ describe('Error Types', () => {
 			});
 
 			it('should accept raw api json as error data', () => {
-				let obj = {
+				const obj = {
 					body: {
 						response,
 					},
@@ -102,7 +102,7 @@ describe('Error Types', () => {
 			});
 
 			it('should accept simple object as error data', () => {
-				let obj = {
+				const obj = {
 					id: response.error_id,
 					code: response.error_code,
 					message: response.error,
@@ -116,7 +116,7 @@ describe('Error Types', () => {
 			});
 
 			it('should accept json response as error message', () => {
-				let msg = {
+				const msg = {
 					a: 1,
 				};
 				try {
@@ -136,7 +136,7 @@ describe('Error Types', () => {
 		});
 
 		it('should detect legacy RateLimitExceededError pre 1.17', () => {
-			let err = AnxApi.buildError({}, { statusCode: 405, body: { response: {
+			const err = AnxApi.buildError({}, { statusCode: 405, body: { response: {
 				error_id: 'SYSTEM',
 				error_code: 'RATE_EXCEEDED',
 			}}});
@@ -189,7 +189,7 @@ describe('Error Types', () => {
 	describe('Network Errors', () => {
 
 		it('Should handle dns lookup errors', () => {
-			let api = new AnxApi({
+			const api = new AnxApi({
 				target: 'http://.com',
 				rateLimiting: false,
 			});
@@ -205,7 +205,7 @@ describe('Error Types', () => {
 		it('Should handle software timeouts', () => {
 			nock('http://api.example.com').get('/timeout').delayConnection(2000).reply(200);
 
-			let api = new AnxApi({
+			const api = new AnxApi({
 				target: 'http://api.example.com',
 				timeout: 500,
 				rateLimiting: false,

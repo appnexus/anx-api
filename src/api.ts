@@ -7,7 +7,7 @@ import concurrencyAdapter from './concurrencyAdapter';
 import errors from './errors';
 import rateLimitAdapter from './rateLimitAdapter';
 
-let DEFAULT_CHUNK_SIZE = 100;
+const DEFAULT_CHUNK_SIZE = 100;
 
 function _hasValue(value) {
 	return !(_.isNull(value) || _.isUndefined(value));
@@ -18,7 +18,7 @@ function _isInteger(value) {
 }
 
 function _normalizeOpts(opts, extendOpts) {
-	let newOpts = _.isString(opts) ? {
+	const newOpts = _.isString(opts) ? {
 		uri: opts,
 	} : opts || {};
 	return _.assign({}, newOpts, extendOpts);
@@ -29,10 +29,10 @@ function _statusOk(body) {
 }
 
 function __request(opts) {
-	let _self = this;
+	const _self = this;
 	return new Promise(function requestPromise(resolve, reject) {
 		let params;
-		let startTime = new Date().getTime();
+		const startTime = new Date().getTime();
 
 		if (_.isEmpty(_self._config.target)) {
 			return reject(new errors.TargetError(opts, 'Target not set'));
@@ -102,14 +102,14 @@ function __request(opts) {
 		}
 
 		if (_self._config.beforeRequest) {
-			let beforeRequestOpts = _self._config.beforeRequest(reqOpts);
+			const beforeRequestOpts = _self._config.beforeRequest(reqOpts);
 			if (beforeRequestOpts) {
 				reqOpts = _.assign({}, reqOpts, beforeRequestOpts);
 			}
 		}
 
 		return _self._config.request(reqOpts).then(function success(res) {
-			let totalTime = new Date().getTime() - startTime;
+			const totalTime = new Date().getTime() - startTime;
 
 			let newRes = _.assign({
 				requestTime: res.requestTime || totalTime,
@@ -117,7 +117,7 @@ function __request(opts) {
 			}, res);
 
 			if (_self._config.afterRequest) {
-				let afterRequestRes = _self._config.afterRequest(newRes);
+				const afterRequestRes = _self._config.afterRequest(newRes);
 				if (afterRequestRes) {
 					newRes = _.assign({}, newRes, afterRequestRes);
 				}
@@ -186,7 +186,7 @@ function AnxApi(config) {
 _.assign(AnxApi, errors);
 
 AnxApi.prototype._request = function _request(method, opts, extendOpts, payload) {
-	let newOpts = _normalizeOpts(opts, extendOpts);
+	const newOpts = _normalizeOpts(opts, extendOpts);
 	newOpts.method = method || newOpts.method || 'GET';
 	if (payload) {
 		newOpts.body = payload;
@@ -203,10 +203,10 @@ AnxApi.prototype.get = function _get(opts, extendOpts) {
 };
 
 AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
-	let _self = this;
+	const _self = this;
 
 	return new Promise(function getAllPromise(resolve, reject) {
-		let newOpts = _normalizeOpts(opts, extendOpts);
+		const newOpts = _normalizeOpts(opts, extendOpts);
 		let numElements = opts.numElements || 100;
 		let firstOutputTerm;
 		let elements = [];
@@ -220,9 +220,9 @@ AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
 				if (!AnxApi.statusOk(res.body)) {
 					return reject(res);
 				}
-				let response = res.body.response;
-				let count = response.count || 0;
-				let outputTerm = response.dbg_info.output_term;
+				const response = res.body.response;
+				const count = response.count || 0;
+				const outputTerm = response.dbg_info.output_term;
 				if (!firstOutputTerm) {
 					firstOutputTerm = outputTerm;
 				}
@@ -232,7 +232,7 @@ AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
 				totalTime += response.dbg_info.time || 0;
 				elements = elements.concat(response[outputTerm]);
 				if (count <= startElement + numElements) {
-					let newResponse = _.assign({}, {
+					const newResponse = _.assign({}, {
 						count: elements.length,
 						start_element: 0,
 						num_elements: elements.length,
@@ -265,8 +265,8 @@ AnxApi.prototype.delete = function _delete(opts, extendOpts) {
 };
 
 AnxApi.prototype.login = function _login(username, password) {
-	let _self = this;
-	let reqOpts = {
+	const _self = this;
+	const reqOpts = {
 		auth: {
 			username,
 			password,
@@ -282,7 +282,7 @@ AnxApi.prototype.login = function _login(username, password) {
 };
 
 AnxApi.prototype.switchUser = function _switchUser(userId) {
-	let _self = this;
+	const _self = this;
 	return _self.post('/auth', {
 		auth: {
 			switch_to_user: userId,
