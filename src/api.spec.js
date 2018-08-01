@@ -91,20 +91,21 @@ describe('AnxApi', function() {
 
 		describe('Options', function() {
 			var opts;
+			var get;
 
 			describe('with encodeParams defaulted to false', function() {
 
-				beforeEach(function(done) {
+				beforeEach(function() {
 					opts = null;
 					var api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
 						request: function(o) {
 							opts = o;
-							done();
+							return Promise.resolve({});
 						},
 					});
-					api.get({
+					get = api.get({
 						uri: 'user',
 						timeout: 5000,
 						startElement: 100,
@@ -123,30 +124,56 @@ describe('AnxApi', function() {
 							}],
 						},
 					});
+
+					return get;
 				});
 
 				it('uri should contain start_element', function() {
-					assert(_.includes(opts.uri, 'start_element=100'));
+					expect.assertions(1);
+					return get.then(() => {
+						expect(_.includes(opts.uri, 'start_element=100')).toBe(true);
+						return null;
+					});
 				});
 
 				it('uri should contain num_elements', function() {
-					assert(_.includes(opts.uri, 'num_elements=25'));
+					expect.assertions(1);
+					return get.then(() => {
+						expect(_.includes(opts.uri, 'num_elements=25')).toBe(true);
+						return null;
+					});
 				});
 
 				it('uri should contain params', function() {
-					assert(_.includes(opts.uri, 'myParam=value'));
+					expect.assertions(1);
+					return get.then(() => {
+						expect(_.includes(opts.uri, 'myParam=value')).toBe(true);
+						return null;
+					});
 				});
 
 				it('uri should convert standard nested array params', function() {
-					assert(_.includes(opts.uri, 'myStdArray[0]=1&myStdArray[1]=2&myStdArray[2]=3'));
+					expect.assertions(1);
+					return get.then(() => {
+						expect(_.includes(opts.uri, 'myStdArray[0]=1&myStdArray[1]=2&myStdArray[2]=3')).toBe(true);
+						return null;
+					});
 				});
 
 				it('uri should convert nested object array params', function() {
-					assert(_.includes(opts.uri, 'myObjArray[0][a]=apple&myObjArray[1][b]=bee'));
+					expect.assertions(1);
+					return get.then(() => {
+						expect(_.includes(opts.uri, 'myObjArray[0][a]=apple&myObjArray[1][b]=bee')).toBe(true);
+						return null;
+					});
 				});
 
 				it('should default request timeout', function() {
-					assert.equal(opts.timeout, 5000);
+					expect.assertions(1);
+					return get.then(() => {
+						expect(opts.timeout).toBe(5000);
+						return null;
+					});
 				});
 
 			});
