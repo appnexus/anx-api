@@ -1,6 +1,5 @@
 /* eslint func-names: 0, padded-blocks: 0 */
 var nock = require('nock');
-var assert = require('assert');
 
 var AnxApi = require('./api');
 
@@ -10,13 +9,13 @@ describe('Error Types', function() {
 		var CustomError = AnxApi[errorName];
 
 		function assertAnxError(e) {
-			assert(e instanceof Error, 'not instance of Error');
-			assert(e instanceof AnxApi.ApiError, 'not instance of ApiError');
-			assert(e instanceof CustomError, 'not instance of ' + errorName);
+			expect(e).toBeInstanceOf(Error);
+			expect(e).toBeInstanceOf(AnxApi.ApiError);
+			expect(e).toBeInstanceOf(CustomError);
 			['id', 'code', 'message', 'description'].forEach(function(prop) {
-				assert(e.hasOwnProperty(prop), prop);
+				expect(e.hasOwnProperty(prop)).toBe(true);
 			});
-			assert(e.stack.indexOf('exFn') > 0, 'the calling function name should be in the stack trace');
+			expect(e.stack.indexOf('exFn') > 0).toBe(true);
 		}
 
 		describe(errorName, function() {
@@ -36,9 +35,9 @@ describe('Error Types', function() {
 					try {
 						throw new CustomError({}, obj);
 					} catch (e) {
-						assert(typeof e.id === 'undefined', 'error_id');
-						assert(typeof e.code === 'undefined', 'error_code');
-						assert.equal(null, e.description, 'error_description');
+						expect(typeof e.id === 'undefined').toBe(true);
+						expect(typeof e.code === 'undefined').toBe(true);
+						expect(e.description).toBeNull();
 					}
 				}
 
@@ -63,10 +62,10 @@ describe('Error Types', function() {
 			};
 
 			function assertErrorInfo(e) {
-				assert.equal('xyz', e.id);
-				assert.equal('m-n-o-p', e.code);
-				assert.equal('something', e.message);
-				assert.equal('stuff happens', e.description);
+				expect('xyz').toBe(e.id);
+				expect('m-n-o-p').toBe(e.code);
+				expect('something').toBe(e.message);
+				expect('stuff happens').toBe(e.description);
 			}
 
 			it('should accept just object as error data', function() {
@@ -124,7 +123,7 @@ describe('Error Types', function() {
 				try {
 					throw new CustomError({}, msg);
 				} catch (e) {
-					assert.equal(msg, e.message);
+					expect(msg).toBe(e.message);
 				}
 			});
 		});
@@ -134,7 +133,7 @@ describe('Error Types', function() {
 	describe('buildError', function() {
 
 		it('should build ApiError by default', function() {
-			assert(AnxApi.buildError() instanceof AnxApi.ApiError);
+			expect(AnxApi.buildError()).toBeInstanceOf(AnxApi.ApiError);
 		});
 
 		it('should detect legacy RateLimitExceededError pre 1.17', function() {
@@ -142,7 +141,7 @@ describe('Error Types', function() {
 				error_id: 'SYSTEM',
 				error_code: 'RATE_EXCEEDED',
 			}}});
-			assert(err instanceof AnxApi.RateLimitExceededError);
+			expect(err).toBeInstanceOf(AnxApi.RateLimitExceededError);
 		});
 
 		[{
@@ -173,7 +172,7 @@ describe('Error Types', function() {
 		].forEach(function(errorSpec) {
 			it('should build ' + errorSpec.name, function() {
 				function check(err) {
-					assert(err instanceof errorSpec.errorType);
+					expect(err).toBeInstanceOf(errorSpec.errorType);
 				}
 				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode }));
 				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: undefined }));

@@ -1,6 +1,5 @@
 /* eslint func-names: 0, padded-blocks: 0 */
 var _ = require('lodash');
-var assert = require('assert');
 
 var axiosAdapter = require('./axiosAdapter');
 var axios = require('axios');
@@ -10,6 +9,8 @@ describe('Axios Adapter', function() {
 	it('should make correct axios request');
 
 	it('should transform axios response', function() {
+
+		expect.assertions(2);
 
 		axios.resolvesOnce({
 			status: 200,
@@ -30,18 +31,20 @@ describe('Axios Adapter', function() {
 
 
 		return axiosAdapter({})(opts).then(function(res) {
-			assert.deepEqual(_.omit(res, 'requestTime'), {
+			expect(_.omit(res, 'requestTime')).toEqual({
 				statusCode: 200,
 				headers: { someHeader: 1 },
 				body: { response: {} },
 			});
-			assert(_.isNumber(res.requestTime), 'has requestTime as number');
+			expect(_.isNumber(res.requestTime)).toBe(true);
 			return null;
 		});
 
 	});
 
 	it('should handle axios error response', function() {
+
+		expect.assertions(4);
 
 		axios.resolvesOnce({
 			status: 401,
