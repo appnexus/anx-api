@@ -1,12 +1,12 @@
 /* eslint func-names: 0, padded-blocks: 0 */
-var nock = require('nock');
+let nock = require('nock');
 
-var AnxApi = require('./api');
+let AnxApi = require('./api');
 
 describe('Error Types', () => {
 
 	['ApiError', 'NotAuthenticatedError', 'NotAuthorizedError', 'TargetError'].forEach(function(errorName) {
-		var CustomError = AnxApi[errorName];
+		let CustomError = AnxApi[errorName];
 
 		function assertAnxError(e) {
 			expect(e).toBeInstanceOf(Error);
@@ -54,7 +54,7 @@ describe('Error Types', () => {
 				check({ body: { response: { error_id: undefined } } });
 			});
 
-			var response = {
+			let response = {
 				error_id: 'xyz',
 				error_code: 'm-n-o-p',
 				error: 'something',
@@ -69,7 +69,7 @@ describe('Error Types', () => {
 			}
 
 			it('should accept just object as error data', () => {
-				var obj = response;
+				let obj = response;
 				try {
 					throw new CustomError({}, obj);
 				} catch (e) {
@@ -78,8 +78,8 @@ describe('Error Types', () => {
 			});
 
 			it('should accept body as error data', () => {
-				var obj = {
-					response: response,
+				let obj = {
+					response,
 				};
 				try {
 					throw new CustomError({}, obj);
@@ -89,9 +89,9 @@ describe('Error Types', () => {
 			});
 
 			it('should accept raw api json as error data', () => {
-				var obj = {
+				let obj = {
 					body: {
-						response: response,
+						response,
 					},
 				};
 				try {
@@ -101,9 +101,8 @@ describe('Error Types', () => {
 				}
 			});
 
-
 			it('should accept simple object as error data', () => {
-				var obj = {
+				let obj = {
 					id: response.error_id,
 					code: response.error_code,
 					message: response.error,
@@ -117,7 +116,7 @@ describe('Error Types', () => {
 			});
 
 			it('should accept json response as error message', () => {
-				var msg = {
+				let msg = {
 					a: 1,
 				};
 				try {
@@ -137,7 +136,7 @@ describe('Error Types', () => {
 		});
 
 		it('should detect legacy RateLimitExceededError pre 1.17', () => {
-			var err = AnxApi.buildError({}, { statusCode: 405, body: { response: {
+			let err = AnxApi.buildError({}, { statusCode: 405, body: { response: {
 				error_id: 'SYSTEM',
 				error_code: 'RATE_EXCEEDED',
 			}}});
@@ -190,7 +189,7 @@ describe('Error Types', () => {
 	describe('Network Errors', () => {
 
 		it('Should handle dns lookup errors', () => {
-			var api = new AnxApi({
+			let api = new AnxApi({
 				target: 'http://.com',
 				rateLimiting: false,
 			});
@@ -206,7 +205,7 @@ describe('Error Types', () => {
 		it('Should handle software timeouts', () => {
 			nock('http://api.example.com').get('/timeout').delayConnection(2000).reply(200);
 
-			var api = new AnxApi({
+			let api = new AnxApi({
 				target: 'http://api.example.com',
 				timeout: 500,
 				rateLimiting: false,

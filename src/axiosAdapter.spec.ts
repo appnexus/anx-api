@@ -1,8 +1,8 @@
 /* eslint func-names: 0, padded-blocks: 0 */
-var _ = require('lodash');
+let _ = require('lodash');
 
-var axiosAdapter = require('./axiosAdapter');
-var axios = require('axios');
+let axiosAdapter = require('./axiosAdapter');
+let axios = require('axios');
 
 describe('Axios Adapter', () => {
 
@@ -18,7 +18,7 @@ describe('Axios Adapter', () => {
 			data: { response: {} },
 		});
 
-		var opts = {
+		let opts = {
 			headers: {
 				'X-Proxy-Target': 'http://01-thorondor-hbapi-sor.envnxs.net',
 				Authorization: 'hbapi:191561:57a21e5581e67:lax1',
@@ -28,7 +28,6 @@ describe('Axios Adapter', () => {
 			params: {},
 			uri: '/api/access-resource?num_elements=1000',
 		};
-
 
 		return axiosAdapter({})(opts).then(function(res) {
 			expect(_.omit(res, 'requestTime')).toEqual({
@@ -52,7 +51,7 @@ describe('Axios Adapter', () => {
 			data: { response: {} },
 		});
 
-		var opts = {
+		let opts = {
 			headers: {
 				'X-Proxy-Target': 'http://01-thorondor-hbapi-sor.envnxs.net',
 				Authorization: 'hbapi:191561:57a21e5581e67:lax1',

@@ -1,13 +1,13 @@
 /* eslint func-names: 0, padded-blocks: 0 */
-var axios = require('axios');
+let axios = require('axios');
 
-var AnxApi = require('./api');
+let AnxApi = require('./api');
 
 describe('Rate Limit Adapter', () => {
 
-	var onRateLimitExceededStub;
-	var onRateLimitPauseStub;
-	var onRateLimitResumeStub;
+	let onRateLimitExceededStub;
+	let onRateLimitPauseStub;
+	let onRateLimitResumeStub;
 
 	beforeAll(() => {
 		onRateLimitExceededStub = jest.fn();
@@ -38,7 +38,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		var api = new AnxApi({
+		let api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			onRateLimitExceeded: onRateLimitExceededStub,
@@ -69,7 +69,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		var api = new AnxApi({
+		let api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			onRateLimitExceeded: onRateLimitExceededStub,
@@ -103,7 +103,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		var api = new AnxApi({
+		let api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitReadSeconds: 1,
@@ -141,7 +141,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		var api = new AnxApi({
+		let api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitReadSeconds: 2,
@@ -179,7 +179,7 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		var api = new AnxApi({
+		let api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitRead: 1,

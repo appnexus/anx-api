@@ -1,11 +1,11 @@
-import _ from 'lodash';
 import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
+import _ from 'lodash';
 
 module.exports = function requestAdaptor(config) {
 	return function(opts) {
-		var url = opts.uri;
-		var axiosOpts = {
+		let url = opts.uri;
+		let axiosOpts = {
 			timeout: opts.timeout,
 			method: opts.method.toLowerCase(),
 			headers: opts.headers,
@@ -19,7 +19,7 @@ module.exports = function requestAdaptor(config) {
 			axiosOpts.data = opts.body;
 		}
 
-		var startTime = new Date().getTime();
+		let startTime = new Date().getTime();
 
 		return axios(url, axiosOpts, opts.body).then(function requestSuccess(res) {
 			return {

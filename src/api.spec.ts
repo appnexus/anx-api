@@ -1,16 +1,16 @@
 /* eslint func-names: 0, padded-blocks: 0 */
 
-var _ = require('lodash');
+let _ = require('lodash');
 
-var AnxApi = require('./api');
+let AnxApi = require('./api');
 
 describe('AnxApi', () => {
 
 	describe('Request', () => {
 
 		describe('config', () => {
-			var opts;
-			var res;
+			let opts;
+			let res;
 
 			describe('with valid config', () => {
 
@@ -18,19 +18,19 @@ describe('AnxApi', () => {
 					opts = null;
 					res = null;
 
-					var api = new AnxApi({
+					let api = new AnxApi({
 						target: 'http://example.com',
 						token: 'MySessionToken',
 						userAgent: 'MyAgent',
 						rateLimiting: false,
-						request: function(o) {
+						request(o) {
 							opts = o;
 							return Promise.resolve({ testKey: 'testValue' });
 						},
-						beforeRequest: function(reqOpts) {
+						beforeRequest(reqOpts) {
 							return _.assign({}, reqOpts, { body: 'test' });
 						},
-						afterRequest: function(reqRes) {
+						afterRequest(reqRes) {
 							return _.assign({}, reqRes, { afterRequest: 'value' });
 						},
 					});
@@ -74,7 +74,7 @@ describe('AnxApi', () => {
 			describe('with invalid config', () => {
 
 				it('should throw on missing target', function(done) {
-					var api = new AnxApi({
+					let api = new AnxApi({
 						rateLimiting: false,
 					});
 
@@ -89,17 +89,17 @@ describe('AnxApi', () => {
 		});
 
 		describe('Options', () => {
-			var opts;
-			var get;
+			let opts;
+			let get;
 
 			describe('with encodeParams defaulted to false', () => {
 
 				beforeEach(() => {
 					opts = null;
-					var api = new AnxApi({
+					let api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
-						request: function(o) {
+						request(o) {
 							opts = o;
 							return Promise.resolve({});
 						},
@@ -181,10 +181,10 @@ describe('AnxApi', () => {
 
 				beforeEach(function(done) {
 					opts = null;
-					var api = new AnxApi({
+					let api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
-						request: function(o) {
+						request(o) {
 							opts = o;
 							done();
 						},
@@ -208,17 +208,17 @@ describe('AnxApi', () => {
 			});
 
 			describe('validation', () => {
-				var api;
-				var reqOpts;
+				let api;
+				let reqOpts;
 
 				beforeEach(() => {
 					api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
-						request: function(o) {
+						request(o) {
 							reqOpts = o;
 							return {
-								then: function(callback) {
+								then(callback) {
 									callback({});
 								},
 							};
@@ -267,7 +267,7 @@ describe('AnxApi', () => {
 				}, function(tests, param) {
 					describe(param, () => {
 						tests.forEach(function(test) {
-							var newOpts = {};
+							let newOpts = {};
 							if (param !== 'uri') {
 								newOpts.uri = '/user';
 							}
@@ -295,7 +295,7 @@ describe('AnxApi', () => {
 			describe('Errors', () => {
 
 				describe('NotAuthenticatedError', () => {
-					var api;
+					let api;
 
 					beforeEach(() => {
 						api = new AnxApi({
@@ -304,7 +304,7 @@ describe('AnxApi', () => {
 							rateLimiting: false,
 							request: () => {
 								return {
-									then: function(callback) {
+									then(callback) {
 										callback({
 											statusCode: 401,
 										});
@@ -336,13 +336,13 @@ describe('AnxApi', () => {
 	describe('#request', () => {
 
 		describe('opts.headers', () => {
-			var api;
+			let api;
 
 			beforeEach(() => {
 				api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
-					request: function(opts) {
+					request(opts) {
 						return Promise.resolve(opts);
 					},
 				});
@@ -425,7 +425,7 @@ describe('AnxApi', () => {
 				const api = new AnxApi({
 					target: 'http://example.com/route',
 					rateLimiting: false,
-					request: function(opts) {
+					request(opts) {
 						return Promise.resolve(opts);
 					},
 				});
@@ -439,7 +439,7 @@ describe('AnxApi', () => {
 				const api = new AnxApi({
 					target: 'http://example.com/route/',
 					rateLimiting: false,
-					request: function(opts) {
+					request(opts) {
 						return Promise.resolve(opts);
 					},
 				});
@@ -453,7 +453,7 @@ describe('AnxApi', () => {
 				const api = new AnxApi({
 					target: 'http://example.com/route',
 					rateLimiting: false,
-					request: function(opts) {
+					request(opts) {
 						return Promise.resolve(opts);
 					},
 				});
@@ -468,14 +468,14 @@ describe('AnxApi', () => {
 	describe('#get', () => {
 
 		describe('opts', () => {
-			var opts;
+			let opts;
 
 			beforeEach(function(done) {
 				opts = null;
-				var api = new AnxApi({
+				let api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
-					request: function(o) {
+					request(o) {
 						opts = o;
 						done();
 					},
@@ -496,8 +496,8 @@ describe('AnxApi', () => {
 	});
 
 	describe('#getAll', () => {
-		var api;
-		var requestStub;
+		let api;
+		let requestStub;
 
 		beforeEach(() => {
 			requestStub = jest.fn();
@@ -541,13 +541,13 @@ describe('AnxApi', () => {
 	describe('#post', () => {
 
 		describe('opts', () => {
-			var opts;
+			let opts;
 
 			beforeEach(function(done) {
-				var api = new AnxApi({
+				let api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
-					request: function(o) {
+					request(o) {
 						opts = o;
 						done();
 					},
@@ -574,13 +574,13 @@ describe('AnxApi', () => {
 	describe('#put', () => {
 
 		describe('opts', () => {
-			var opts;
+			let opts;
 
 			beforeEach(function(done) {
-				var api = new AnxApi({
+				let api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
-					request: function(o) {
+					request(o) {
 						opts = o;
 						done();
 					},
@@ -607,13 +607,13 @@ describe('AnxApi', () => {
 	describe('#delete', () => {
 
 		describe('opts', () => {
-			var opts;
+			let opts;
 
 			beforeEach(function(done) {
-				var api = new AnxApi({
+				let api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
-					request: function(o) {
+					request(o) {
 						opts = o;
 						done();
 					},
@@ -656,7 +656,7 @@ describe('AnxApi', () => {
 	describe('#login', () => {
 
 		function buildApi(responseData) {
-			var api = new AnxApi({
+			let api = new AnxApi({
 				// target: 'http://example.com',
 				target: 'https://sand.api.appnexus.com',
 				userAgent: 'MyAgent',
@@ -671,7 +671,7 @@ describe('AnxApi', () => {
 		}
 
 		it('should reject with NotAuthenticatedError if status is not ok', () => {
-			var api = buildApi({
+			let api = buildApi({
 				statusCode: 200, // 200 instead of 401 because thats what the service responds with
 				body: {
 					response: {
@@ -697,7 +697,7 @@ describe('AnxApi', () => {
 		});
 
 		it('should login give api auth token', () => {
-			var api = buildApi({
+			let api = buildApi({
 				statusCode: 200,
 				body: {
 					response: {
@@ -714,8 +714,8 @@ describe('AnxApi', () => {
 	});
 
 	describe('#switchUser', () => {
-		var api;
-		var requestStub;
+		let api;
+		let requestStub;
 
 		beforeEach(() => {
 			requestStub = jest.fn();

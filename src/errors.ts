@@ -10,11 +10,11 @@ function ApiError(req, res) {
 	this.name = 'ApiError';
 	this.defaultMessage = this.defaultMessage || '';
 
-	var id;
-	var code;
-	var message;
-	var description;
-	var response;
+	let id;
+	let code;
+	let message;
+	let description;
+	let response;
 
 	if (_.isObject(res)) {
 		// Traverse through general API JSON Response
@@ -158,12 +158,12 @@ util.inherits(ConnectionRefusedError, NetworkError);
 // Build error from root response
 // https://wiki.appnexus.com/display/adnexusdocumentation/API+Semantics#APISemantics-Errors
 function buildError(req, res) {
-	var ErrorType = ApiError;
+	let ErrorType = ApiError;
 
 	if (res) {
-		var statusCode;
-		var errorId;
-		var errorCode;
+		let statusCode;
+		let errorId;
+		let errorCode;
 
 		if (res instanceof Error || res.errno) {
 			if (res.code === 'ENOTFOUND') {
@@ -220,20 +220,20 @@ function buildError(req, res) {
 }
 
 module.exports = {
-	NetworkError: NetworkError,
-	ArgumentError: ArgumentError,
-	ApiError: ApiError,
-	DNSLookupError: DNSLookupError,
-	NotAuthorizedError: NotAuthorizedError,
-	NotAuthenticatedError: NotAuthenticatedError,
-	RateLimitExceededError: RateLimitExceededError,
-	SystemServiceUnavailableError: SystemServiceUnavailableError,
-	SystemUnknownError: SystemUnknownError,
-	TargetError: TargetError,
-	ConnectionAbortedError: ConnectionAbortedError,
-	SocketTimeoutError: SocketTimeoutError,
-	ConnectionTimeoutError: ConnectionTimeoutError,
-	ConnectionResetError: ConnectionResetError,
-	ConnectionRefusedError: ConnectionRefusedError,
-	buildError: buildError,
+	NetworkError,
+	ArgumentError,
+	ApiError,
+	DNSLookupError,
+	NotAuthorizedError,
+	NotAuthenticatedError,
+	RateLimitExceededError,
+	SystemServiceUnavailableError,
+	SystemUnknownError,
+	TargetError,
+	ConnectionAbortedError,
+	SocketTimeoutError,
+	ConnectionTimeoutError,
+	ConnectionResetError,
+	ConnectionRefusedError,
+	buildError,
 };

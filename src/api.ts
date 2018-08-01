@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import query from 'qs';
 import urljoin from 'url-join';
-import errors from './errors';
 import packageJson from '../package.json';
 import axiosAdapter from './axiosAdapter';
-import rateLimitAdapter from './rateLimitAdapter';
 import concurrencyAdapter from './concurrencyAdapter';
+import errors from './errors';
+import rateLimitAdapter from './rateLimitAdapter';
 
-var DEFAULT_CHUNK_SIZE = 100;
+let DEFAULT_CHUNK_SIZE = 100;
 
 function _hasValue(value) {
 	return !(_.isNull(value) || _.isUndefined(value));
@@ -18,7 +18,7 @@ function _isInteger(value) {
 }
 
 function _normalizeOpts(opts, extendOpts) {
-	var newOpts = _.isString(opts) ? {
+	let newOpts = _.isString(opts) ? {
 		uri: opts,
 	} : opts || {};
 	return _.assign({}, newOpts, extendOpts);
@@ -29,10 +29,10 @@ function _statusOk(body) {
 }
 
 function __request(opts) {
-	var _self = this;
+	let _self = this;
 	return new Promise(function requestPromise(resolve, reject) {
-		var params;
-		var startTime = new Date().getTime();
+		let params;
+		let startTime = new Date().getTime();
 
 		if (_.isEmpty(_self._config.target)) {
 			return reject(new errors.TargetError(opts, 'Target not set'));
@@ -47,7 +47,7 @@ function __request(opts) {
 		});
 
 		// Configure Options
-		var reqOpts = _.assign({}, {
+		let reqOpts = _.assign({}, {
 			rejectUnauthorized: false,
 			headers: _.assign({}, _self._config.headers),
 		});
@@ -102,22 +102,22 @@ function __request(opts) {
 		}
 
 		if (_self._config.beforeRequest) {
-			var beforeRequestOpts = _self._config.beforeRequest(reqOpts);
+			let beforeRequestOpts = _self._config.beforeRequest(reqOpts);
 			if (beforeRequestOpts) {
 				reqOpts = _.assign({}, reqOpts, beforeRequestOpts);
 			}
 		}
 
 		return _self._config.request(reqOpts).then(function success(res) {
-			var totalTime = new Date().getTime() - startTime;
+			let totalTime = new Date().getTime() - startTime;
 
-			var newRes = _.assign({
+			let newRes = _.assign({
 				requestTime: res.requestTime || totalTime,
 				totalTime: new Date().getTime() - startTime,
 			}, res);
 
 			if (_self._config.afterRequest) {
-				var afterRequestRes = _self._config.afterRequest(newRes);
+				let afterRequestRes = _self._config.afterRequest(newRes);
 				if (afterRequestRes) {
 					newRes = _.assign({}, newRes, afterRequestRes);
 				}
@@ -128,8 +128,8 @@ function __request(opts) {
 			}
 
 			// Temporary fix
-			var errorId;
-			var errorCode;
+			let errorId;
+			let errorCode;
 			if (newRes.body && newRes.body.response && newRes.body.response) {
 				errorId = newRes.body.response.error_id;
 				errorCode = newRes.body.response.error_code;
@@ -145,7 +145,7 @@ function __request(opts) {
 
 			return resolve(newRes);
 		}).catch(function failure(err) {
-			var newErr;
+			let newErr;
 			if (_self._config.afterRequest) {
 				newErr = _self._config.afterRequest(err);
 			}
@@ -186,7 +186,7 @@ function AnxApi(config) {
 _.assign(AnxApi, errors);
 
 AnxApi.prototype._request = function _request(method, opts, extendOpts, payload) {
-	var newOpts = _normalizeOpts(opts, extendOpts);
+	let newOpts = _normalizeOpts(opts, extendOpts);
 	newOpts.method = method || newOpts.method || 'GET';
 	if (payload) {
 		newOpts.body = payload;
@@ -203,14 +203,14 @@ AnxApi.prototype.get = function _get(opts, extendOpts) {
 };
 
 AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
-	var _self = this;
+	let _self = this;
 
 	return new Promise(function getAllPromise(resolve, reject) {
-		var newOpts = _normalizeOpts(opts, extendOpts);
-		var numElements = opts.numElements || 100;
-		var firstOutputTerm;
-		var elements = [];
-		var totalTime = 0;
+		let newOpts = _normalizeOpts(opts, extendOpts);
+		let numElements = opts.numElements || 100;
+		let firstOutputTerm;
+		let elements = [];
+		let totalTime = 0;
 
 		function getAll(startElement) {
 			newOpts.startElement = startElement;
@@ -220,9 +220,9 @@ AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
 				if (!AnxApi.statusOk(res.body)) {
 					return reject(res);
 				}
-				var response = res.body.response;
-				var count = response.count || 0;
-				var outputTerm = response.dbg_info.output_term;
+				let response = res.body.response;
+				let count = response.count || 0;
+				let outputTerm = response.dbg_info.output_term;
 				if (!firstOutputTerm) {
 					firstOutputTerm = outputTerm;
 				}
@@ -232,7 +232,7 @@ AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
 				totalTime += response.dbg_info.time || 0;
 				elements = elements.concat(response[outputTerm]);
 				if (count <= startElement + numElements) {
-					var newResponse = _.assign({}, {
+					let newResponse = _.assign({}, {
 						count: elements.length,
 						start_element: 0,
 						num_elements: elements.length,
@@ -265,11 +265,11 @@ AnxApi.prototype.delete = function _delete(opts, extendOpts) {
 };
 
 AnxApi.prototype.login = function _login(username, password) {
-	var _self = this;
-	var reqOpts = {
+	let _self = this;
+	let reqOpts = {
 		auth: {
-			username: username,
-			password: password,
+			username,
+			password,
 		},
 	};
 	return _self.post('/auth', reqOpts).then(function success(res) {
@@ -282,7 +282,7 @@ AnxApi.prototype.login = function _login(username, password) {
 };
 
 AnxApi.prototype.switchUser = function _switchUser(userId) {
-	var _self = this;
+	let _self = this;
 	return _self.post('/auth', {
 		auth: {
 			switch_to_user: userId,

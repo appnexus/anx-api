@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import errors from './errors';
 
-var DEFAULT_LIMIT = 60;
-var DEFAULT_LIMIT_SECONDS = 60;
-var DEFAULT_LIMIT_SECONDS_BUFFER = 1;
-var DEFAULT_LIMIT_COUNT_BUFFER = 4;
-var ONE_SECOND = 1000;
-var DEFAULT_RATE_LIMIT_TIMEOUT = DEFAULT_LIMIT_SECONDS * ONE_SECOND;
-var RETRY_AFTER_BUFFER_TIME = ONE_SECOND;
+let DEFAULT_LIMIT = 60;
+let DEFAULT_LIMIT_SECONDS = 60;
+let DEFAULT_LIMIT_SECONDS_BUFFER = 1;
+let DEFAULT_LIMIT_COUNT_BUFFER = 4;
+let ONE_SECOND = 1000;
+let DEFAULT_RATE_LIMIT_TIMEOUT = DEFAULT_LIMIT_SECONDS * ONE_SECOND;
+let RETRY_AFTER_BUFFER_TIME = ONE_SECOND;
 
 function RequestQueue(options) {
 	this.options = _.assign({
@@ -24,29 +24,29 @@ function RequestQueue(options) {
 }
 
 RequestQueue.prototype.enqueue = function _enqueue(opts) {
-	var _self = this;
+	let _self = this;
 	return new Promise(function queuedPromise(resolve, reject) {
 		_self.queue.push({
-			opts: opts,
-			resolve: resolve,
-			reject: reject,
+			opts,
+			resolve,
+			reject,
 		});
 		_self._processQueue();
 	});
 };
 
 RequestQueue.prototype.dequeue = function _dequeue() {
-	var _self = this;
+	let _self = this;
 	return _self.queue.shift();
 };
 
 RequestQueue.prototype.paused = function paused() {
-	var _self = this;
+	let _self = this;
 	return !!_self.timeoutId;
 };
 
 RequestQueue.prototype._processQueue = function _processQueue(retryAfter) {
-	var _self = this;
+	let _self = this;
 	if (_self.queue.length > 0) { // if items left to process
 		if (_self.limitCount < Math.max(_self.options.limit - DEFAULT_LIMIT_COUNT_BUFFER, 1)) { // if not over limit
 			_self.limitCount++;
@@ -60,9 +60,9 @@ RequestQueue.prototype._processQueue = function _processQueue(retryAfter) {
 };
 
 RequestQueue.prototype._schedule = function _schedule(retryAfter) {
-	var _self = this;
+	let _self = this;
 	if (!this.timeoutId) {
-		var delay = Math.max(retryAfter || (this.expires - Date.now()), 0);
+		let delay = Math.max(retryAfter || (this.expires - Date.now()), 0);
 		_self.timeoutId = setTimeout(function scheduleRun() {
 			_self._resetTimeout();
 			_self.limitCount = 0;
@@ -73,7 +73,7 @@ RequestQueue.prototype._schedule = function _schedule(retryAfter) {
 };
 
 RequestQueue.prototype._resetTimeout = function _resetTimeout() {
-	var _self = this;
+	let _self = this;
 	if (this.timeoutId) {
 		clearTimeout(_self.timeoutId);
 		_self.timeoutId = null;
@@ -82,7 +82,7 @@ RequestQueue.prototype._resetTimeout = function _resetTimeout() {
 };
 
 RequestQueue.prototype._execute = function _execute(reqInfo) {
-	var _self = this;
+	let _self = this;
 	return _self.options.request(reqInfo.opts).then(function success(res) {
 		_self._checkHeaders(res);
 		return reqInfo.resolve(res);
@@ -93,7 +93,7 @@ RequestQueue.prototype._execute = function _execute(reqInfo) {
 				// Abort retry due to missing retryAfter
 				return reqInfo.reject(err);
 			}
-			var retryAfter = err.retryAfter ? (err.retryAfter * ONE_SECOND) + RETRY_AFTER_BUFFER_TIME : DEFAULT_RATE_LIMIT_TIMEOUT;
+			let retryAfter = err.retryAfter ? (err.retryAfter * ONE_SECOND) + RETRY_AFTER_BUFFER_TIME : DEFAULT_RATE_LIMIT_TIMEOUT;
 			_self.limitCount = Infinity;
 			_self.queue.push(reqInfo);
 			_self._processQueue(retryAfter);
@@ -104,9 +104,9 @@ RequestQueue.prototype._execute = function _execute(reqInfo) {
 };
 
 RequestQueue.prototype._checkHeaders = function _checkHeaders(res) {
-	var _self = this;
+	let _self = this;
 	if (res.headers[_self.options.limitHeader]) {
-		var limit = parseInt(res.headers[_self.options.limitHeader], 10) || DEFAULT_LIMIT;
+		let limit = parseInt(res.headers[_self.options.limitHeader], 10) || DEFAULT_LIMIT;
 		if (limit !== _self.options.limit) {
 			_self.options.limit = limit;
 			_self._resetTimeout();
