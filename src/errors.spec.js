@@ -220,13 +220,13 @@ describe('Error Types', function() {
 			});
 		});
 
-		it('SocketTimeoutError');
+		it.skip('SocketTimeoutError', () => {});
 
-		it('ConnectionTimeoutError');
+		it.skip('ConnectionTimeoutError', () => {});
 
-		it('ConnectionResetError');
+		it.skip('ConnectionResetError', () => {});
 
-		it('ConnectionRefusedError');
+		it.skip('ConnectionRefusedError', () => {});
 
 	});
 
