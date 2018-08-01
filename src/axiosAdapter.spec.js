@@ -4,11 +4,11 @@ var _ = require('lodash');
 var axiosAdapter = require('./axiosAdapter');
 var axios = require('axios');
 
-describe('Axios Adapter', function() {
+describe('Axios Adapter', () => {
 
 	it.skip('should make correct axios request', () => {});
 
-	it('should transform axios response', function() {
+	it('should transform axios response', () => {
 
 		expect.assertions(2);
 
@@ -42,7 +42,7 @@ describe('Axios Adapter', function() {
 
 	});
 
-	it('should handle axios error response', function() {
+	it('should handle axios error response', () => {
 
 		expect.assertions(4);
 

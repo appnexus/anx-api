@@ -4,17 +4,17 @@ var _ = require('lodash');
 
 var AnxApi = require('./api');
 
-describe('AnxApi', function() {
+describe('AnxApi', () => {
 
-	describe('Request', function() {
+	describe('Request', () => {
 
-		describe('config', function() {
+		describe('config', () => {
 			var opts;
 			var res;
 
-			describe('with valid config', function() {
+			describe('with valid config', () => {
 
-				beforeEach(function() {
+				beforeEach(() => {
 					opts = null;
 					res = null;
 
@@ -41,37 +41,37 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('should use target', function() {
+				it('should use target', () => {
 					expect(_.includes(opts.uri, 'http://example.com/')).toBe(true);
 				});
 
-				it('should use token', function() {
+				it('should use token', () => {
 					expect(opts.headers.Authorization).toBe('MySessionToken');
 				});
 
-				it('should use User-Agent', function() {
+				it('should use User-Agent', () => {
 					expect(opts.headers['User-Agent']).toBe('MyAgent');
 				});
 
-				it('should use beforeRequest function', function() {
+				it('should use beforeRequest function', () => {
 					expect(opts.body).toBe('test');
 				});
 
-				it('should use afterRequest function', function() {
+				it('should use afterRequest function', () => {
 					expect(res.afterRequest).toBe('value');
 				});
 
-				it('should default request timeout', function() {
+				it('should default request timeout', () => {
 					expect(opts.timeout).toBe(60000);
 				});
 
-				it('should attach original request options to the response', function() {
+				it('should attach original request options to the response', () => {
 					expect(res.req).toEqual(opts);
 				});
 
 			});
 
-			describe('with invalid config', function() {
+			describe('with invalid config', () => {
 
 				it('should throw on missing target', function(done) {
 					var api = new AnxApi({
@@ -88,13 +88,13 @@ describe('AnxApi', function() {
 
 		});
 
-		describe('Options', function() {
+		describe('Options', () => {
 			var opts;
 			var get;
 
-			describe('with encodeParams defaulted to false', function() {
+			describe('with encodeParams defaulted to false', () => {
 
-				beforeEach(function() {
+				beforeEach(() => {
 					opts = null;
 					var api = new AnxApi({
 						target: 'http://example.com',
@@ -127,7 +127,7 @@ describe('AnxApi', function() {
 					return get;
 				});
 
-				it('uri should contain start_element', function() {
+				it('uri should contain start_element', () => {
 					expect.assertions(1);
 					return get.then(() => {
 						expect(_.includes(opts.uri, 'start_element=100')).toBe(true);
@@ -135,7 +135,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('uri should contain num_elements', function() {
+				it('uri should contain num_elements', () => {
 					expect.assertions(1);
 					return get.then(() => {
 						expect(_.includes(opts.uri, 'num_elements=25')).toBe(true);
@@ -143,7 +143,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('uri should contain params', function() {
+				it('uri should contain params', () => {
 					expect.assertions(1);
 					return get.then(() => {
 						expect(_.includes(opts.uri, 'myParam=value')).toBe(true);
@@ -151,7 +151,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('uri should convert standard nested array params', function() {
+				it('uri should convert standard nested array params', () => {
 					expect.assertions(1);
 					return get.then(() => {
 						expect(_.includes(opts.uri, 'myStdArray[0]=1&myStdArray[1]=2&myStdArray[2]=3')).toBe(true);
@@ -159,7 +159,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('uri should convert nested object array params', function() {
+				it('uri should convert nested object array params', () => {
 					expect.assertions(1);
 					return get.then(() => {
 						expect(_.includes(opts.uri, 'myObjArray[0][a]=apple&myObjArray[1][b]=bee')).toBe(true);
@@ -167,7 +167,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('should default request timeout', function() {
+				it('should default request timeout', () => {
 					expect.assertions(1);
 					return get.then(() => {
 						expect(opts.timeout).toBe(5000);
@@ -177,7 +177,7 @@ describe('AnxApi', function() {
 
 			});
 
-			describe('with encodeParams true', function() {
+			describe('with encodeParams true', () => {
 
 				beforeEach(function(done) {
 					opts = null;
@@ -201,17 +201,17 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('uri should encode params', function() {
+				it('uri should encode params', () => {
 					expect(_.includes(opts.uri, 'myEncodedString=%25ssp')).toBe(true);
 				});
 
 			});
 
-			describe('validation', function() {
+			describe('validation', () => {
 				var api;
 				var reqOpts;
 
-				beforeEach(function() {
+				beforeEach(() => {
 					api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
@@ -227,7 +227,7 @@ describe('AnxApi', function() {
 				});
 
 				function expectValidationError(errOpts, expected, done) {
-					api.request(errOpts).then(function() {
+					api.request(errOpts).then(() => {
 						return done(new Error('Expected error: ' + expected));
 					}).catch(function(err) {
 						expect(err).toBeInstanceOf(AnxApi.ArgumentError);
@@ -265,7 +265,7 @@ describe('AnxApi', function() {
 						{ value: 'ZZZ', message: 'Invalid numElements' },
 					],
 				}, function(tests, param) {
-					describe(param, function() {
+					describe(param, () => {
 						tests.forEach(function(test) {
 							var newOpts = {};
 							if (param !== 'uri') {
@@ -277,8 +277,8 @@ describe('AnxApi', function() {
 									expectValidationError(newOpts, test.message, done);
 								});
 							} else {
-								it(param + ' should accept ' + test.value, function() {
-									return api.request(newOpts).then(function() {
+								it(param + ' should accept ' + test.value, () => {
+									return api.request(newOpts).then(() => {
 										if (test.uriContains) {
 											expect(_.includes(reqOpts.uri, test.uriContains)).toBe(true);
 										}
@@ -292,17 +292,17 @@ describe('AnxApi', function() {
 
 			});
 
-			describe('Errors', function() {
+			describe('Errors', () => {
 
-				describe('NotAuthenticatedError', function() {
+				describe('NotAuthenticatedError', () => {
 					var api;
 
-					beforeEach(function() {
+					beforeEach(() => {
 						api = new AnxApi({
 							target: 'http://example.com',
 							userAgent: 'MyAgent',
 							rateLimiting: false,
-							request: function() {
+							request: () => {
 								return {
 									then: function(callback) {
 										callback({
@@ -315,7 +315,7 @@ describe('AnxApi', function() {
 					});
 
 					it('should reject with NotAuthenticatedError', function(done) {
-						api.get('user').then(function() {
+						api.get('user').then(() => {
 							return done(new Error('Did not catch 401'));
 						}).catch(function(err) {
 							if (!(err instanceof AnxApi.NotAuthenticatedError)) {
@@ -333,12 +333,12 @@ describe('AnxApi', function() {
 
 	});
 
-	describe('#request', function() {
+	describe('#request', () => {
 
-		describe('opts.headers', function() {
+		describe('opts.headers', () => {
 			var api;
 
-			beforeEach(function() {
+			beforeEach(() => {
 				api = new AnxApi({
 					target: 'http://example.com',
 					rateLimiting: false,
@@ -348,9 +348,9 @@ describe('AnxApi', function() {
 				});
 			});
 
-			describe('json default', function() {
+			describe('json default', () => {
 
-				it('should set up GET request for json', function() {
+				it('should set up GET request for json', () => {
 					expect.assertions(2);
 					return api.request({}).then(function(opts) {
 						expect(opts.headers.Accept).toBe('application/json');
@@ -359,7 +359,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('should set up POST request for json', function() {
+				it('should set up POST request for json', () => {
 					expect.assertions(2);
 					return api.request({ method: 'POST' }).then(function(opts) {
 						expect(opts.headers.Accept).toBe('application/json');
@@ -368,7 +368,7 @@ describe('AnxApi', function() {
 					});
 				});
 
-				it('should set up PUT request for json', function() {
+				it('should set up PUT request for json', () => {
 					expect.assertions(2);
 					return api.request({ method: 'PUT' }).then(function(opts) {
 						expect(opts.headers.Accept).toBe('application/json');
@@ -377,8 +377,8 @@ describe('AnxApi', function() {
 					});
 				});
 
-				describe('header overrides', function() {
-					it('should allow overriding Accept', function() {
+				describe('header overrides', () => {
+					it('should allow overriding Accept', () => {
 						expect.assertions(2);
 						return api.request({ method: 'DELETE' }).then(function(opts) {
 							expect(opts.headers.Accept).toBe('application/json');
@@ -387,7 +387,7 @@ describe('AnxApi', function() {
 						});
 					});
 
-					it('should allow overriding Content-Type', function() {
+					it('should allow overriding Content-Type', () => {
 						expect.assertions(2);
 						return api.request({ method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(function(opts) {
 							expect(opts.headers.Accept).toBe('application/json');
@@ -399,7 +399,7 @@ describe('AnxApi', function() {
 
 			});
 
-			it('should allow overriding json accept type', function() {
+			it('should allow overriding json accept type', () => {
 				expect.assertions(2);
 				return api.request({ method: 'POST', headers: { Accept: 'text/csv', 'Content-Type': 'text/csv' }}).then(function(opts) {
 					expect(opts.headers.Accept).toBe('text/csv', 'bad or missing Accept');
@@ -408,7 +408,7 @@ describe('AnxApi', function() {
 				});
 			});
 
-			it('should allow setting Accept and Content-Type with mimeType option', function() {
+			it('should allow setting Accept and Content-Type with mimeType option', () => {
 				expect.assertions(2);
 				return api.request({ method: 'POST', mimeType: 'text/csv' }).then(function(opts) {
 					expect(opts.headers.Accept).toBe('text/csv', 'bad or missing Accept');
@@ -465,9 +465,9 @@ describe('AnxApi', function() {
 		});
 	});
 
-	describe('#get', function() {
+	describe('#get', () => {
 
-		describe('opts', function() {
+		describe('opts', () => {
 			var opts;
 
 			beforeEach(function(done) {
@@ -483,11 +483,11 @@ describe('AnxApi', function() {
 				api.get('user').catch((error) => error);
 			});
 
-			it('method should be GET', function() {
+			it('method should be GET', () => {
 				expect(opts.method).toBe('GET');
 			});
 
-			it('should use string path', function() {
+			it('should use string path', () => {
 				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
@@ -495,11 +495,11 @@ describe('AnxApi', function() {
 
 	});
 
-	describe('#getAll', function() {
+	describe('#getAll', () => {
 		var api;
 		var requestStub;
 
-		beforeEach(function() {
+		beforeEach(() => {
 			requestStub = jest.fn();
 			api = new AnxApi({
 				target: 'http://example.com',
@@ -508,7 +508,7 @@ describe('AnxApi', function() {
 			});
 		});
 
-		it('should ', function() {
+		it('should ', () => {
 			requestStub.mockReturnValueOnce(Promise.resolve({ body: { response: { status: 'OK', count: 3, num_elements: 2, users: [{ id: 1 }, { id: 2 }], dbg_info: { output_term: 'users' } } } }));
 			requestStub.mockReturnValueOnce(Promise.resolve({ body: { response: { status: 'OK', count: 3, num_elements: 2, user: { id: 3 }, dbg_info: { output_term: 'user' } } } }));
 			return api.getAll('user').then(function(res) {
@@ -538,9 +538,9 @@ describe('AnxApi', function() {
 
 	});
 
-	describe('#post', function() {
+	describe('#post', () => {
 
-		describe('opts', function() {
+		describe('opts', () => {
 			var opts;
 
 			beforeEach(function(done) {
@@ -555,15 +555,15 @@ describe('AnxApi', function() {
 				api.post('user', { name: 'MyName' }).catch((error) => error);
 			});
 
-			it('method should be POST', function() {
+			it('method should be POST', () => {
 				expect(opts.method).toBe('POST');
 			});
 
-			it('should use string path', function() {
+			it('should use string path', () => {
 				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
-			it('should place the payload into the post body', function() {
+			it('should place the payload into the post body', () => {
 				expect(opts.body).toEqual({ name: 'MyName' });
 			});
 
@@ -571,9 +571,9 @@ describe('AnxApi', function() {
 
 	});
 
-	describe('#put', function() {
+	describe('#put', () => {
 
-		describe('opts', function() {
+		describe('opts', () => {
 			var opts;
 
 			beforeEach(function(done) {
@@ -588,15 +588,15 @@ describe('AnxApi', function() {
 				api.put('user', { name: 'MyName' }).catch((error) => error);
 			});
 
-			it('method should be PUT', function() {
+			it('method should be PUT', () => {
 				expect(opts.method).toBe('PUT');
 			});
 
-			it('should use string path', function() {
+			it('should use string path', () => {
 				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
-			it('should place the payload into the put body', function() {
+			it('should place the payload into the put body', () => {
 				expect(opts.body).toEqual({ name: 'MyName' });
 			});
 
@@ -604,9 +604,9 @@ describe('AnxApi', function() {
 
 	});
 
-	describe('#delete', function() {
+	describe('#delete', () => {
 
-		describe('opts', function() {
+		describe('opts', () => {
 			var opts;
 
 			beforeEach(function(done) {
@@ -621,11 +621,11 @@ describe('AnxApi', function() {
 				api.delete('user?id=1').catch((error) => error);
 			});
 
-			it('method should be DELETE', function() {
+			it('method should be DELETE', () => {
 				expect(opts.method).toBe('DELETE');
 			});
 
-			it('should use string path', function() {
+			it('should use string path', () => {
 				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
 
@@ -633,27 +633,27 @@ describe('AnxApi', function() {
 
 	});
 
-	describe('#statusOk', function() {
+	describe('#statusOk', () => {
 
-		it('should return true when status is OK', function() {
+		it('should return true when status is OK', () => {
 			expect(AnxApi.statusOk({ response: { status: 'OK' } })).toBe(true);
 		});
 
-		it('should return false when status is not OK', function() {
+		it('should return false when status is not OK', () => {
 			expect(AnxApi.statusOk({ response: { status: '' } })).toBe(false);
 		});
 
-		it('should return false with no status field', function() {
+		it('should return false with no status field', () => {
 			expect(AnxApi.statusOk({ response: {} })).toBe(false);
 		});
 
-		it('should return false with no response field', function() {
+		it('should return false with no response field', () => {
 			expect(AnxApi.statusOk({})).toBe(false);
 		});
 
 	});
 
-	describe('#login', function() {
+	describe('#login', () => {
 
 		function buildApi(responseData) {
 			var api = new AnxApi({
@@ -661,7 +661,7 @@ describe('AnxApi', function() {
 				target: 'https://sand.api.appnexus.com',
 				userAgent: 'MyAgent',
 				rateLimiting: false,
-				request: function() {
+				request: () => {
 					return new Promise(function(resolve) {
 						resolve(responseData);
 					});
@@ -670,7 +670,7 @@ describe('AnxApi', function() {
 			return api;
 		}
 
-		it('should reject with NotAuthenticatedError if status is not ok', function() {
+		it('should reject with NotAuthenticatedError if status is not ok', () => {
 			var api = buildApi({
 				statusCode: 200, // 200 instead of 401 because thats what the service responds with
 				body: {
@@ -684,7 +684,7 @@ describe('AnxApi', function() {
 					},
 				},
 			});
-			return api.login('test_user', 'bad_password').then(function() {
+			return api.login('test_user', 'bad_password').then(() => {
 				throw new Error('Did not catch Login Error');
 			}).catch(function(err) {
 				// API treats bad apssword as Authentication instead of Authorization Error.
@@ -696,7 +696,7 @@ describe('AnxApi', function() {
 			});
 		});
 
-		it('should login give api auth token', function() {
+		it('should login give api auth token', () => {
 			var api = buildApi({
 				statusCode: 200,
 				body: {
@@ -713,11 +713,11 @@ describe('AnxApi', function() {
 		});
 	});
 
-	describe('#switchUser', function() {
+	describe('#switchUser', () => {
 		var api;
 		var requestStub;
 
-		beforeEach(function() {
+		beforeEach(() => {
 			requestStub = jest.fn();
 			api = new AnxApi({
 				target: 'http://example.com',
@@ -726,9 +726,9 @@ describe('AnxApi', function() {
 			});
 		});
 
-		it('should post to /auth', function() {
+		it('should post to /auth', () => {
 			requestStub.mockReturnValueOnce(Promise.resolve({}));
-			return api.switchUser(1234).then(function() {
+			return api.switchUser(1234).then(() => {
 				expect(requestStub.mock.calls[0][0].method).toBe('POST');
 				expect(requestStub.mock.calls[0][0].uri).toBe('http://example.com/auth');
 				expect(requestStub.mock.calls[0][0].body).toEqual({ auth: { switch_to_user: 1234 }});

@@ -3,7 +3,7 @@ var nock = require('nock');
 
 var AnxApi = require('./api');
 
-describe('Error Types', function() {
+describe('Error Types', () => {
 
 	['ApiError', 'NotAuthenticatedError', 'NotAuthorizedError', 'TargetError'].forEach(function(errorName) {
 		var CustomError = AnxApi[errorName];
@@ -18,9 +18,9 @@ describe('Error Types', function() {
 			expect(e.stack.indexOf('exFn') > 0).toBe(true);
 		}
 
-		describe(errorName, function() {
+		describe(errorName, () => {
 
-			it('should have proper type and properties', function() {
+			it('should have proper type and properties', () => {
 				try {
 					(function exFn() {
 						throw new CustomError();
@@ -30,7 +30,7 @@ describe('Error Types', function() {
 				}
 			});
 
-			it('should ignore unknown objects as error data', function() {
+			it('should ignore unknown objects as error data', () => {
 				function check(obj) {
 					try {
 						throw new CustomError({}, obj);
@@ -68,7 +68,7 @@ describe('Error Types', function() {
 				expect('stuff happens').toBe(e.description);
 			}
 
-			it('should accept just object as error data', function() {
+			it('should accept just object as error data', () => {
 				var obj = response;
 				try {
 					throw new CustomError({}, obj);
@@ -77,7 +77,7 @@ describe('Error Types', function() {
 				}
 			});
 
-			it('should accept body as error data', function() {
+			it('should accept body as error data', () => {
 				var obj = {
 					response: response,
 				};
@@ -88,7 +88,7 @@ describe('Error Types', function() {
 				}
 			});
 
-			it('should accept raw api json as error data', function() {
+			it('should accept raw api json as error data', () => {
 				var obj = {
 					body: {
 						response: response,
@@ -102,7 +102,7 @@ describe('Error Types', function() {
 			});
 
 
-			it('should accept simple object as error data', function() {
+			it('should accept simple object as error data', () => {
 				var obj = {
 					id: response.error_id,
 					code: response.error_code,
@@ -116,7 +116,7 @@ describe('Error Types', function() {
 				}
 			});
 
-			it('should accept json response as error message', function() {
+			it('should accept json response as error message', () => {
 				var msg = {
 					a: 1,
 				};
@@ -130,13 +130,13 @@ describe('Error Types', function() {
 
 	});
 
-	describe('buildError', function() {
+	describe('buildError', () => {
 
-		it('should build ApiError by default', function() {
+		it('should build ApiError by default', () => {
 			expect(AnxApi.buildError()).toBeInstanceOf(AnxApi.ApiError);
 		});
 
-		it('should detect legacy RateLimitExceededError pre 1.17', function() {
+		it('should detect legacy RateLimitExceededError pre 1.17', () => {
 			var err = AnxApi.buildError({}, { statusCode: 405, body: { response: {
 				error_id: 'SYSTEM',
 				error_code: 'RATE_EXCEEDED',
@@ -170,7 +170,7 @@ describe('Error Types', function() {
 			errorCode: 'RATE_EXCEEDED',
 		},
 		].forEach(function(errorSpec) {
-			it('should build ' + errorSpec.name, function() {
+			it('should build ' + errorSpec.name, () => {
 				function check(err) {
 					expect(err).toBeInstanceOf(errorSpec.errorType);
 				}
@@ -187,15 +187,15 @@ describe('Error Types', function() {
 		});
 	});
 
-	describe('Network Errors', function() {
+	describe('Network Errors', () => {
 
-		it('Should handle dns lookup errors', function() {
+		it('Should handle dns lookup errors', () => {
 			var api = new AnxApi({
 				target: 'http://.com',
 				rateLimiting: false,
 			});
 
-			return api.get('junk').then(function() {
+			return api.get('junk').then(() => {
 				return new Error('expected error');
 			}).catch(function(err) {
 				expect(err).toBeInstanceOf(AnxApi.NetworkError);
@@ -203,7 +203,7 @@ describe('Error Types', function() {
 			});
 		});
 
-		it('Should handle software timeouts', function() {
+		it('Should handle software timeouts', () => {
 			nock('http://api.example.com').get('/timeout').delayConnection(2000).reply(200);
 
 			var api = new AnxApi({
@@ -212,7 +212,7 @@ describe('Error Types', function() {
 				rateLimiting: false,
 			});
 
-			return api.get('timeout').then(function() {
+			return api.get('timeout').then(() => {
 				return new Error('expected error');
 			}).catch(function(err) {
 				expect(err).toBeInstanceOf(AnxApi.NetworkError);

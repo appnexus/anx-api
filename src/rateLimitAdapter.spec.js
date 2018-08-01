@@ -3,25 +3,25 @@ var axios = require('axios');
 
 var AnxApi = require('./api');
 
-describe('Rate Limit Adapter', function() {
+describe('Rate Limit Adapter', () => {
 
 	var onRateLimitExceededStub;
 	var onRateLimitPauseStub;
 	var onRateLimitResumeStub;
 
-	beforeAll(function() {
+	beforeAll(() => {
 		onRateLimitExceededStub = jest.fn();
 		onRateLimitPauseStub = jest.fn();
 		onRateLimitResumeStub = jest.fn();
 	});
 
-	beforeEach(function() {
+	beforeEach(() => {
 		onRateLimitExceededStub.mockReset();
 		onRateLimitPauseStub.mockReset();
 		onRateLimitResumeStub.mockReset();
 	});
 
-	it('should handle RateLimitExceededError', function() {
+	it('should handle RateLimitExceededError', () => {
 
 		axios.resolvesOnce({
 			status: 405,
@@ -48,7 +48,7 @@ describe('Rate Limit Adapter', function() {
 
 		expect.assertions(3);
 
-		return api.get('/limit').then(function() {
+		return api.get('/limit').then(() => {
 			expect(onRateLimitExceededStub).toHaveBeenCalledTimes(1);
 			expect(onRateLimitPauseStub).toHaveBeenCalledTimes(1);
 			expect(onRateLimitResumeStub).toHaveBeenCalledTimes(1);
@@ -57,7 +57,7 @@ describe('Rate Limit Adapter', function() {
 
 	});
 
-	it('should handle non-standard RateLimitExceededError', function() {
+	it('should handle non-standard RateLimitExceededError', () => {
 
 		axios.resolvesOnce({
 			status: 405,
@@ -79,7 +79,7 @@ describe('Rate Limit Adapter', function() {
 
 		expect.assertions(3);
 
-		return api.get('/limit-bad').catch(function() {
+		return api.get('/limit-bad').catch(() => {
 			expect(onRateLimitExceededStub).toHaveBeenCalledTimes(1);
 			expect(onRateLimitPauseStub).not.toHaveBeenCalled();
 			expect(onRateLimitResumeStub).not.toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe('Rate Limit Adapter', function() {
 
 	});
 
-	it('should adapt up limits', function() {
+	it('should adapt up limits', () => {
 
 		axios.resolvesOnce({
 			status: 200,
@@ -114,8 +114,8 @@ describe('Rate Limit Adapter', function() {
 
 		expect.assertions(3);
 
-		return api.get('/limit').then(function() {
-			return api.get('/limit').then(function() {
+		return api.get('/limit').then(() => {
+			return api.get('/limit').then(() => {
 				expect(onRateLimitExceededStub).not.toHaveBeenCalled();
 				expect(onRateLimitPauseStub).not.toHaveBeenCalled();
 				expect(onRateLimitResumeStub).not.toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('Rate Limit Adapter', function() {
 
 	});
 
-	it('should adapt down limits', function() {
+	it('should adapt down limits', () => {
 
 		axios.resolvesOnce({
 			status: 200,
@@ -152,8 +152,8 @@ describe('Rate Limit Adapter', function() {
 
 		expect.assertions(3);
 
-		return api.get('/limit').then(function() {
-			return api.get('/limit').then(function() {
+		return api.get('/limit').then(() => {
+			return api.get('/limit').then(() => {
 				expect(onRateLimitExceededStub).not.toHaveBeenCalled();
 				expect(onRateLimitPauseStub).toHaveBeenCalledTimes(1);
 				expect(onRateLimitResumeStub).toHaveBeenCalledTimes(1);
@@ -163,7 +163,7 @@ describe('Rate Limit Adapter', function() {
 
 	});
 
-	it('should limit multiple requests', function() {
+	it('should limit multiple requests', () => {
 
 		axios.resolvesOnce({
 			status: 200,
@@ -195,7 +195,7 @@ describe('Rate Limit Adapter', function() {
 			api.get('/limit'),
 			api.get('/limit'),
 			api.get('/limit'),
-		]).then(function() {
+		]).then(() => {
 			expect(onRateLimitExceededStub).not.toHaveBeenCalled();
 			expect(onRateLimitPauseStub).toHaveBeenCalledTimes(2);
 			expect(onRateLimitResumeStub).toHaveBeenCalledTimes(2);
