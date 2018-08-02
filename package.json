@@ -14,8 +14,8 @@
     "clean": "rm -rf coverage && rm -rf lib && mkdir lib",
     "cover": "jest src --coverage",
     "dependency-check": "npm audit",
-    "lint": "tslint -c tslint.json 'src/**/*.ts' 'src/**/*.js'",
-    "lint-fix": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts' 'src/**/*.js' --fix",
+    "lint": "tslint --project tsconfig.json -c tslint.json 'src/**/*.ts'",
+    "lint-fix": "tslint --project tsconfig.json -c tslint.json 'src/**/*.ts' --fix",
     "preversion": "npm run build",
     "test": "jest src",
     "watch": "jest src --watch"
