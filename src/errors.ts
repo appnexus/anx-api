@@ -1,164 +1,157 @@
-import _  from 'lodash';
-import util from 'util';
+import * as _ from 'lodash';
 
-function ApiError(req, res) {
-	Error.apply(this);
+export class ApiError extends Error {
+	public id;
+	public code;
+	public defaultMessage;
+	public description;
+	public response;
+	public req;
+	public res;
 
-	// Error.captureStackTrace not supported in Firefox
-	Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
+	constructor(req?, res?) {
+		super();
 
-	this.name = 'ApiError';
-	this.defaultMessage = this.defaultMessage || '';
+		// Error.captureStackTrace not supported in Firefox
+		// tslint:disable-next-line
+		Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
 
-	let id;
-	let code;
-	let message;
-	let description;
-	let response;
+		this.name = 'ApiError';
+		this.defaultMessage = this.defaultMessage || '';
 
-	if (_.isObject(res)) {
-		// Traverse through general API JSON Response
-		if (res.body && res.body.response) {
-			response = res.body.response; // res is raw api response
-		} else if (res.response) {
-			response = res.response; // res is body
-		} else {
-			response = res;
-		}
+		let response;
+		let id;
+		let code;
+		let message;
+		let description;
 
-		// Extract values from object - duck type check
-		if (response.hasOwnProperty('error_id')) { // Api Response
-			id = response.error_id;
-			code = response.error_code;
-			message = response.error;
-			description = response.error_description;
-		} else if (response.hasOwnProperty('id')) { // Simple Object
-			id = response.id;
-			code = response.code;
-			message = response.message;
-			description = response.description;
+		if (_.isObject(res)) {
+			// Traverse through general API JSON Response
+			if (res.body && res.body.response) {
+				response = res.body.response; // res is raw api response
+			} else if (res.response) {
+				response = res.response; // res is body
+			} else {
+				response = res;
+			}
+
+			// Extract values from object - duck type check
+			if (response.hasOwnProperty('error_id')) { // Api Response
+				id = response.error_id;
+				code = response.error_code;
+				message = response.error;
+				description = response.error_description;
+			} else if (response.hasOwnProperty('id')) { // Simple Object
+				id = response.id;
+				code = response.code;
+				message = response.message;
+				description = response.description;
+			} else {
+				message = res;
+			}
 		} else {
 			message = res;
 		}
-	} else {
-		message = res;
+
+		this.id = id;
+		this.code = code;
+		this.message = (message || this.defaultMessage);
+		delete this.defaultMessage;
+		this.description = (description || null);
+		this.req = req;
+		this.res = res;
 	}
-
-	this.id = id;
-	this.code = code;
-	this.message = (message || this.defaultMessage);
-	delete this.defaultMessage;
-	this.description = (description || null);
-	this.req = req;
-	this.res = res;
 }
-util.inherits(ApiError, Error);
 
-function NotAuthorizedError() {
-	this.defaultMessage = 'Authorization failed';
-	ApiError.apply(this, arguments);
-	this.name = 'NotAuthorizedError';
+export class NotAuthorizedError extends ApiError {
+	public defaultMessage = 'Authorization failed';
+	public name = 'NotAuthorizedError';
 }
-util.inherits(NotAuthorizedError, ApiError);
 
 // NotAuthenticated extends NotAuthorized for backwards compatibility
-function NotAuthenticatedError() {
-	this.defaultMessage = 'Authentication failed';
-	NotAuthorizedError.apply(this, arguments);
-	this.name = 'NotAuthenticatedError';
+export class NotAuthenticatedError extends NotAuthorizedError {
+	public defaultMessage = 'Authentication failed';
+	public name = 'NotAuthenticatedError';
 }
-util.inherits(NotAuthenticatedError, NotAuthorizedError);
 
-function RateLimitExceededError(opts, res) {
-	this.defaultMessage = 'Rate Limit Exceeded';
-	ApiError.apply(this, arguments);
-	this.name = 'RateLimitExceededError';
-	this.retryAfter = res.headers && res.headers['retry-after'] && parseInt(res.headers['retry-after'], 10);
+export class RateLimitExceededError extends ApiError {
+	public defaultMessage = 'Rate Limit Exceeded';
+	public name = 'RateLimitExceededError';
+	public retryAfter;
+	constructor(opts, res) {
+		super(opts, res);
+		this.retryAfter = res.headers && res.headers['retry-after'] && parseInt(res.headers['retry-after'], 10);
+	}
 }
-util.inherits(NotAuthorizedError, ApiError);
 
-function SystemServiceUnavailableError() {
-	this.defaultMessage = 'Service Unavailable';
-	ApiError.apply(this, arguments);
-	this.name = 'SystemServiceUnavailableError';
+export class SystemServiceUnavailableError extends ApiError {
+	public defaultMessage = 'Service Unavailable';
+	public name = 'SystemServiceUnavailableError';
 }
-util.inherits(SystemServiceUnavailableError, ApiError);
 
-function SystemUnknownError() {
-	this.defaultMessage = 'Unknown';
-	ApiError.apply(this, arguments);
-	this.name = 'SystemUnknownError';
+export class SystemUnknownError extends ApiError {
+	public defaultMessage = 'Unknown';
+	public name = 'SystemUnknownError';
 }
-util.inherits(SystemUnknownError, ApiError);
 
-function NetworkError(opts, err) {
-	Error.apply(this);
-	this.message = err.message;
-	this.req = opts;
-	this.name = 'NetworkError';
+export class NetworkError extends Error {
+	public name = 'NetworkError';
+	public req;
+	constructor(req, err) {
+		super();
+		this.req = req;
+	}
 }
-util.inherits(NetworkError, Error);
 
-function ArgumentError(opts, message) {
-	Error.apply(this);
-	this.message = message;
-	this.req = opts;
-	this.name = 'ArgumentError';
+export class ArgumentError extends Error {
+	public name = 'ArgumentError';
+	public req;
+	constructor(req, message) {
+		super();
+		this.message = message;
+		this.req = req;
+	}
 }
-util.inherits(ArgumentError, Error);
 
-function TargetError() {
-	ApiError.apply(this, arguments);
-	this.name = 'TargetError';
-}
-util.inherits(TargetError, ApiError);
+export class TargetError extends ApiError {}
 
-function DNSLookupError(req, err) {
-	ApiError.apply(this, arguments);
-	this.name = 'DNSLookupError';
-	this.message = 'DNS Lookup Error: ' + err.hostname;
+export class DNSLookupError extends NetworkError {
+	public name = 'DNSLookupError';
+	constructor(req, err) {
+		super(req, err);
+		this.message = 'DNS Lookup Error: ' + err.hostname;
+	}
 }
-util.inherits(DNSLookupError, NetworkError);
 
-function ConnectionAbortedError() {
-	ApiError.apply(this, arguments);
-	this.name = 'ConnectionAbortedError';
-	this.message = 'Connection Aborted Error';
+export class ConnectionAbortedError extends NetworkError {
+	public name = 'ConnectionAbortedError';
+	public message = 'Connection Aborted Error';
 }
-util.inherits(ConnectionAbortedError, NetworkError);
 
-function SocketTimeoutError() {
-	ApiError.apply(this, arguments);
-	this.name = 'SocketTimeoutError';
-	this.message = 'Timeout Error';
+export class SocketTimeoutError extends NetworkError {
+	public name = 'SocketTimeoutError';
+	public message = 'Timeout Error';
 }
-util.inherits(SocketTimeoutError, NetworkError);
 
-function ConnectionTimeoutError() {
-	ApiError.apply(this, arguments);
-	this.name = 'ConnectionTimeoutError';
-	this.message = 'Connection Timeout Error';
+export class ConnectionTimeoutError extends NetworkError {
+	public name = 'ConnectionTimeoutError';
+	public message = 'Connection Timeout Error';
 }
-util.inherits(ConnectionTimeoutError, NetworkError);
 
-function ConnectionResetError() {
-	ApiError.apply(this, arguments);
-	this.name = 'ConnectionResetError';
-	this.message = 'Connection Reset Error';
+export class ConnectionResetError extends NetworkError {
+	public name = 'ConnectionResetError';
+	public message = 'Connection Reset Error';
 }
-util.inherits(ConnectionResetError, NetworkError);
 
-function ConnectionRefusedError() {
-	ApiError.apply(this, arguments);
-	this.name = 'ConnectionRefusedError';
-	this.message = 'Connection Refused Error';
+export class ConnectionRefusedError extends NetworkError {
+	public name = 'ConnectionRefusedError';
+	public message = 'Connection Refused Error';
 }
-util.inherits(ConnectionRefusedError, NetworkError);
 
 // Build error from root response
 // https://wiki.appnexus.com/display/adnexusdocumentation/API+Semantics#APISemantics-Errors
-function buildError(req, res) {
-	let ErrorType = ApiError;
+export function buildError(req?, res?) {
+	let ErrorType: any = ApiError;
 
 	if (res) {
 		let statusCode;
@@ -218,22 +211,3 @@ function buildError(req, res) {
 
 	return new ErrorType(req, res);
 }
-
-module.exports = {
-	NetworkError,
-	ArgumentError,
-	ApiError,
-	DNSLookupError,
-	NotAuthorizedError,
-	NotAuthenticatedError,
-	RateLimitExceededError,
-	SystemServiceUnavailableError,
-	SystemUnknownError,
-	TargetError,
-	ConnectionAbortedError,
-	SocketTimeoutError,
-	ConnectionTimeoutError,
-	ConnectionResetError,
-	ConnectionRefusedError,
-	buildError,
-};

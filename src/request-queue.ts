@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import errors from './errors';
+import * as _ from 'lodash';
+import * as errors from './errors';
 
 const DEFAULT_LIMIT = 60;
 const DEFAULT_LIMIT_SECONDS = 60;
@@ -115,4 +115,4 @@ RequestQueue.prototype._checkHeaders = function _checkHeaders(res) {
 	}
 };
 
-module.exports = RequestQueue;
+export default RequestQueue;

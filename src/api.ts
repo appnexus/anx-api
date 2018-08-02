@@ -1,11 +1,12 @@
-import _ from 'lodash';
-import query from 'qs';
-import urljoin from 'url-join';
-import packageJson from '../package.json';
+import * as _ from 'lodash';
+import * as query from 'qs';
+import * as urlJoin from 'url-join';
 import axiosAdapter from './axiosAdapter';
 import concurrencyAdapter from './concurrencyAdapter';
-import errors from './errors';
+import * as errors from './errors';
 import rateLimitAdapter from './rateLimitAdapter';
+
+const packageJson = require('../package.json');
 
 const DEFAULT_CHUNK_SIZE = 100;
 
@@ -24,7 +25,7 @@ function _normalizeOpts(opts, extendOpts) {
 	return _.assign({}, newOpts, extendOpts);
 }
 
-function _statusOk(body) {
+export function statusOk(body) {
 	return !!body && !!body.response && body.response.status === 'OK';
 }
 
@@ -47,7 +48,7 @@ function __request(opts) {
 		});
 
 		// Configure Options
-		let reqOpts = _.assign({}, {
+		let reqOpts: any = _.assign({}, {
 			rejectUnauthorized: false,
 			headers: _.assign({}, _self._config.headers),
 		});
@@ -83,7 +84,7 @@ function __request(opts) {
 
 		reqOpts.headers = _.assign({}, reqOpts.headers, opts.headers);
 
-		reqOpts.uri = urljoin(_self._config.target, _.trimStart(opts.uri, '/'));
+		reqOpts.uri = urlJoin(_self._config.target, _.trimStart(opts.uri, '/'));
 
 		// Configure Parameters
 		if (_hasValue(opts.startElement)) {
@@ -154,142 +155,142 @@ function __request(opts) {
 	});
 }
 
-function AnxApi(config) {
-	this._config = _.defaults({}, config, {
-		request: axiosAdapter({
-			forceHttpAdaptor: config.environment === 'node',
-		}),
-		userAgent: 'anx-api/' + packageJson.version,
-		timeout: 60 * 1000,
-		headers: {},
-		target: null,
-		token: null,
-		rateLimiting: true,
-		chunkSize: DEFAULT_CHUNK_SIZE,
-	});
+class AnxApi {
+	public _config;
 
-	this.request = __request;
+	constructor(config) {
+		this._config = _.defaults({}, config, {
+			request: axiosAdapter({
+				forceHttpAdaptor: config.environment === 'node',
+			}),
+			userAgent: 'anx-api/' + packageJson.version,
+			timeout: 60 * 1000,
+			headers: {},
+			target: null,
+			token: null,
+			rateLimiting: true,
+			chunkSize: DEFAULT_CHUNK_SIZE,
+		});
 
-	// Install optional rate limiting adapter
-	this.request = this._config.rateLimiting ? rateLimitAdapter(_.assign({}, config, {
-		request: __request.bind(this),
-	})) : __request.bind(this);
+		this.request = __request;
 
-	// Install optional concurrency adapter
-	this._config.request = this._config.concurrencyLimit ? concurrencyAdapter({
-		limit: this._config.concurrencyLimit,
-		request: this._config.request,
-	}) : this._config.request;
+		// Install optional rate limiting adapter
+		this.request = this._config.rateLimiting ? rateLimitAdapter(_.assign({}, config, {
+			request: __request.bind(this),
+		})) : __request.bind(this);
+
+		// Install optional concurrency adapter
+		this._config.request = this._config.concurrencyLimit ? concurrencyAdapter({
+			limit: this._config.concurrencyLimit,
+			request: this._config.request,
+		}) : this._config.request;
+	}
+
+	public _request(method, opts, extendOpts, payload?) {
+		const newOpts = _normalizeOpts(opts, extendOpts);
+		newOpts.method = method || newOpts.method || 'GET';
+		if (payload) {
+			newOpts.body = payload;
+		}
+		return this.request(newOpts);
+	}
+
+	public request(opts, extendOpts?) {
+		return this._request(null, opts, extendOpts);
+	}
+
+	public get(opts, extendOpts?) {
+		return this._request('GET', opts, extendOpts);
+	}
+
+	public getAll(opts, extendOpts) {
+		const _self = this;
+
+		return new Promise(function getAllPromise(resolve, reject) {
+			const newOpts = _normalizeOpts(opts, extendOpts);
+			let numElements = opts.numElements || 100;
+			let firstOutputTerm;
+			let elements = [];
+			let totalTime = 0;
+
+			function getAll(startElement) {
+				newOpts.startElement = startElement;
+				newOpts.numElements = numElements;
+
+				return _self.get(newOpts).then(function success(res) {
+					if (!statusOk(res.body)) {
+						return reject(res);
+					}
+					const response = res.body.response;
+					const count = response.count || 0;
+					const outputTerm = response.dbg_info.output_term;
+					if (!firstOutputTerm) {
+						firstOutputTerm = outputTerm;
+					}
+
+					numElements = response.num_elements;
+
+					totalTime += response.dbg_info.time || 0;
+					elements = elements.concat(response[outputTerm]);
+					if (count <= startElement + numElements) {
+						const newResponse = _.assign({}, {
+							count: elements.length,
+							start_element: 0,
+							num_elements: elements.length,
+							dbg_info: _.assign({}, response.dbg_info, {
+								output_term: firstOutputTerm,
+								time: totalTime,
+							}),
+						});
+						newResponse[firstOutputTerm] = elements;
+						return resolve({ body: { response: newResponse } });
+					}
+					return getAll(startElement + numElements);
+				}).catch(reject);
+			}
+
+			return getAll(0);
+		});
+	}
+
+	public post(opts, payload, extendOpts?) {
+		return this._request('POST', opts, extendOpts, payload);
+	}
+
+	public put(opts, payload, extendOpts?) {
+		return this._request('PUT', opts, extendOpts, payload);
+	}
+
+	public delete(opts, extendOpts?) {
+		return this._request('DELETE', opts, extendOpts);
+	}
+
+	public login = function _login(username, password) {
+		const _self = this;
+		const reqOpts = {
+			auth: {
+				username,
+				password,
+			},
+		};
+		return _self.post('/auth', reqOpts).then(function success(res) {
+			if (res.statusCode === 200 && statusOk(res.body)) {
+				_self._config.token = res.body.response.token;
+				return _self._config.token;
+			}
+			throw errors.buildError(reqOpts, res);
+		});
+	};
+
+	public switchUser = function _switchUser(userId) {
+		const _self = this;
+		return _self.post('/auth', {
+			auth: {
+				switch_to_user: userId,
+			},
+		});
+	};
+
 }
 
-// Bind error types on the AnxApi namespace
-_.assign(AnxApi, errors);
-
-AnxApi.prototype._request = function _request(method, opts, extendOpts, payload) {
-	const newOpts = _normalizeOpts(opts, extendOpts);
-	newOpts.method = method || newOpts.method || 'GET';
-	if (payload) {
-		newOpts.body = payload;
-	}
-	return this.request(newOpts);
-};
-
-AnxApi.prototype.request = function _request(opts, extendOpts) {
-	return this._request(null, opts, extendOpts);
-};
-
-AnxApi.prototype.get = function _get(opts, extendOpts) {
-	return this._request('GET', opts, extendOpts);
-};
-
-AnxApi.prototype.getAll = function _getAll(opts, extendOpts) {
-	const _self = this;
-
-	return new Promise(function getAllPromise(resolve, reject) {
-		const newOpts = _normalizeOpts(opts, extendOpts);
-		let numElements = opts.numElements || 100;
-		let firstOutputTerm;
-		let elements = [];
-		let totalTime = 0;
-
-		function getAll(startElement) {
-			newOpts.startElement = startElement;
-			newOpts.numElements = numElements;
-
-			return _self.get(newOpts).then(function success(res) {
-				if (!AnxApi.statusOk(res.body)) {
-					return reject(res);
-				}
-				const response = res.body.response;
-				const count = response.count || 0;
-				const outputTerm = response.dbg_info.output_term;
-				if (!firstOutputTerm) {
-					firstOutputTerm = outputTerm;
-				}
-
-				numElements = response.num_elements;
-
-				totalTime += response.dbg_info.time || 0;
-				elements = elements.concat(response[outputTerm]);
-				if (count <= startElement + numElements) {
-					const newResponse = _.assign({}, {
-						count: elements.length,
-						start_element: 0,
-						num_elements: elements.length,
-						dbg_info: _.assign({}, response.dbg_info, {
-							output_term: firstOutputTerm,
-							time: totalTime,
-						}),
-					});
-					newResponse[firstOutputTerm] = elements;
-					return resolve({ body: { response: newResponse } });
-				}
-				return getAll(startElement + numElements);
-			}).catch(reject);
-		}
-
-		return getAll(0);
-	});
-};
-
-AnxApi.prototype.post = function _post(opts, payload, extendOpts) {
-	return this._request('POST', opts, extendOpts, payload);
-};
-
-AnxApi.prototype.put = function _put(opts, payload, extendOpts) {
-	return this._request('PUT', opts, extendOpts, payload);
-};
-
-AnxApi.prototype.delete = function _delete(opts, extendOpts) {
-	return this._request('DELETE', opts, extendOpts);
-};
-
-AnxApi.prototype.login = function _login(username, password) {
-	const _self = this;
-	const reqOpts = {
-		auth: {
-			username,
-			password,
-		},
-	};
-	return _self.post('/auth', reqOpts).then(function success(res) {
-		if (res.statusCode === 200 && AnxApi.statusOk(res.body)) {
-			_self._config.token = res.body.response.token;
-			return _self._config.token;
-		}
-		throw AnxApi.buildError(reqOpts, res);
-	});
-};
-
-AnxApi.prototype.switchUser = function _switchUser(userId) {
-	const _self = this;
-	return _self.post('/auth', {
-		auth: {
-			switch_to_user: userId,
-		},
-	});
-};
-
-AnxApi.statusOk = _statusOk;
-
-module.exports = AnxApi;
+export default AnxApi;

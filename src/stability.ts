@@ -1,6 +1,4 @@
-/* eslint no-console: 0 */
-
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 const warnings = {
 	experimental: {},
@@ -10,6 +8,7 @@ const warnings = {
 function experimentalMethod(methodName, className) {
 	if (!warnings.experimental[methodName + className]) {
 		warnings.experimental[methodName + className] = _.once(function warnOnce() {
+			// tslint:disable-next-line:no-console
 			const log = (console.warn || console.log || _.noop).bind(console);
 			log('Method ' + className + '.' + methodName + ' is experimental, use with caution.');
 		});
@@ -20,6 +19,7 @@ function experimentalMethod(methodName, className) {
 function deprecatedMethod(methodName, className, useName) {
 	if (!warnings.deprecated[methodName + className + useName]) {
 		warnings.deprecated[methodName + className + useName] = _.once(function warnOnce() {
+			// tslint:disable-next-line:no-console
 			const log = (console.warn || console.log || _.noop).bind(console);
 			log('Method ' + className + '.' + methodName + ' is deprecated, use `' + className + '.' + useName + '` instead');
 		});
@@ -27,7 +27,7 @@ function deprecatedMethod(methodName, className, useName) {
 	warnings.deprecated[methodName + className + useName]();
 }
 
-module.exports = {
+export default {
 	deprecated: { method: deprecatedMethod },
 	experimental: { method: experimentalMethod },
 };

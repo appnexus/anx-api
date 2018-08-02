@@ -1,7 +1,9 @@
-/* eslint func-names: 0, padded-blocks: 0 */
-let axios = require('axios');
+import axios from 'axios';
 
-let AnxApi = require('./api');
+import AnxApi from './api';
+
+jest.mock('axios');
+const axiosMock: jest.Mock = axios as any;
 
 describe('Rate Limit Adapter', () => {
 
@@ -23,7 +25,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should handle RateLimitExceededError', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 405,
 			headers: {
 				'retry-after': '1',
@@ -32,7 +34,7 @@ describe('Rate Limit Adapter', () => {
 				'x-ratelimit-write': '1000',
 			},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
@@ -59,7 +61,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should handle non-standard RateLimitExceededError', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 405,
 			headers: {
 				'x-ratelimit-read': '1000',
@@ -89,7 +91,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should adapt up limits', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 200,
 			headers: {
 				'x-ratelimit-read': '6',
@@ -97,7 +99,7 @@ describe('Rate Limit Adapter', () => {
 				'x-ratelimit-write': '1000',
 			},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
@@ -127,7 +129,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should adapt down limits', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 200,
 			headers: {
 				'x-ratelimit-read': '1',
@@ -135,7 +137,7 @@ describe('Rate Limit Adapter', () => {
 				'x-ratelimit-write': '1000',
 			},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
@@ -165,15 +167,15 @@ describe('Rate Limit Adapter', () => {
 
 	it('should limit multiple requests', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 function ConcurrencyQueue(options) {
 	this.options = _.assign({}, options);
@@ -46,9 +46,9 @@ ConcurrencyQueue.prototype.makeRequest = function _makeRequest(reqInfo) {
 	_self.running.push(requestPromise);
 };
 
-module.exports = function concurrencyAdapter(options) {
+export default function concurrencyAdapter(options) {
 	const concurrencyQueue = new ConcurrencyQueue(options);
 	return function concurrencyLimitedRequest(opts) {
 		return concurrencyQueue.push(opts);
 	};
-};
+}

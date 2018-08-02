@@ -1,27 +1,28 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
-module.exports = function requestAdaptor(config) {
-	return function(opts) {
+export default function requestAdaptor(config) {
+	return (opts) => {
 		const url = opts.uri;
-		const axiosOpts = {
+		const axiosConfig: AxiosRequestConfig = {
+			url,
 			timeout: opts.timeout,
 			method: opts.method.toLowerCase(),
 			headers: opts.headers,
 		};
 
 		if (config.forceHttpAdaptor) {
-			axiosOpts.adapter = httpAdapter;
+			axiosConfig.adapter = httpAdapter;
 		}
 
 		if (!_.isUndefined(opts.body)) {
-			axiosOpts.data = opts.body;
+			axiosConfig.data = opts.body;
 		}
 
 		const startTime = new Date().getTime();
 
-		return axios(url, axiosOpts, opts.body).then(function requestSuccess(res) {
+		return axios(axiosConfig).then(function requestSuccess(res) {
 			return {
 				statusCode: res.status,
 				headers: res.headers,
@@ -40,4 +41,4 @@ module.exports = function requestAdaptor(config) {
 			};
 		});
 	};
-};
+}

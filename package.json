@@ -10,11 +10,12 @@
     "url": "https://github.com/appnexus/anx-api.git"
   },
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf coverage && rm -rf lib && mkdir lib",
     "cover": "jest src --coverage",
     "dependency-check": "npm audit",
-    "lint": "eslint src --quiet",
-    "lint-fix": "eslint src --fix",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'src/**/*.js'",
+    "lint-fix": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts' 'src/**/*.js' --fix",
     "preversion": "npm run build",
     "test": "jest src",
     "watch": "jest src --watch"
@@ -42,22 +43,41 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-jest": "^23.4.2",
-    "babel-plugin-lodash": "^3.3.4",
-    "babel-preset-env": "^1.7.0",
+    "@appnexus/tslint-rules": "^1.2.3",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^23.3.1",
+    "@types/lodash": "^4.14.115",
+    "@types/node": "^10.5.5",
     "coveralls": "^3.0.2",
-    "eslint": "^5.2.0",
-    "eslint-config-appnexus": "^1.6.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-lodash": "^2.7.0",
-    "eslint-plugin-promise": "^3.8.0",
     "jest": "^23.4.2",
     "nock": "^9.4.4",
-    "pre-push": "^0.1.1"
+    "pre-push": "^0.1.1",
+    "ts-jest": "^23.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageDirectory": "../coverage/",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "**/*.ts",
+      "!constants/**",
+      "!generated/**",
+      "!*.*"
+    ],
+    "coverageReporters": [
+      "html"
+    ],
+    "rootDir": "src",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
   }
 }

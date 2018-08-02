@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import PromiseQueue from './request-queue';
 
 const DEFAULT_READ_LIMIT = 100;
@@ -18,7 +18,7 @@ const DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 // onRateLimitPause
 // onRateLimitResume
 
-module.exports = function rateLimitAdapter(options) {
+export default function rateLimitAdapter(options) {
 	const readQueue = new PromiseQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
@@ -42,4 +42,4 @@ module.exports = function rateLimitAdapter(options) {
 	return function rateLimitedRequest(opts) {
 		return opts.method === 'GET' ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
 	};
-};
+}
