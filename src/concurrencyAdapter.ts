@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { IRequestOptions } from './api';
 
 function ConcurrencyQueue(options) {
 	this.options = _.assign({}, options);

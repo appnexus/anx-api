@@ -75,6 +75,7 @@ describe('AnxApi', () => {
 				it('should throw on missing target', (done) => {
 					const api = new AnxApi({
 						rateLimiting: false,
+						target: '',
 					});
 
 					api.get('/user').catch((err) => {

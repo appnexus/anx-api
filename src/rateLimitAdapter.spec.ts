@@ -46,7 +46,7 @@ describe('Rate Limit Adapter', () => {
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -77,7 +77,7 @@ describe('Rate Limit Adapter', () => {
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -112,7 +112,7 @@ describe('Rate Limit Adapter', () => {
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -150,7 +150,7 @@ describe('Rate Limit Adapter', () => {
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -189,7 +189,7 @@ describe('Rate Limit Adapter', () => {
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 

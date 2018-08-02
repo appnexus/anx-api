@@ -10,26 +10,64 @@ const packageJson = require('../package.json');
 
 const DEFAULT_CHUNK_SIZE = 100;
 
-function _hasValue(value) {
+export interface IConfig {
+	concurrencyLimit?: number;
+	environment?: string;
+	rateLimiting: boolean;
+	request?: (opts: any) => any;
+	beforeRequest?: (opts: any) => any;
+	afterRequest?: (opts: any) => any;
+	target: string;
+	timeout?: number;
+	token?: string;
+	userAgent?: string;
+}
+
+export interface IGenericOptions {
+	auth?: any;
+	body?: any;
+	encodeParams?: boolean;
+	headers?: {};
+	mimeType?: string;
+	noAuth?: any;
+	numElements?: number;
+	params?: {};
+	startElement?: number;
+	timeout?: number;
+	uri: string;
+}
+
+export enum Method {
+	GET =	'GET',
+	POST = 'POST',
+	PUT = 'PUT',
+	DELETE = 'DELETE',
+}
+
+export interface IRequestOptions extends IGenericOptions {
+	method: Method;
+}
+
+function _hasValue(value: any) {
 	return !(_.isNull(value) || _.isUndefined(value));
 }
 
-function _isInteger(value) {
+function _isInteger(value: any) {
 	return parseInt(value, 10) === +value;
 }
 
-function _normalizeOpts(opts, extendOpts) {
+function _normalizeOpts(opts: IGenericOptions | string, extendOpts: IGenericOptions): IRequestOptions {
 	const newOpts = _.isString(opts) ? {
 		uri: opts,
 	} : opts || {};
-	return _.assign({}, newOpts, extendOpts);
+	return _.assign({ method: null }, newOpts, extendOpts);
 }
 
 export function statusOk(body) {
 	return !!body && !!body.response && body.response.status === 'OK';
 }
 
-function __request(opts) {
+function __request(opts: IRequestOptions) {
 	const _self = this;
 	return new Promise(function requestPromise(resolve, reject) {
 		let params;
@@ -156,9 +194,9 @@ function __request(opts) {
 }
 
 class AnxApi {
-	public _config;
+	public _config: IConfig;
 
-	constructor(config) {
+	constructor(config: IConfig) {
 		this._config = _.defaults({}, config, {
 			request: axiosAdapter({
 				forceHttpAdaptor: config.environment === 'node',
@@ -186,24 +224,24 @@ class AnxApi {
 		}) : this._config.request;
 	}
 
-	public _request(method, opts, extendOpts, payload?) {
+	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?) {
 		const newOpts = _normalizeOpts(opts, extendOpts);
-		newOpts.method = method || newOpts.method || 'GET';
+		newOpts.method = method || newOpts.method || Method.GET;
 		if (payload) {
 			newOpts.body = payload;
 		}
 		return this.request(newOpts);
 	}
 
-	public request(opts, extendOpts?) {
+	public request(opts: IRequestOptions, extendOpts?: IGenericOptions) {
 		return this._request(null, opts, extendOpts);
 	}
 
-	public get(opts, extendOpts?) {
-		return this._request('GET', opts, extendOpts);
+	public get(opts: IGenericOptions | string, extendOpts?: IGenericOptions) {
+		return this._request(Method.GET, opts, extendOpts);
 	}
 
-	public getAll(opts, extendOpts) {
+	public getAll(opts: IGenericOptions, extendOpts) {
 		const _self = this;
 
 		return new Promise(function getAllPromise(resolve, reject) {
@@ -253,19 +291,19 @@ class AnxApi {
 		});
 	}
 
-	public post(opts, payload, extendOpts?) {
-		return this._request('POST', opts, extendOpts, payload);
+	public post(opts: IGenericOptions | string, payload, extendOpts?: IGenericOptions) {
+		return this._request(Method.POST, opts, extendOpts, payload);
 	}
 
-	public put(opts, payload, extendOpts?) {
-		return this._request('PUT', opts, extendOpts, payload);
+	public put(opts: IGenericOptions | string, payload, extendOpts?: IGenericOptions) {
+		return this._request(Method.PUT, opts, extendOpts, payload);
 	}
 
-	public delete(opts, extendOpts?) {
-		return this._request('DELETE', opts, extendOpts);
+	public delete(opts: IGenericOptions | string, extendOpts?: IGenericOptions) {
+		return this._request(Method.DELETE, opts, extendOpts);
 	}
 
-	public login = function _login(username, password) {
+	public login(username: string, password: string) {
 		const _self = this;
 		const reqOpts = {
 			auth: {
@@ -280,16 +318,16 @@ class AnxApi {
 			}
 			throw errors.buildError(reqOpts, res);
 		});
-	};
+	}
 
-	public switchUser = function _switchUser(userId) {
+	public switchUser(userId: number) {
 		const _self = this;
 		return _self.post('/auth', {
 			auth: {
 				switch_to_user: userId,
 			},
 		});
-	};
+	}
 
 }
 
