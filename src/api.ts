@@ -25,7 +25,6 @@ export interface IConfig {
 
 export interface IGenericOptions {
 	auth?: any;
-	body?: any;
 	encodeParams?: boolean;
 	headers?: {};
 	mimeType?: string;
@@ -37,6 +36,10 @@ export interface IGenericOptions {
 	uri: string;
 }
 
+export interface IOptionsWithPayload extends IGenericOptions {
+	body?: any;
+}
+
 export enum Method {
 	GET =	'GET',
 	POST = 'POST',
@@ -44,7 +47,7 @@ export enum Method {
 	DELETE = 'DELETE',
 }
 
-export interface IRequestOptions extends IGenericOptions {
+export interface IRequestOptions extends IOptionsWithPayload {
 	method: Method;
 }
 
@@ -291,11 +294,11 @@ class AnxApi {
 		});
 	}
 
-	public post(opts: IGenericOptions | string, payload, extendOpts?: IGenericOptions) {
+	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions) {
 		return this._request(Method.POST, opts, extendOpts, payload);
 	}
 
-	public put(opts: IGenericOptions | string, payload, extendOpts?: IGenericOptions) {
+	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions) {
 		return this._request(Method.PUT, opts, extendOpts, payload);
 	}
 

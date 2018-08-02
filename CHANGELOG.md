@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v7.0.0
+
+* [major] Converted project to typescript
+
 ## v6.1.0
 
 * [minor] Updated dependencies and converted from nsp to npm audit
