@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "outDir": "./lib",
     "target": "es6",
     "module": "commonjs",
@@ -10,9 +10,6 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
     "node_modules",
     "lib",
