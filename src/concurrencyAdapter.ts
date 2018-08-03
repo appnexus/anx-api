@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { IConfig } from './api';
 
-export class ConcurrencyQueue{
+export class ConcurrencyQueue {
 	private options: any;
 	private queue: any[];
 	private running: any[];

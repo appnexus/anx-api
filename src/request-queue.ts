@@ -26,7 +26,7 @@ export class RequestQueue {
 	private expires: number;
 	private timeoutId: any;
 
-	constructor(options: IRequestQueueOptions){
+	constructor(options: IRequestQueueOptions) {
 		this.options = _.assign({
 			request: null,
 			limit: DEFAULT_LIMIT,
@@ -57,7 +57,7 @@ export class RequestQueue {
 
 	public paused() {
 		return !!this.timeoutId;
-	};
+	}
 
 	private _processQueue(retryAfter?) {
 		if (this.queue.length > 0) { // if items left to process
@@ -90,7 +90,7 @@ export class RequestQueue {
 			this.timeoutId = null;
 		}
 		this.expires = Date.now() + ((this.options.limitSeconds + DEFAULT_LIMIT_SECONDS_BUFFER) * ONE_SECOND);
-	};
+	}
 
 	private _execute(reqInfo) {
 		return this.options.request(reqInfo.opts).then((res) => {
