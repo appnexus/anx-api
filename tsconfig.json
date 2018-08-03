@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "allowJs": false,
+    "declaration": true,
+    "inlineSources": true,
     "outDir": "./lib",
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true
