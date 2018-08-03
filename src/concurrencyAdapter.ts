@@ -1,55 +1,57 @@
 import * as _ from 'lodash';
-import { IRequestOptions } from './api';
+import { IConfig } from './api';
 
-function ConcurrencyQueue(options) {
-	this.options = _.assign({}, options);
-	this.queue = [];
-	this.running = [];
-}
+export class ConcurrencyQueue{
+	private options: any;
+	private queue: any[];
+	private running: any[];
 
-ConcurrencyQueue.prototype.push = function _push(opts) {
-	const _self = this;
-	if (_self.running.length < _self.options.limit) {
-		const requestPromise = _self.options.request(opts).then(function success(res) {
-			_self.finished(requestPromise);
-			return res;
-		}, function failure(err) {
-			_self.finished(requestPromise);
-			throw err;
+	constructor(options: IConfig) {
+		this.options = _.assign({}, options);
+		this.queue = [];
+		this.running = [];
+	}
+
+	public push(opts) {
+		if (this.running.length < this.options.limit) {
+			const requestPromise = this.options.request(opts).then(function success(res) {
+				this.finished(requestPromise);
+				return res;
+			}, function failure(err) {
+				this.finished(requestPromise);
+				throw err;
+			});
+			this.running.push(requestPromise);
+			return requestPromise;
+		}
+		return new Promise((resolve, reject) => {
+			const reqInfo = { opts, resolve, reject };
+			this.queue.push(reqInfo);
 		});
-		_self.running.push(requestPromise);
-		return requestPromise;
 	}
-	return new Promise(function queuedPromise(resolve, reject) {
-		const reqInfo = { opts, resolve, reject };
-		_self.queue.push(reqInfo);
-	});
-};
 
-ConcurrencyQueue.prototype.finished = function _finished(requestPromise) {
-	const _self = this;
-	_.remove(_self.running, requestPromise);
-	if (_self.queue.length > 0) {
-		_self.makeRequest(_self.queue.shift());
+	public finished(requestPromise) {
+		_.remove(this.running, requestPromise);
+		if (this.queue.length > 0) {
+			this.makeRequest(this.queue.shift());
+		}
 	}
-};
 
-ConcurrencyQueue.prototype.makeRequest = function _makeRequest(reqInfo) {
-	const _self = this;
-	const requestPromise = _self.options.request(reqInfo.opts).then(function success(res) {
-		_self.finished(requestPromise);
-		reqInfo.resolve(res);
-		return null;
-	}, function failure(err) {
-		_self.finished(requestPromise);
-		reqInfo.reject(err);
-	});
-	_self.running.push(requestPromise);
-};
+	public makeRequest(reqInfo) {
+		const requestPromise = this.options.request(reqInfo.opts).then((res) => {
+			this.finished(requestPromise);
+			reqInfo.resolve(res);
+			return null;
+		}).catch((err) => {
+			this.finished(requestPromise);
+			reqInfo.reject(err);
+		});
+		this.running.push(requestPromise);
+	}
 
-export default function concurrencyAdapter(options) {
-	const concurrencyQueue = new ConcurrencyQueue(options);
-	return function concurrencyLimitedRequest(opts) {
-		return concurrencyQueue.push(opts);
-	};
 }
+
+export const concurrencyAdapter = (options) => (opts): ConcurrencyQueue => {
+	const concurrencyQueue = new ConcurrencyQueue(options);
+	return concurrencyQueue.push(opts);
+};
