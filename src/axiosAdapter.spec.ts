@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import axios from 'axios';
-import axiosAdapter from './axiosAdapter';
+import { axiosAdapter } from './axiosAdapter';
 
 jest.mock('axios');
 const axiosMock: jest.Mock = axios as any;
