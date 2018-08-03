@@ -14,9 +14,9 @@ export interface IRequestQueueOptions {
 	limit: number;
 	limitSeconds: number;
 	limitHeader: string;
-	onRateLimitExceeded: () => void;
-	onRateLimitPause: () => void;
-	onRateLimitResume: () => void;
+	onRateLimitExceeded: any;
+	onRateLimitPause: any;
+	onRateLimitResume: any;
 }
 
 export class RequestQueue {
@@ -93,10 +93,10 @@ export class RequestQueue {
 	};
 
 	private _execute(reqInfo) {
-		return this.options.request(reqInfo.opts).then(function success(res) {
+		return this.options.request(reqInfo.opts).then((res) => {
 			this._checkHeaders(res);
 			return reqInfo.resolve(res);
-		}).catch(function failure(err) {
+		}).catch((err) => {
 			if (err instanceof errors.RateLimitExceededError) {
 				this.options.onRateLimitExceeded(err);
 				if (_.isNil(err.retryAfter)) {

@@ -18,7 +18,7 @@ const DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 // onRateLimitPause
 // onRateLimitResume
 
-export const rateLimitAdapter = (options) => (opts) => {
+export const rateLimitAdapter = (options) => {
 	const readQueue = new RequestQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
@@ -38,6 +38,7 @@ export const rateLimitAdapter = (options) => (opts) => {
 		onRateLimitPause: _.partial(options.onRateLimitPause || _.noop, 'WRITE'),
 		onRateLimitResume: _.partial(options.onRateLimitResume || _.noop, 'WRITE'),
 	});
-
-	return opts.method === 'GET' ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
+	return (opts) => {
+		return opts.method === 'GET' ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
+	};
 };
