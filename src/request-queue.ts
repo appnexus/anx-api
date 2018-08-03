@@ -13,7 +13,7 @@ export interface IRequestQueueOptions {
 	request: any;
 	limit: number;
 	limitSeconds: number;
-	limitHeader: any;
+	limitHeader: string;
 	onRateLimitExceeded: () => void;
 	onRateLimitPause: () => void;
 	onRateLimitResume: () => void;

@@ -5,7 +5,7 @@ const warnings = {
 	deprecated: {},
 };
 
-function experimentalMethod(methodName, className) {
+export const experimentalMethod = (methodName, className): void => {
 	if (!warnings.experimental[methodName + className]) {
 		warnings.experimental[methodName + className] = _.once(function warnOnce() {
 			// tslint:disable-next-line:no-console
@@ -14,9 +14,9 @@ function experimentalMethod(methodName, className) {
 		});
 	}
 	warnings.experimental[methodName + className]();
-}
+};
 
-function deprecatedMethod(methodName, className, useName) {
+export const deprecatedMethod = (methodName, className, useName): void => {
 	if (!warnings.deprecated[methodName + className + useName]) {
 		warnings.deprecated[methodName + className + useName] = _.once(function warnOnce() {
 			// tslint:disable-next-line:no-console
@@ -25,9 +25,4 @@ function deprecatedMethod(methodName, className, useName) {
 		});
 	}
 	warnings.deprecated[methodName + className + useName]();
-}
-
-export default {
-	deprecated: { method: deprecatedMethod },
-	experimental: { method: experimentalMethod },
 };

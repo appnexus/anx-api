@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import * as query from 'qs';
 import * as urlJoin from 'url-join';
-import axiosAdapter from './axiosAdapter';
-import concurrencyAdapter from './concurrencyAdapter';
+import { axiosAdapter } from './axiosAdapter';
+import { concurrencyAdapter } from './concurrencyAdapter';
 import * as errors from './errors';
-import rateLimitAdapter from './rateLimitAdapter';
+import { rateLimitAdapter } from './rateLimitAdapter';
 
 const packageJson = require('../package.json');
 

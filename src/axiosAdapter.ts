@@ -9,7 +9,7 @@ export interface IResponse {
 	requestTime: any;
 }
 
-export const requestAdaptor = (config) => (opts): Promise<IResponse> => {
+export const axiosAdapter = (config) => (opts): Promise<IResponse> => {
 	const url = opts.uri;
 	const axiosConfig: AxiosRequestConfig = {
 		url,
