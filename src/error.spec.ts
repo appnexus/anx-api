@@ -1,6 +1,6 @@
 import * as nock from 'nock';
 
-import AnxApi from './api';
+import { AnxApi } from './api';
 import * as errors from './errors';
 
 describe('Error Types', () => {

@@ -97,9 +97,11 @@ export class SystemUnknownError extends ApiError {
 export class NetworkError extends Error {
 	public name = 'NetworkError';
 	public req;
+	public err;
 	constructor(req, err) {
 		super();
 		this.req = req;
+		this.err = err;
 	}
 }
 

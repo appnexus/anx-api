@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import AnxApi, { statusOk } from './api';
+import { AnxApi, statusOk } from './api';
 import * as errors from './errors';
 
 describe('AnxApi', () => {
