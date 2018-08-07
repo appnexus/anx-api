@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-import AnxApi from './api';
+import { AnxApi } from './api';
 
 jest.mock('axios');
 const axiosMock: jest.Mock = axios as any;
