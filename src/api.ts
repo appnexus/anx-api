@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import * as query from 'qs';
 import * as urlJoin from 'url-join';
-import axiosAdapter from './axiosAdapter';
-import concurrencyAdapter from './concurrencyAdapter';
+import { axiosAdapter } from './axiosAdapter';
+import { concurrencyAdapter } from './concurrencyAdapter';
 import * as errors from './errors';
-import rateLimitAdapter from './rateLimitAdapter';
+import { rateLimitAdapter } from './rateLimitAdapter';
 
 const packageJson = require('../package.json');
 
@@ -48,7 +48,7 @@ export enum Method {
 }
 
 export interface IRequestOptions extends IOptionsWithPayload {
-	method: Method;
+	method: (Method | string);
 }
 
 function _hasValue(value: any) {
@@ -72,7 +72,7 @@ export function statusOk(body) {
 
 function __request(opts: IRequestOptions) {
 	const _self = this;
-	return new Promise(function requestPromise(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		let params;
 		const startTime = new Date().getTime();
 
@@ -81,7 +81,7 @@ function __request(opts: IRequestOptions) {
 		}
 
 		// Validate Opts
-		_.forEach(_.pick(opts, ['startElement', 'numElements']), function validate(value, opt) {
+		_.forEach(_.pick(opts, ['startElement', 'numElements']), (value, opt) => {
 			if (_hasValue(value) && !_isInteger(value)) {
 				return reject(new errors.ArgumentError(opts, 'Invalid ' + opt));
 			}
@@ -95,7 +95,7 @@ function __request(opts: IRequestOptions) {
 		});
 
 		reqOpts.timeout = opts.timeout || _self._config.timeout;
-		reqOpts.method = (opts.method || 'GET').toUpperCase();
+		reqOpts.method = (opts.method || Method.GET).toUpperCase();
 		reqOpts.params = _.assign({}, opts.params);
 		reqOpts.body = opts.body;
 		reqOpts.encodeParams = _.get(opts, 'encodeParams', false);
@@ -110,7 +110,7 @@ function __request(opts: IRequestOptions) {
 
 		if (opts.mimeType) {
 			reqOpts.headers.Accept = opts.mimeType;
-			if (opts.method === 'POST' || opts.method === 'PUT') {
+			if (opts.method === Method.POST || opts.method === Method.PUT) {
 				reqOpts.headers['Content-Type'] = opts.mimeType;
 			}
 		} else {
@@ -118,7 +118,7 @@ function __request(opts: IRequestOptions) {
 			reqOpts.headers.Accept = _.get(opts, 'headers.Accept', 'application/json');
 
 			// Default Content-Type to application/json for POSTs and PUTs
-			if (reqOpts.method === 'POST' || reqOpts.method === 'PUT') {
+			if (reqOpts.method === Method.POST || reqOpts.method === Method.PUT) {
 				reqOpts.headers['Content-Type'] = _.get(opts, 'headers.Content-Type', 'application/json');
 			}
 		}
@@ -150,7 +150,7 @@ function __request(opts: IRequestOptions) {
 			}
 		}
 
-		return _self._config.request(reqOpts).then(function success(res) {
+		return _self._config.request(reqOpts).then((res) => {
 			const totalTime = new Date().getTime() - startTime;
 
 			let newRes = _.assign({
@@ -186,7 +186,7 @@ function __request(opts: IRequestOptions) {
 			newRes.req = reqOpts;
 
 			return resolve(newRes);
-		}).catch(function failure(err) {
+		}).catch((err) => {
 			let newErr;
 			if (_self._config.afterRequest) {
 				newErr = _self._config.afterRequest(err);
@@ -196,7 +196,7 @@ function __request(opts: IRequestOptions) {
 	});
 }
 
-class AnxApi {
+export class AnxApi {
 	public _config: IConfig;
 
 	constructor(config: IConfig) {
@@ -247,7 +247,7 @@ class AnxApi {
 	public getAll(opts: IGenericOptions, extendOpts) {
 		const _self = this;
 
-		return new Promise(function getAllPromise(resolve, reject) {
+		return new Promise((resolve, reject) => {
 			const newOpts = _normalizeOpts(opts, extendOpts);
 			let numElements = opts.numElements || 100;
 			let firstOutputTerm;
@@ -258,7 +258,7 @@ class AnxApi {
 				newOpts.startElement = startElement;
 				newOpts.numElements = numElements;
 
-				return _self.get(newOpts).then(function success(res) {
+				return _self.get(newOpts).then((res) => {
 					if (!statusOk(res.body)) {
 						return reject(res);
 					}
@@ -314,7 +314,7 @@ class AnxApi {
 				password,
 			},
 		};
-		return _self.post('/auth', reqOpts).then(function success(res) {
+		return _self.post('/auth', reqOpts).then((res) => {
 			if (res.statusCode === 200 && statusOk(res.body)) {
 				_self._config.token = res.body.response.token;
 				return _self._config.token;
@@ -333,5 +333,3 @@ class AnxApi {
 	}
 
 }
-
-export default AnxApi;

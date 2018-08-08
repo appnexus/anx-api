@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import PromiseQueue from './request-queue';
+import { RequestQueue } from './request-queue';
 
 const DEFAULT_READ_LIMIT = 100;
 const DEFAULT_READ_LIMIT_SECONDS = 60;
@@ -18,8 +18,8 @@ const DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 // onRateLimitPause
 // onRateLimitResume
 
-export default function rateLimitAdapter(options) {
-	const readQueue = new PromiseQueue({
+export const rateLimitAdapter = (options) => {
+	const readQueue = new RequestQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
 		limitSeconds: options.rateLimitReadSeconds || DEFAULT_READ_LIMIT_SECONDS,
@@ -29,7 +29,7 @@ export default function rateLimitAdapter(options) {
 		onRateLimitResume: _.partial(options.onRateLimitResume || _.noop, 'READ'),
 	});
 
-	const writeQueue = new PromiseQueue({
+	const writeQueue = new RequestQueue({
 		request: options.request,
 		limit: options.rateLimitWrite || DEFAULT_WRITE_LIMIT,
 		limitSeconds: options.rateLimitWriteSeconds || DEFAULT_WRITE_LIMIT_SECONDS,
@@ -38,8 +38,7 @@ export default function rateLimitAdapter(options) {
 		onRateLimitPause: _.partial(options.onRateLimitPause || _.noop, 'WRITE'),
 		onRateLimitResume: _.partial(options.onRateLimitResume || _.noop, 'WRITE'),
 	});
-
-	return function rateLimitedRequest(opts) {
+	return (opts) => {
 		return opts.method === 'GET' ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
 	};
-}
+};

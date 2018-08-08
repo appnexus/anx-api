@@ -5,29 +5,24 @@ const warnings = {
 	deprecated: {},
 };
 
-function experimentalMethod(methodName, className) {
+export const experimentalMethod = (methodName: string, className: string): void => {
 	if (!warnings.experimental[methodName + className]) {
 		warnings.experimental[methodName + className] = _.once(function warnOnce() {
 			// tslint:disable-next-line:no-console
 			const log = (console.warn || console.log || _.noop).bind(console);
-			log('Method ' + className + '.' + methodName + ' is experimental, use with caution.');
+			log(`Method ${className}.${methodName} is experimental, use with caution.`);
 		});
 	}
 	warnings.experimental[methodName + className]();
-}
+};
 
-function deprecatedMethod(methodName, className, useName) {
+export const deprecatedMethod = (methodName: string, className: string, useName: string): void => {
 	if (!warnings.deprecated[methodName + className + useName]) {
 		warnings.deprecated[methodName + className + useName] = _.once(function warnOnce() {
 			// tslint:disable-next-line:no-console
 			const log = (console.warn || console.log || _.noop).bind(console);
-			log('Method ' + className + '.' + methodName + ' is deprecated, use `' + className + '.' + useName + '` instead');
+			log(`Method ${className}.${methodName} is deprecated, use ${className}.${useName } instead.`);
 		});
 	}
 	warnings.deprecated[methodName + className + useName]();
-}
-
-export default {
-	deprecated: { method: deprecatedMethod },
-	experimental: { method: experimentalMethod },
 };
