@@ -18,7 +18,7 @@ const DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 // onRateLimitPause
 // onRateLimitResume
 
-export const rateLimitAdapter = (options) => {
+export const rateLimitAdapter: (options: any) => (opts: any) => Promise<void> = (options) => {
 	const readQueue = new RequestQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
