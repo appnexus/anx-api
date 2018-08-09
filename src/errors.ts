@@ -152,7 +152,7 @@ export class ConnectionRefusedError extends NetworkError {
 
 // Build error from root response
 // https://wiki.appnexus.com/display/adnexusdocumentation/API+Semantics#APISemantics-Errors
-export function buildError(req?, res?) {
+export const buildError = (req?, res?): ApiError => {
 	let ErrorType: any = ApiError;
 
 	if (res) {
@@ -212,4 +212,4 @@ export function buildError(req?, res?) {
 	}
 
 	return new ErrorType(req, res);
-}
+};
