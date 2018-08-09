@@ -40,7 +40,7 @@ export class RequestQueue {
 		this._resetTimeout();
 	}
 
-	public enqueue(opts) {
+	public enqueue(opts): Promise<void> {
 		return new Promise((resolve, reject) => {
 			this.queue.push({
 				opts,
@@ -51,15 +51,15 @@ export class RequestQueue {
 		});
 	}
 
-	public dequeue() {
+	public dequeue(): () => any[] {
 		return this.queue.shift();
 	}
 
-	public paused() {
+	public paused(): any {
 		return !!this.timeoutId;
 	}
 
-	private _processQueue(retryAfter?) {
+	private _processQueue(retryAfter?): void {
 		if (this.queue.length > 0) { // if items left to process
 			if (this.limitCount < Math.max(this.options.limit - DEFAULT_LIMIT_COUNT_BUFFER, 1)) { // if not over limit
 				this.limitCount++;
@@ -72,7 +72,7 @@ export class RequestQueue {
 		}
 	}
 
-	private _schedule(retryAfter?) {
+	private _schedule(retryAfter?): void {
 		if (!this.timeoutId) {
 			const delay = Math.max(retryAfter || (this.expires - Date.now()), 0);
 			this.timeoutId = setTimeout(() => {
@@ -84,7 +84,7 @@ export class RequestQueue {
 		}
 	}
 
-	private _resetTimeout() {
+	private _resetTimeout(): void {
 		if (this.timeoutId) {
 			clearTimeout(this.timeoutId);
 			this.timeoutId = null;
@@ -92,7 +92,7 @@ export class RequestQueue {
 		this.expires = Date.now() + ((this.options.limitSeconds + DEFAULT_LIMIT_SECONDS_BUFFER) * ONE_SECOND);
 	}
 
-	private _execute(reqInfo) {
+	private _execute(reqInfo): () => any {
 		return this.options.request(reqInfo.opts).then((res) => {
 			this._checkHeaders(res);
 			return reqInfo.resolve(res);
@@ -113,7 +113,7 @@ export class RequestQueue {
 		});
 	}
 
-	private _checkHeaders(res) {
+	private _checkHeaders(res): void {
 		if (res.headers[this.options.limitHeader]) {
 			const limit = parseInt(res.headers[this.options.limitHeader], 10) || DEFAULT_LIMIT;
 			if (limit !== this.options.limit) {

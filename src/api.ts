@@ -51,11 +51,11 @@ export interface IRequestOptions extends IOptionsWithPayload {
 	method: (Method | string);
 }
 
-function _hasValue(value: any) {
+function _hasValue(value: any): boolean {
 	return !(_.isNull(value) || _.isUndefined(value));
 }
 
-function _isInteger(value: any) {
+function _isInteger(value: any): boolean {
 	return parseInt(value, 10) === +value;
 }
 
@@ -70,7 +70,7 @@ export function statusOk(body) {
 	return !!body && !!body.response && body.response.status === 'OK';
 }
 
-function __request(opts: IRequestOptions) {
+function __request(opts: IRequestOptions): Promise<any> {
 	const _self = this;
 	return new Promise((resolve, reject) => {
 		let params;
@@ -227,7 +227,7 @@ export class AnxApi {
 		}) : this._config.request;
 	}
 
-	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?) {
+	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?): Promise<any> {
 		const newOpts = _normalizeOpts(opts, extendOpts);
 		newOpts.method = method || newOpts.method || Method.GET;
 		if (payload) {
@@ -236,16 +236,15 @@ export class AnxApi {
 		return this.request(newOpts);
 	}
 
-	public request(opts: IRequestOptions, extendOpts?: IGenericOptions) {
+	public request(opts: IRequestOptions, extendOpts?: IGenericOptions): Promise<any> {
 		return this._request(null, opts, extendOpts);
 	}
 
-	public get(opts: IGenericOptions | string, extendOpts?: IGenericOptions) {
+	public get(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<any> {
 		return this._request(Method.GET, opts, extendOpts);
 	}
 
-	public getAll(opts: IGenericOptions, extendOpts) {
-		const _self = this;
+	public getAll(opts: IGenericOptions, extendOpts): Promise<any> {
 
 		return new Promise((resolve, reject) => {
 			const newOpts = _normalizeOpts(opts, extendOpts);
@@ -254,11 +253,11 @@ export class AnxApi {
 			let elements = [];
 			let totalTime = 0;
 
-			function getAll(startElement) {
+			const getAll = (startElement) => {
 				newOpts.startElement = startElement;
 				newOpts.numElements = numElements;
 
-				return _self.get(newOpts).then((res) => {
+				return this.get(newOpts).then((res) => {
 					if (!statusOk(res.body)) {
 						return reject(res);
 					}
@@ -288,44 +287,42 @@ export class AnxApi {
 					}
 					return getAll(startElement + numElements);
 				}).catch(reject);
-			}
+			};
 
 			return getAll(0);
 		});
 	}
 
-	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions) {
+	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<any> {
 		return this._request(Method.POST, opts, extendOpts, payload);
 	}
 
-	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions) {
+	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<any> {
 		return this._request(Method.PUT, opts, extendOpts, payload);
 	}
 
-	public delete(opts: IGenericOptions | string, extendOpts?: IGenericOptions) {
+	public delete(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<any> {
 		return this._request(Method.DELETE, opts, extendOpts);
 	}
 
-	public login(username: string, password: string) {
-		const _self = this;
+	public login(username: string, password: string): Promise<any> {
 		const reqOpts = {
 			auth: {
 				username,
 				password,
 			},
 		};
-		return _self.post('/auth', reqOpts).then((res) => {
+		return this.post('/auth', reqOpts).then((res) => {
 			if (res.statusCode === 200 && statusOk(res.body)) {
-				_self._config.token = res.body.response.token;
-				return _self._config.token;
+				this._config.token = res.body.response.token;
+				return this._config.token;
 			}
 			throw errors.buildError(reqOpts, res);
 		});
 	}
 
-	public switchUser(userId: number) {
-		const _self = this;
-		return _self.post('/auth', {
+	public switchUser(userId: number): Promise<any> {
+		return this.post('/auth', {
 			auth: {
 				switch_to_user: userId,
 			},

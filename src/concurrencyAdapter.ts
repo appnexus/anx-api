@@ -12,7 +12,7 @@ export class ConcurrencyQueue {
 		this.running = [];
 	}
 
-	public push(opts) {
+	public push(opts): Promise<any> {
 		if (this.running.length < this.options.limit) {
 			const requestPromise = this.options.request(opts).then(function success(res) {
 				this.finished(requestPromise);
@@ -30,14 +30,14 @@ export class ConcurrencyQueue {
 		});
 	}
 
-	public finished(requestPromise) {
+	public finished(requestPromise): void {
 		_.remove(this.running, requestPromise);
 		if (this.queue.length > 0) {
 			this.makeRequest(this.queue.shift());
 		}
 	}
 
-	public makeRequest(reqInfo) {
+	public makeRequest(reqInfo): void {
 		const requestPromise = this.options.request(reqInfo.opts).then((res) => {
 			this.finished(requestPromise);
 			reqInfo.resolve(res);
@@ -51,7 +51,7 @@ export class ConcurrencyQueue {
 
 }
 
-export const concurrencyAdapter = (options) => (opts): ConcurrencyQueue => {
+export const concurrencyAdapter = (options) => (opts): Promise<any> => {
 	const concurrencyQueue = new ConcurrencyQueue(options);
 	return concurrencyQueue.push(opts);
 };
