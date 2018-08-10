@@ -4,7 +4,15 @@
   "description": "AppNexus Api Wrapper",
   "homepage": "https://github.com/appnexus/anx-api",
   "bugs": "https://github.com/appnexus/anx-api/issues",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/appnexus/anx-api.git"
