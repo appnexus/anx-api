@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
-import * as errors from './errors';
+import { IRequestOptions } from './api';
+import { RateLimitExceededError } from './errors';
 
 const DEFAULT_LIMIT = 60;
 const DEFAULT_LIMIT_SECONDS = 60;
@@ -14,14 +15,20 @@ export interface IRequestQueueOptions {
 	limit: number;
 	limitSeconds: number;
 	limitHeader: string;
-	onRateLimitExceeded: (err: errors.RateLimitExceededError) => any;
+	onRateLimitExceeded: (err: RateLimitExceededError) => any;
 	onRateLimitPause: () => any;
 	onRateLimitResume: () => any;
 }
 
+export interface IRequestQueueItem {
+	opts: IRequestOptions;
+	resolve: (value?: void | PromiseLike<void>) => void;
+	reject: (reason?: any) => void;
+}
+
 export class RequestQueue {
 	private options: IRequestQueueOptions;
-	private queue: any[];
+	private queue: IRequestQueueItem[];
 	private limitCount: number;
 	private expires: number;
 	private timeoutId: any;
@@ -40,7 +47,7 @@ export class RequestQueue {
 		this._resetTimeout();
 	}
 
-	public enqueue(opts): Promise<void> {
+	public enqueue(opts: IRequestOptions): Promise<void> {
 		return new Promise((resolve, reject) => {
 			this.queue.push({
 				opts,
@@ -51,15 +58,15 @@ export class RequestQueue {
 		});
 	}
 
-	public dequeue(): () => any[] {
+	public dequeue(): IRequestQueueItem {
 		return this.queue.shift();
 	}
 
-	public paused(): any {
+	public paused(): boolean {
 		return !!this.timeoutId;
 	}
 
-	private _processQueue(retryAfter?): void {
+	private _processQueue(retryAfter?: number): void {
 		if (this.queue.length > 0) { // if items left to process
 			if (this.limitCount < Math.max(this.options.limit - DEFAULT_LIMIT_COUNT_BUFFER, 1)) { // if not over limit
 				this.limitCount++;
@@ -72,7 +79,7 @@ export class RequestQueue {
 		}
 	}
 
-	private _schedule(retryAfter?): void {
+	private _schedule(retryAfter?: number): void {
 		if (!this.timeoutId) {
 			const delay = Math.max(retryAfter || (this.expires - Date.now()), 0);
 			this.timeoutId = setTimeout(() => {
@@ -92,12 +99,12 @@ export class RequestQueue {
 		this.expires = Date.now() + ((this.options.limitSeconds + DEFAULT_LIMIT_SECONDS_BUFFER) * ONE_SECOND);
 	}
 
-	private _execute(reqInfo): () => any {
+	private _execute(reqInfo: IRequestQueueItem): () => any {
 		return this.options.request(reqInfo.opts).then((res) => {
 			this._checkHeaders(res);
 			return reqInfo.resolve(res);
 		}).catch((err) => {
-			if (err instanceof errors.RateLimitExceededError) {
+			if (err instanceof RateLimitExceededError) {
 				this.options.onRateLimitExceeded(err);
 				if (_.isNil(err.retryAfter)) {
 					// Abort retry due to missing retryAfter
@@ -113,7 +120,7 @@ export class RequestQueue {
 		});
 	}
 
-	private _checkHeaders(res): void {
+	private _checkHeaders(res: any): void {
 		if (res.headers[this.options.limitHeader]) {
 			const limit = parseInt(res.headers[this.options.limitHeader], 10) || DEFAULT_LIMIT;
 			if (limit !== this.options.limit) {
