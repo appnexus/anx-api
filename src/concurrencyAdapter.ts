@@ -19,10 +19,10 @@ export class ConcurrencyQueue {
 
 	public push(opts: IRequestOptions): Promise<any> {
 		if (this.running.length < this.options.limit) {
-			const requestPromise = this.options.request(opts).then(function success(res) {
+			const requestPromise = this.options.request(opts).then((res) => {
 				this.finished(requestPromise);
 				return res;
-			}, function failure(err) {
+			}, (err) => {
 				this.finished(requestPromise);
 				throw err;
 			});
