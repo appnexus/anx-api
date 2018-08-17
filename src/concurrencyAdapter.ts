@@ -1,18 +1,23 @@
 import * as _ from 'lodash';
-import { IConfig } from './api';
+import { IRequestOptions } from './api';
+import { IRequestQueueItem } from './request-queue';
 
+export interface IConcurrencyQueueOptions {
+	limit: number;
+	request: (opts: any) => any;
+}
 export class ConcurrencyQueue {
-	private options: any;
-	private queue: any[];
-	private running: any[];
+	private options: IConcurrencyQueueOptions;
+	private queue: IRequestQueueItem[];
+	private running: IRequestQueueItem[];
 
-	constructor(options: IConfig) {
+	constructor(options: IConcurrencyQueueOptions) {
 		this.options = _.assign({}, options);
 		this.queue = [];
 		this.running = [];
 	}
 
-	public push(opts): Promise<any> {
+	public push(opts: IRequestOptions): Promise<any> {
 		if (this.running.length < this.options.limit) {
 			const requestPromise = this.options.request(opts).then(function success(res) {
 				this.finished(requestPromise);
@@ -25,19 +30,19 @@ export class ConcurrencyQueue {
 			return requestPromise;
 		}
 		return new Promise((resolve, reject) => {
-			const reqInfo = { opts, resolve, reject };
+			const reqInfo: IRequestQueueItem = { opts, resolve, reject };
 			this.queue.push(reqInfo);
 		});
 	}
 
-	public finished(requestPromise): void {
+	public finished(requestPromise: IRequestQueueItem): void {
 		_.remove(this.running, requestPromise);
 		if (this.queue.length > 0) {
 			this.makeRequest(this.queue.shift());
 		}
 	}
 
-	public makeRequest(reqInfo): void {
+	public makeRequest(reqInfo: IRequestQueueItem): void {
 		const requestPromise = this.options.request(reqInfo.opts).then((res) => {
 			this.finished(requestPromise);
 			reqInfo.resolve(res);
@@ -51,7 +56,7 @@ export class ConcurrencyQueue {
 
 }
 
-export const concurrencyAdapter = (options) => (opts): Promise<any> => {
+export const concurrencyAdapter = (options: IConcurrencyQueueOptions) => (opts: IRequestOptions): Promise<any> => {
 	const concurrencyQueue = new ConcurrencyQueue(options);
 	return concurrencyQueue.push(opts);
 };
