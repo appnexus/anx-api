@@ -14,9 +14,9 @@ export interface IRequestQueueOptions {
 	limit: number;
 	limitSeconds: number;
 	limitHeader: string;
-	onRateLimitExceeded: any;
-	onRateLimitPause: any;
-	onRateLimitResume: any;
+	onRateLimitExceeded: (err: errors.RateLimitExceededError) => any;
+	onRateLimitPause: () => any;
+	onRateLimitResume: () => any;
 }
 
 export class RequestQueue {
