@@ -1,20 +1,29 @@
 {
   "name": "anx-api",
-  "version": "6.1.0",
+  "version": "7.0.0-2",
   "description": "AppNexus Api Wrapper",
   "homepage": "https://github.com/appnexus/anx-api",
   "bugs": "https://github.com/appnexus/anx-api/issues",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/appnexus/anx-api.git"
   },
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf coverage && rm -rf lib && mkdir lib",
     "cover": "jest src --coverage",
     "dependency-check": "npm audit",
-    "lint": "eslint src --quiet",
-    "lint-fix": "eslint src --fix",
+    "lint": "tslint --project tsconfig.json -c tslint.json 'src/**/*.ts'",
+    "lint-fix": "tslint --project tsconfig.json -c tslint.json 'src/**/*.ts' --fix",
     "preversion": "npm run build",
     "test": "jest src",
     "watch": "jest src --watch"
@@ -42,22 +51,42 @@
     "url-join": "^4.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-jest": "^23.4.2",
-    "babel-plugin-lodash": "^3.3.4",
-    "babel-preset-env": "^1.7.0",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^23.3.1",
+    "@types/lodash": "^4.14.115",
+    "@types/node": "^10.5.5",
+    "@types/qs": "^6.5.1",
+    "@types/url-join": "^0.8.2",
     "coveralls": "^3.0.2",
-    "eslint": "^5.2.0",
-    "eslint-config-appnexus": "^1.6.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-lodash": "^2.7.0",
-    "eslint-plugin-promise": "^3.8.0",
     "jest": "^23.4.2",
     "nock": "^9.4.4",
-    "pre-push": "^0.1.1"
+    "pre-push": "^0.1.1",
+    "ts-jest": "^23.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageDirectory": "../coverage/",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "**/*.ts",
+      "!constants/**",
+      "!generated/**",
+      "!*.*"
+    ],
+    "coverageReporters": [
+      "html"
+    ],
+    "rootDir": "src",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
   }
 }

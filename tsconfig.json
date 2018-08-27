@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "declaration": true,
+    "inlineSources": true,
+    "outDir": "./lib",
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "inlineSourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules",
+    "lib",
+    "./src/**/*.spec.js",
+    "./src/**/*.spec.ts"
+  ]
+}

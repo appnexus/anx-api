@@ -1,18 +1,15 @@
-/* eslint func-names: 0, padded-blocks: 0 */
-var nock = require('nock');
+import * as nock from 'nock';
 
-var AnxApi = require('./api');
+import { AnxApi } from './api';
+import * as errors from './errors';
 
 describe('Error Types', () => {
 
-	['ApiError', 'NotAuthenticatedError', 'NotAuthorizedError', 'TargetError'].forEach(function(errorName) {
-		var CustomError = AnxApi[errorName];
-
+	['ApiError', 'NotAuthenticatedError', 'NotAuthorizedError', 'TargetError'].forEach((errorName) => {
 		function assertAnxError(e) {
 			expect(e).toBeInstanceOf(Error);
-			expect(e).toBeInstanceOf(AnxApi.ApiError);
-			expect(e).toBeInstanceOf(CustomError);
-			['id', 'code', 'message', 'description'].forEach(function(prop) {
+			expect(e).toBeInstanceOf(errors.ApiError);
+			['id', 'code', 'message', 'description'].forEach((prop) => {
 				expect(e.hasOwnProperty(prop)).toBe(true);
 			});
 			expect(e.stack.indexOf('exFn') > 0).toBe(true);
@@ -23,7 +20,7 @@ describe('Error Types', () => {
 			it('should have proper type and properties', () => {
 				try {
 					(function exFn() {
-						throw new CustomError();
+						throw new errors[errorName]();
 					}());
 				} catch (e) {
 					assertAnxError(e);
@@ -33,7 +30,7 @@ describe('Error Types', () => {
 			it('should ignore unknown objects as error data', () => {
 				function check(obj) {
 					try {
-						throw new CustomError({}, obj);
+						throw new errors[errorName]({}, obj);
 					} catch (e) {
 						expect(typeof e.id === 'undefined').toBe(true);
 						expect(typeof e.code === 'undefined').toBe(true);
@@ -41,7 +38,6 @@ describe('Error Types', () => {
 					}
 				}
 
-				check();
 				check(undefined);
 				check({ a: 1 });
 				check({ id: undefined });
@@ -54,7 +50,7 @@ describe('Error Types', () => {
 				check({ body: { response: { error_id: undefined } } });
 			});
 
-			var response = {
+			const response = {
 				error_id: 'xyz',
 				error_code: 'm-n-o-p',
 				error: 'something',
@@ -69,59 +65,58 @@ describe('Error Types', () => {
 			}
 
 			it('should accept just object as error data', () => {
-				var obj = response;
+				const obj = response;
 				try {
-					throw new CustomError({}, obj);
+					throw new errors[errorName]({}, obj);
 				} catch (e) {
 					assertErrorInfo(e);
 				}
 			});
 
 			it('should accept body as error data', () => {
-				var obj = {
-					response: response,
+				const obj = {
+					response,
 				};
 				try {
-					throw new CustomError({}, obj);
+					throw new errors[errorName]({}, obj);
 				} catch (e) {
 					assertErrorInfo(e);
 				}
 			});
 
 			it('should accept raw api json as error data', () => {
-				var obj = {
+				const obj = {
 					body: {
-						response: response,
+						response,
 					},
 				};
 				try {
-					throw new CustomError({}, obj);
+					throw new errors[errorName]({}, obj);
 				} catch (e) {
 					assertErrorInfo(e);
 				}
 			});
 
-
 			it('should accept simple object as error data', () => {
-				var obj = {
+				const obj = {
 					id: response.error_id,
 					code: response.error_code,
 					message: response.error,
 					description: response.error_description,
 				};
 				try {
-					throw new CustomError({}, obj);
+					throw new errors[errorName]({}, obj);
 				} catch (e) {
 					assertErrorInfo(e);
 				}
 			});
 
 			it('should accept json response as error message', () => {
-				var msg = {
+				const msg = {
 					a: 1,
 				};
 				try {
-					throw new CustomError({}, msg);
+					throw new errors[errorName]({}, msg);
 				} catch (e) {
 					expect(msg).toBe(e.message);
 				}
@@ -133,56 +128,56 @@ describe('Error Types', () => {
 	describe('buildError', () => {
 
 		it('should build ApiError by default', () => {
-			expect(AnxApi.buildError()).toBeInstanceOf(AnxApi.ApiError);
+			expect(errors.buildError()).toBeInstanceOf(errors.ApiError);
 		});
 
 		it('should detect legacy RateLimitExceededError pre 1.17', () => {
-			var err = AnxApi.buildError({}, { statusCode: 405, body: { response: {
+			const err = errors.buildError({}, { statusCode: 405, body: { response: {
 				error_id: 'SYSTEM',
 				error_code: 'RATE_EXCEEDED',
 			}}});
-			expect(err).toBeInstanceOf(AnxApi.RateLimitExceededError);
+			expect(err).toBeInstanceOf(errors.RateLimitExceededError);
 		});
 
 		[{
 			name: 'ApiError',
-			errorType: AnxApi.ApiError,
+			errorType: errors.ApiError,
 			statusCode: 500,
 			errorId: 'Z',
 		},
 		{
 			name: 'NotAuthorizedError',
-			errorType: AnxApi.NotAuthorizedError,
+			errorType: errors.NotAuthorizedError,
 			statusCode: 403,
 			errorId: 'UNAUTH',
 		},
 		{
 			name: 'NotAuthenticatedError',
-			errorType: AnxApi.NotAuthenticatedError,
+			errorType: errors.NotAuthenticatedError,
 			statusCode: 401,
 			errorId: 'NOAUTH',
 		},
 		{
 			name: 'RateLimitExceededError',
-			errorType: AnxApi.RateLimitExceededError,
+			errorType: errors.RateLimitExceededError,
 			statusCode: 429,
 			errorId: 'SYSTEM',
 			errorCode: 'RATE_EXCEEDED',
 		},
-		].forEach(function(errorSpec) {
+		].forEach((errorSpec) => {
 			it('should build ' + errorSpec.name, () => {
 				function check(err) {
 					expect(err).toBeInstanceOf(errorSpec.errorType);
 				}
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode }));
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: undefined }));
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: {} }));
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: { response: undefined } }));
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: { response: {} } }));
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: { response: { error_id: 'X' } } }));
-				check(AnxApi.buildError({}, { statusCode: errorSpec.statusCode, body: { response: { error_id: errorSpec.errorId } } }));
-				check(AnxApi.buildError({}, { statusCode: 200, body: { response: { error_id: errorSpec.errorId, error_code: errorSpec.errorCode } } }));
-				check(AnxApi.buildError({}, { body: { response: { error_id: errorSpec.errorId, error_code: errorSpec.errorCode } } }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode, body: undefined }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode, body: {} }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode, body: { response: undefined } }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode, body: { response: {} } }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode, body: { response: { error_id: 'X' } } }));
+				check(errors.buildError({}, { statusCode: errorSpec.statusCode, body: { response: { error_id: errorSpec.errorId } } }));
+				check(errors.buildError({}, { statusCode: 200, body: { response: { error_id: errorSpec.errorId, error_code: errorSpec.errorCode } } }));
+				check(errors.buildError({}, { body: { response: { error_id: errorSpec.errorId, error_code: errorSpec.errorCode } } }));
 			});
 		});
 	});
@@ -190,23 +185,23 @@ describe('Error Types', () => {
 	describe('Network Errors', () => {
 
 		it('Should handle dns lookup errors', () => {
-			var api = new AnxApi({
+			const api = new AnxApi({
 				target: 'http://.com',
 				rateLimiting: false,
 			});
 
 			return api.get('junk').then(() => {
 				return new Error('expected error');
-			}).catch(function(err) {
-				expect(err).toBeInstanceOf(AnxApi.NetworkError);
-				expect(err).toBeInstanceOf(AnxApi.DNSLookupError);
+			}).catch((err) => {
+				expect(err).toBeInstanceOf(errors.NetworkError);
+				expect(err).toBeInstanceOf(errors.DNSLookupError);
 			});
 		});
 
 		it('Should handle software timeouts', () => {
 			nock('http://api.example.com').get('/timeout').delayConnection(2000).reply(200);
 
-			var api = new AnxApi({
+			const api = new AnxApi({
 				target: 'http://api.example.com',
 				timeout: 500,
 				rateLimiting: false,
@@ -214,9 +209,9 @@ describe('Error Types', () => {
 
 			return api.get('timeout').then(() => {
 				return new Error('expected error');
-			}).catch(function(err) {
-				expect(err).toBeInstanceOf(AnxApi.NetworkError);
-				expect(err).toBeInstanceOf(AnxApi.ConnectionAbortedError);
+			}).catch((err) => {
+				expect(err).toBeInstanceOf(errors.NetworkError);
+				expect(err).toBeInstanceOf(errors.ConnectionAbortedError);
 			});
 		});
 

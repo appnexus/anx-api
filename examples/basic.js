@@ -1,5 +1,3 @@
-/* eslint func-names: 0, no-console: 0 */
-
 var AnxApi = require('anx-api');
 
 var anxApi = new AnxApi({

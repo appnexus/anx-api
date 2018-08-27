@@ -1,13 +1,14 @@
-/* eslint func-names: 0, padded-blocks: 0 */
-var axios = require('axios');
+import axios from 'axios';
+import { AnxApi } from './api';
 
-var AnxApi = require('./api');
+jest.mock('axios');
+const axiosMock: jest.Mock = axios as any;
 
 describe('Rate Limit Adapter', () => {
 
-	var onRateLimitExceededStub;
-	var onRateLimitPauseStub;
-	var onRateLimitResumeStub;
+	let onRateLimitExceededStub;
+	let onRateLimitPauseStub;
+	let onRateLimitResumeStub;
 
 	beforeAll(() => {
 		onRateLimitExceededStub = jest.fn();
@@ -23,7 +24,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should handle RateLimitExceededError', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 405,
 			headers: {
 				'retry-after': '1',
@@ -32,19 +33,19 @@ describe('Rate Limit Adapter', () => {
 				'x-ratelimit-write': '1000',
 			},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
 		});
 
-		var api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -59,7 +60,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should handle non-standard RateLimitExceededError', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 405,
 			headers: {
 				'x-ratelimit-read': '1000',
@@ -69,13 +70,13 @@ describe('Rate Limit Adapter', () => {
 			body: {},
 		});
 
-		var api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -89,7 +90,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should adapt up limits', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 200,
 			headers: {
 				'x-ratelimit-read': '6',
@@ -97,20 +98,20 @@ describe('Rate Limit Adapter', () => {
 				'x-ratelimit-write': '1000',
 			},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
 		});
 
-		var api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitReadSeconds: 1,
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -127,7 +128,7 @@ describe('Rate Limit Adapter', () => {
 
 	it('should adapt down limits', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 200,
 			headers: {
 				'x-ratelimit-read': '1',
@@ -135,20 +136,20 @@ describe('Rate Limit Adapter', () => {
 				'x-ratelimit-write': '1000',
 			},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
 		});
 
-		var api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitReadSeconds: 2,
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
@@ -165,21 +166,21 @@ describe('Rate Limit Adapter', () => {
 
 	it('should limit multiple requests', () => {
 
-		axios.resolvesOnce({
+		axiosMock.mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
-		}).resolvesOnce({
+		}).mockResolvedValueOnce({
 			status: 200,
 			headers: {},
 			body: {},
 		});
 
-		var api = new AnxApi({
+		const api = new AnxApi({
 			target: 'http://api.example.com',
 			rateLimiting: true,
 			rateLimitRead: 1,
@@ -187,7 +188,7 @@ describe('Rate Limit Adapter', () => {
 			onRateLimitExceeded: onRateLimitExceededStub,
 			onRateLimitPause: onRateLimitPauseStub,
 			onRateLimitResume: onRateLimitResumeStub,
-		});
+		} as any);
 
 		expect.assertions(3);
 
