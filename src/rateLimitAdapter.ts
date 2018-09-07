@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
-import { IRequestOptions, Method } from './api';
+import { IRequestOptionsInternal,  Method } from './api';
 import { RequestQueue } from './request-queue';
+import { IResponse } from './types';
 
 const DEFAULT_READ_LIMIT = 100;
 const DEFAULT_READ_LIMIT_SECONDS = 60;
@@ -10,7 +11,7 @@ const DEFAULT_WRITE_LIMIT_SECONDS = 60;
 const DEFAULT_WRITE_LIMIT_HEADER = 'x-ratelimit-write';
 
 export interface IRateLimitAdapterOptions {
-	request: () => any;
+	request: (opts: IRequestOptionsInternal) => Promise<IResponse>;
 	rateLimitRead?: number;
 	rateLimitReadSeconds?: number;
 	rateLimitWrite?: number;
@@ -20,7 +21,7 @@ export interface IRateLimitAdapterOptions {
 	onRateLimitResume?: () => any;
 }
 
-export const rateLimitAdapter = (options: IRateLimitAdapterOptions): (opts: IRequestOptions) => Promise<void> => {
+export const rateLimitAdapter = (options: IRateLimitAdapterOptions): (opts: IRequestOptionsInternal) => Promise<void> => {
 	const readQueue: RequestQueue = new RequestQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
@@ -40,7 +41,7 @@ export const rateLimitAdapter = (options: IRateLimitAdapterOptions): (opts: IReq
 		onRateLimitPause: _.partial(options.onRateLimitPause || _.noop, 'WRITE'),
 		onRateLimitResume: _.partial(options.onRateLimitResume || _.noop, 'WRITE'),
 	});
-	return (opts: IRequestOptions): Promise<void> => {
+	return (opts: IRequestOptionsInternal): Promise<void> => {
 		return opts.method === Method.GET ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
 	};
 };

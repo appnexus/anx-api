@@ -1,15 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
+
 import httpAdapter from 'axios/lib/adapters/http';
 import * as _ from 'lodash';
+import { IRequestOptionsInternal } from './api';
+import { IResponse } from './types';
 
-export interface IResponse {
-	statusCode: any;
-	headers: any;
-	body: any;
-	requestTime: any;
-}
-
-export const axiosAdapter = (config) => (opts): Promise<IResponse> => {
+export const axiosAdapter = (config) => (opts: IRequestOptionsInternal): Promise<IResponse> => {
 	const url = opts.uri;
 	const axiosConfig: AxiosRequestConfig = {
 		url,
@@ -30,16 +26,18 @@ export const axiosAdapter = (config) => (opts): Promise<IResponse> => {
 
 	return axios(axiosConfig).then((res) => {
 		return {
+			uri: opts.uri,
 			statusCode: res.status,
 			headers: res.headers,
 			body: res.data,
 			requestTime: new Date().getTime() - startTime,
 		};
-	}).catch((err) => {
+	}).catch((err): IResponse => {
 		if (!err.response) {
 			throw err;
 		}
 		return {
+			uri: opts.uri,
 			statusCode: err.response.status,
 			headers: err.response.headers,
 			body: err.response.data,

@@ -66,14 +66,12 @@
     "typescript": "^3.0.1"
   },
   "jest": {
+    "verbose": false,
     "testEnvironment": "node",
     "coverageDirectory": "../coverage/",
     "collectCoverageFrom": [
       "**/*.js",
-      "**/*.ts",
-      "!constants/**",
-      "!generated/**",
-      "!*.*"
+      "**/*.ts"
     ],
     "coverageReporters": [
       "html"

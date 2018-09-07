@@ -1,10 +1,12 @@
 import * as _ from 'lodash';
 import * as query from 'qs';
 import * as urlJoin from 'url-join';
+
 import { axiosAdapter } from './axiosAdapter';
 import { concurrencyAdapter } from './concurrencyAdapter';
 import * as errors from './errors';
 import { rateLimitAdapter } from './rateLimitAdapter';
+import { IResponse } from './types';
 
 const packageJson = require('../package.json');
 
@@ -14,7 +16,7 @@ export interface IConfig {
 	concurrencyLimit?: number;
 	environment?: string;
 	rateLimiting: boolean;
-	request?: (opts: any) => any;
+	request?: (opts: IGenericOptions) => Promise<IResponse>;
 	beforeRequest?: (opts: any) => any;
 	afterRequest?: (opts: any) => any;
 	target: string;
@@ -51,6 +53,22 @@ export interface IRequestOptions extends IOptionsWithPayload {
 	method: (Method | string);
 }
 
+export interface IRequestOptionsInternal {
+	auth?: boolean;
+	body: object;
+	encodeParams: boolean;
+	headers: Record<string, string>;
+	method: string;
+	mimeType?: string;
+	noAuth?: boolean;
+	numElements?: number;
+	params: Record<string, string>;
+	rejectUnauthorized: boolean;
+	startElement?: number;
+	timeout: number;
+	uri: string;
+}
+
 function _hasValue(value: any): boolean {
 	return !(_.isNull(value) || _.isUndefined(value));
 }
@@ -70,7 +88,7 @@ export function statusOk(body) {
 	return !!body && !!body.response && body.response.status === 'OK';
 }
 
-function __request(opts: IRequestOptions): Promise<any> {
+function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 	const _self = this;
 	return new Promise((resolve, reject) => {
 		let params;
@@ -89,16 +107,16 @@ function __request(opts: IRequestOptions): Promise<any> {
 		});
 
 		// Configure Options
-		let reqOpts: any = _.assign({}, {
+		let reqOpts: IRequestOptionsInternal = {
+			method: (opts.method || Method.GET).toUpperCase(),
+			uri: urlJoin(_self._config.target, _.trimStart(opts.uri, '/')),
+			timeout: opts.timeout || _self._config.timeout,
 			rejectUnauthorized: false,
-			headers: _.assign({}, _self._config.headers),
-		});
-
-		reqOpts.timeout = opts.timeout || _self._config.timeout;
-		reqOpts.method = (opts.method || Method.GET).toUpperCase();
-		reqOpts.params = _.assign({}, opts.params);
-		reqOpts.body = opts.body;
-		reqOpts.encodeParams = _.get(opts, 'encodeParams', false);
+			headers: { ..._self._config.headers },
+			params: { ...opts.params },
+			body: opts.body,
+			encodeParams: _.get(opts, 'encodeParams', false),
+		};
 
 		if (_self._config.userAgent) {
 			reqOpts.headers['User-Agent'] = _self._config.userAgent;
@@ -125,15 +143,13 @@ function __request(opts: IRequestOptions): Promise<any> {
 
 		reqOpts.headers = _.assign({}, reqOpts.headers, opts.headers);
 
-		reqOpts.uri = urlJoin(_self._config.target, _.trimStart(opts.uri, '/'));
-
 		// Configure Parameters
 		if (_hasValue(opts.startElement)) {
-			reqOpts.params.start_element = +opts.startElement;
+			reqOpts.params.start_element = (+opts.startElement).toString();
 		}
 		if (_hasValue(opts.numElements)) {
-			reqOpts.params.num_elements = +opts.numElements;
-			reqOpts.params.start_element = +opts.startElement || reqOpts.params.start_element || 0; // startElement is required if numElements is set
+			reqOpts.params.num_elements = (+opts.numElements).toString();
+			reqOpts.params.start_element = (+opts.startElement || reqOpts.params.start_element || 0).toString(); // startElement is required if numElements is set
 		}
 
 		params = query.stringify(reqOpts.params, {encode: reqOpts.encodeParams});
@@ -153,7 +169,7 @@ function __request(opts: IRequestOptions): Promise<any> {
 		return _self._config.request(reqOpts).then((res) => {
 			const totalTime = new Date().getTime() - startTime;
 
-			let newRes = _.assign({
+			let newRes: IResponse = _.assign({
 				requestTime: res.requestTime || totalTime,
 				totalTime: new Date().getTime() - startTime,
 			}, res);
@@ -227,7 +243,7 @@ export class AnxApi {
 		}) : this._config.request;
 	}
 
-	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?): Promise<any> {
+	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?): Promise<IResponse> {
 		const newOpts = _normalizeOpts(opts, extendOpts);
 		newOpts.method = method || newOpts.method || Method.GET;
 		if (payload) {
@@ -236,16 +252,15 @@ export class AnxApi {
 		return this.request(newOpts);
 	}
 
-	public request(opts: IRequestOptions, extendOpts?: IGenericOptions): Promise<any> {
+	public request(opts: IRequestOptions, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request(null, opts, extendOpts);
 	}
 
-	public get(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<any> {
+	public get(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request(Method.GET, opts, extendOpts);
 	}
 
 	public getAll(opts: IGenericOptions, extendOpts): Promise<any> {
-
 		return new Promise((resolve, reject) => {
 			const newOpts = _normalizeOpts(opts, extendOpts);
 			let numElements = opts.numElements || 100;
@@ -293,19 +308,19 @@ export class AnxApi {
 		});
 	}
 
-	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<any> {
+	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request(Method.POST, opts, extendOpts, payload);
 	}
 
-	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<any> {
+	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request(Method.PUT, opts, extendOpts, payload);
 	}
 
-	public delete(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<any> {
+	public delete(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request(Method.DELETE, opts, extendOpts);
 	}
 
-	public login(username: string, password: string): Promise<any> {
+	public login(username: string, password: string): Promise<string> {
 		const reqOpts = {
 			auth: {
 				username,
@@ -321,7 +336,7 @@ export class AnxApi {
 		});
 	}
 
-	public switchUser(userId: number): Promise<any> {
+	public switchUser(userId: number): Promise<IResponse> {
 		return this.post('/auth', {
 			auth: {
 				switch_to_user: userId,
