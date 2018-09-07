@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { IRequestOptions } from './api';
+import { IRequestOptionsInternal } from './api';
 import { IRequestQueueItem } from './request-queue';
 
 export interface IConcurrencyQueueOptions {
@@ -17,46 +17,39 @@ export class ConcurrencyQueue {
 		this.running = [];
 	}
 
-	public push(opts: IRequestOptions): Promise<any> {
-		if (this.running.length < this.options.limit) {
-			const requestPromise = this.options.request(opts).then((res) => {
-				this.finished(requestPromise);
-				return res;
-			}, (err) => {
-				this.finished(requestPromise);
-				throw err;
-			});
-			this.running.push(requestPromise);
-			return requestPromise;
-		}
+	public push(opts: IRequestOptionsInternal): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const reqInfo: IRequestQueueItem = { opts, resolve, reject };
 			this.queue.push(reqInfo);
+			if (this.running.length < this.options.limit) {
+				this.makeRequest(this.queue.shift());
+			}
 		});
 	}
 
-	public finished(requestPromise: IRequestQueueItem): void {
+	private finished(requestPromise: IRequestQueueItem): void {
 		_.remove(this.running, requestPromise);
 		if (this.queue.length > 0) {
 			this.makeRequest(this.queue.shift());
 		}
 	}
 
-	public makeRequest(reqInfo: IRequestQueueItem): void {
-		const requestPromise = this.options.request(reqInfo.opts).then((res) => {
-			this.finished(requestPromise);
+	private makeRequest(reqInfo: IRequestQueueItem): void {
+		this.options.request(reqInfo.opts).then((res) => {
+			this.finished(reqInfo);
 			reqInfo.resolve(res);
 			return null;
 		}).catch((err) => {
-			this.finished(requestPromise);
+			this.finished(reqInfo);
 			reqInfo.reject(err);
 		});
-		this.running.push(requestPromise);
+		this.running.push(reqInfo);
 	}
-
 }
 
-export const concurrencyAdapter = (options: IConcurrencyQueueOptions) => (opts: IRequestOptions): Promise<any> => {
+export const concurrencyAdapter = (options: IConcurrencyQueueOptions) => {
 	const concurrencyQueue = new ConcurrencyQueue(options);
-	return concurrencyQueue.push(opts);
+	return (opts: IRequestOptionsInternal): Promise<any> => {
+		return concurrencyQueue.push(opts);
+	};
 };

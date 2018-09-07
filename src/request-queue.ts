@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
-import { IRequestOptions } from './api';
+import { IRequestOptionsInternal } from './api';
 import { RateLimitExceededError } from './errors';
+import { IResponse } from './types';
 
 const DEFAULT_LIMIT = 60;
 const DEFAULT_LIMIT_SECONDS = 60;
@@ -11,18 +12,18 @@ const DEFAULT_RATE_LIMIT_TIMEOUT = DEFAULT_LIMIT_SECONDS * ONE_SECOND;
 const RETRY_AFTER_BUFFER_TIME = ONE_SECOND;
 
 export interface IRequestQueueOptions {
-	request: any;
+	request: (opts: IRequestOptionsInternal) => Promise<IResponse>;
 	limit: number;
 	limitSeconds: number;
 	limitHeader: string;
-	onRateLimitExceeded: (err: RateLimitExceededError) => any;
-	onRateLimitPause: () => any;
-	onRateLimitResume: () => any;
+	onRateLimitExceeded: (err: RateLimitExceededError) => void;
+	onRateLimitPause: () => void;
+	onRateLimitResume: () => void;
 }
 
 export interface IRequestQueueItem {
-	opts: IRequestOptions;
-	resolve: (value?: void | PromiseLike<void>) => void;
+	opts: IRequestOptionsInternal;
+	resolve: (value?: any) => void;
 	reject: (reason?: any) => void;
 }
 
@@ -31,7 +32,7 @@ export class RequestQueue {
 	private queue: IRequestQueueItem[];
 	private limitCount: number;
 	private expires: number;
-	private timeoutId: any;
+	private timeoutId: NodeJS.Timer;
 
 	constructor(options: IRequestQueueOptions) {
 		this.options = _.assign({
@@ -47,7 +48,7 @@ export class RequestQueue {
 		this._resetTimeout();
 	}
 
-	public enqueue(opts: IRequestOptions): Promise<void> {
+	public enqueue(opts: IRequestOptionsInternal): Promise<void> {
 		return new Promise((resolve, reject) => {
 			this.queue.push({
 				opts,
@@ -99,10 +100,9 @@ export class RequestQueue {
 		this.expires = Date.now() + ((this.options.limitSeconds + DEFAULT_LIMIT_SECONDS_BUFFER) * ONE_SECOND);
 	}
 
-	private _execute(reqInfo: IRequestQueueItem): () => any {
+	private _execute(reqInfo: IRequestQueueItem): Promise<IResponse> {
 		return this.options.request(reqInfo.opts).then((res) => {
-			this._checkHeaders(res);
-			return reqInfo.resolve(res);
+			return reqInfo.resolve(this._checkHeaders(res)) as any;
 		}).catch((err) => {
 			if (err instanceof RateLimitExceededError) {
 				this.options.onRateLimitExceeded(err);
@@ -120,7 +120,7 @@ export class RequestQueue {
 		});
 	}
 
-	private _checkHeaders(res: any): void {
+	private _checkHeaders(res: IResponse): IResponse {
 		if (res.headers[this.options.limitHeader]) {
 			const limit = parseInt(res.headers[this.options.limitHeader], 10) || DEFAULT_LIMIT;
 			if (limit !== this.options.limit) {
@@ -129,5 +129,6 @@ export class RequestQueue {
 				this._processQueue();
 			}
 		}
+		return res;
 	}
 }

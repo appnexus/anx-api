@@ -2,6 +2,12 @@
 
 ## Latest
 
+## v7.1.0
+
+* [patch] More strict internal types
+* [patch] Unit tested concurrency
+* [minor] Added `statusCode` and `uri` to the root response object
+
 ## v7.0.0
 
 * [major] Converted project to typescript
@@ -127,8 +133,8 @@
 
 * Added `rateLimiting` option to the constructor
 * Added `mimeType` option to requests
-* Setting `opts.headers.Accept` and `opts.headers['Contenty-Type']` overrides json defaults
-* Fixed bug where `get` and `delete` set `Contenty-Type`
+* Setting `opts.headers.Accept` and `opts.headers['Content-Type']` overrides json defaults
+* Fixed bug where `get` and `delete` set `Content-Type`
 * Replaced `q` with `es6-promise`
 * Added error type `RateLimitExceededError`
 * Added `afterRequest` config function to transform response objects
@@ -143,7 +149,7 @@
 
 * Updated `qs` and `lodash`
 * Allows null or undefined urls
-* Allows unsetting 'User-Agent' with config.userAgent = null
+* Allows un-setting 'User-Agent' with config.userAgent = null
 * Added `beforeRequest` config function to transform request options
 * Added ability to set default headers in the config.
 * Added change log

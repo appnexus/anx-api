@@ -1,7 +1,10 @@
 import * as _ from 'lodash';
 
+import { IResponse } from './types';
+
 export class ApiError extends Error {
 	public id;
+	public statusCode: number;
 	public code;
 	public defaultMessage;
 	public description;
@@ -26,6 +29,8 @@ export class ApiError extends Error {
 		let description;
 
 		if (_.isObject(res)) {
+			this.statusCode = res.statusCode;
+
 			// Traverse through general API JSON Response
 			if (res.body && res.body.response) {
 				response = res.body.response; // res is raw api response

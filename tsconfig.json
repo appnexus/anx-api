@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
     "allowJs": false,
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "inlineSources": true,
-    "outDir": "./lib",
-    "target": "es6",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "inlineSourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "target": "es6",
+    "typeRoots": ["./node_modules/@types"]
   },
   "exclude": [
     "node_modules",

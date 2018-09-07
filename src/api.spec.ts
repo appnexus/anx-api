@@ -24,7 +24,7 @@ describe('AnxApi', () => {
 						rateLimiting: false,
 						request(o) {
 							opts = o;
-							return Promise.resolve({ testKey: 'testValue' });
+							return Promise.resolve({ testKey: 'testValue', statusCode: 200, headers: {}, body: {}, requestTime: 0, uri: '' });
 						},
 						beforeRequest(reqOpts) {
 							return _.assign({}, reqOpts, { body: 'test' });
@@ -101,7 +101,7 @@ describe('AnxApi', () => {
 						rateLimiting: false,
 						request(o) {
 							opts = o;
-							return Promise.resolve({});
+							return Promise.resolve({ statusCode: 200, headers: {}, body: {}, requestTime: 0, uri: '' });
 						},
 					});
 					get = api.get({
@@ -186,7 +186,7 @@ describe('AnxApi', () => {
 						rateLimiting: false,
 						request(o) {
 							opts = o;
-							done();
+							return done();
 						},
 					});
 					api.get({
@@ -221,7 +221,7 @@ describe('AnxApi', () => {
 								then(callback) {
 									callback({});
 								},
-							};
+							} as any;
 						},
 					});
 				});
@@ -309,7 +309,7 @@ describe('AnxApi', () => {
 											statusCode: 401,
 										});
 									},
-								};
+								} as any;
 							},
 						});
 					});
@@ -343,7 +343,7 @@ describe('AnxApi', () => {
 					target: 'http://example.com',
 					rateLimiting: false,
 					request: (opts) => {
-						return Promise.resolve(opts);
+						return Promise.resolve(opts) as any;
 					},
 				});
 			});
@@ -426,7 +426,7 @@ describe('AnxApi', () => {
 					target: 'http://example.com/route',
 					rateLimiting: false,
 					request(opts) {
-						return Promise.resolve(opts);
+						return Promise.resolve(opts) as any;
 					},
 				});
 				return api.get('sub-route').then((opts) => {
@@ -440,7 +440,7 @@ describe('AnxApi', () => {
 					target: 'http://example.com/route/',
 					rateLimiting: false,
 					request(opts) {
-						return Promise.resolve(opts);
+						return Promise.resolve(opts) as any;
 					},
 				});
 				return api.get('sub-route').then((opts) => {
@@ -454,7 +454,7 @@ describe('AnxApi', () => {
 					target: 'http://example.com/route',
 					rateLimiting: false,
 					request(opts) {
-						return Promise.resolve(opts);
+						return Promise.resolve(opts) as any;
 					},
 				});
 
@@ -477,7 +477,7 @@ describe('AnxApi', () => {
 					rateLimiting: false,
 					request(o) {
 						opts = o;
-						done();
+						return done();
 					},
 				});
 				api.get('user').catch((error) => error);
@@ -549,7 +549,7 @@ describe('AnxApi', () => {
 					rateLimiting: false,
 					request(o) {
 						opts = o;
-						done();
+						return done();
 					},
 				});
 				api.post('user', { name: 'MyName' }).catch((error) => error);
@@ -582,7 +582,7 @@ describe('AnxApi', () => {
 					rateLimiting: false,
 					request(o) {
 						opts = o;
-						done();
+						return done();
 					},
 				});
 				api.put('user', { name: 'MyName' }).catch((error) => error);
@@ -615,7 +615,7 @@ describe('AnxApi', () => {
 					rateLimiting: false,
 					request(o) {
 						opts = o;
-						done();
+						return done();
 					},
 				});
 				api.delete('user?id=1').catch((error) => error);
@@ -687,7 +687,7 @@ describe('AnxApi', () => {
 			return api.login('test_user', 'bad_password').then(() => {
 				throw new Error('Did not catch Login Error');
 			}).catch((err) => {
-				// API treats bad apssword as Authentication instead of Authorization Error.
+				// API treats bad password as Authentication instead of Authorization Error.
 				// assert(err instanceof NotAuthenticatedError, 'Api.NotAuthenticatedError');
 				expect(err).toBeInstanceOf(errors.NotAuthorizedError);
 

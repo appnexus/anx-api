@@ -34,6 +34,7 @@ describe('Axios Adapter', () => {
 		return axiosAdapter({})(opts).then((res) => {
 			expect(_.omit(res, 'requestTime')).toEqual({
 				statusCode: 200,
+				uri: '/api/access-resource?num_elements=1000',
 				headers: { someHeader: 1 },
 				body: { response: {} },
 			});
@@ -43,7 +44,7 @@ describe('Axios Adapter', () => {
 
 	});
 
-	it('should handle axios error response', () => {
+	it('should handle axios error 400 response', () => {
 
 		expect.assertions(4);
 
