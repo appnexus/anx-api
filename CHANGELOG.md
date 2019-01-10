@@ -2,6 +2,10 @@
 
 ## Latest
 
+## v7.1.1
+
+* [patch] Bumped jest and ts-jest versions
+
 ## v7.1.0
 
 * [patch] More strict internal types

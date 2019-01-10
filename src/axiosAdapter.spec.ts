@@ -31,7 +31,7 @@ describe('Axios Adapter', () => {
 			uri: '/api/access-resource?num_elements=1000',
 		};
 
-		return axiosAdapter({})(opts).then((res) => {
+		return axiosAdapter({})(opts as any).then((res) => {
 			expect(_.omit(res, 'requestTime')).toEqual({
 				statusCode: 200,
 				uri: '/api/access-resource?num_elements=1000',
@@ -65,7 +65,7 @@ describe('Axios Adapter', () => {
 			uri: '/api/access-resource?num_elements=1000',
 		};
 
-		return axiosAdapter({})(opts).then((res) => {
+		return axiosAdapter({})(opts as any).then((res) => {
 			expect(res.statusCode).toBe(401);
 			expect(res.headers).toEqual({ someHeader: 1 });
 			expect(res.body).toEqual({ response: {} });
