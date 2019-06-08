@@ -10,7 +10,7 @@ export const axiosAdapter = (config) => (opts: IRequestOptionsInternal): Promise
 	const axiosConfig: AxiosRequestConfig = {
 		url,
 		timeout: opts.timeout,
-		method: opts.method.toLowerCase(),
+		method: opts.method,
 		headers: opts.headers,
 	};
 

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { IRequestOptionsInternal,  Method } from './api';
+import { IRequestOptionsInternal } from './api';
 import { RequestQueue } from './request-queue';
 import { IResponse } from './types';
 
@@ -42,6 +42,6 @@ export const rateLimitAdapter = (options: IRateLimitAdapterOptions): (opts: IReq
 		onRateLimitResume: _.partial(options.onRateLimitResume || _.noop, 'WRITE'),
 	});
 	return (opts: IRequestOptionsInternal): Promise<void> => {
-		return opts.method === Method.GET ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
+		return opts.method === 'GET' ? readQueue.enqueue(opts) : writeQueue.enqueue(opts);
 	};
 };

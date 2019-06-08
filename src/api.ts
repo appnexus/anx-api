@@ -2,6 +2,15 @@ import * as _ from 'lodash';
 import * as query from 'qs';
 import * as urlJoin from 'url-join';
 
+export type Method =
+	| 'get' | 'GET'
+	| 'delete' | 'DELETE'
+	| 'head' | 'HEAD'
+	| 'options' | 'OPTIONS'
+	| 'post' | 'POST'
+	| 'put' | 'PUT'
+	| 'patch' | 'PATCH';
+
 import { axiosAdapter } from './axiosAdapter';
 import { concurrencyAdapter } from './concurrencyAdapter';
 import * as errors from './errors';
@@ -42,15 +51,8 @@ export interface IOptionsWithPayload extends IGenericOptions {
 	body?: any;
 }
 
-export enum Method {
-	GET =	'GET',
-	POST = 'POST',
-	PUT = 'PUT',
-	DELETE = 'DELETE',
-}
-
 export interface IRequestOptions extends IOptionsWithPayload {
-	method: (Method | string);
+	method: Method;
 }
 
 export interface IRequestOptionsInternal {
@@ -58,7 +60,7 @@ export interface IRequestOptionsInternal {
 	body: object;
 	encodeParams: boolean;
 	headers: Record<string, string>;
-	method: string;
+	method: Method;
 	mimeType?: string;
 	noAuth?: boolean;
 	numElements?: number;
@@ -108,7 +110,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 
 		// Configure Options
 		let reqOpts: IRequestOptionsInternal = {
-			method: (opts.method || Method.GET).toUpperCase(),
+			method: (opts.method || 'GET'),
 			uri: urlJoin(_self._config.target, _.trimStart(opts.uri, '/')),
 			timeout: opts.timeout || _self._config.timeout,
 			rejectUnauthorized: false,
@@ -128,7 +130,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 
 		if (opts.mimeType) {
 			reqOpts.headers.Accept = opts.mimeType;
-			if (opts.method === Method.POST || opts.method === Method.PUT) {
+			if (opts.method === 'POST' || opts.method === 'PUT') {
 				reqOpts.headers['Content-Type'] = opts.mimeType;
 			}
 		} else {
@@ -136,7 +138,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 			reqOpts.headers.Accept = _.get(opts, 'headers.Accept', 'application/json');
 
 			// Default Content-Type to application/json for POSTs and PUTs
-			if (reqOpts.method === Method.POST || reqOpts.method === Method.PUT) {
+			if (reqOpts.method === 'POST' || reqOpts.method === 'PUT') {
 				reqOpts.headers['Content-Type'] = _.get(opts, 'headers.Content-Type', 'application/json');
 			}
 		}
@@ -245,7 +247,7 @@ export class AnxApi {
 
 	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?): Promise<IResponse> {
 		const newOpts = _normalizeOpts(opts, extendOpts);
-		newOpts.method = method || newOpts.method || Method.GET;
+		newOpts.method = method || newOpts.method || 'GET';
 		if (payload) {
 			newOpts.body = payload;
 		}
@@ -257,7 +259,7 @@ export class AnxApi {
 	}
 
 	public get(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<IResponse> {
-		return this._request(Method.GET, opts, extendOpts);
+		return this._request('GET', opts, extendOpts);
 	}
 
 	public getAll(opts: IGenericOptions, extendOpts): Promise<any> {
@@ -309,15 +311,15 @@ export class AnxApi {
 	}
 
 	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<IResponse> {
-		return this._request(Method.POST, opts, extendOpts, payload);
+		return this._request('POST', opts, extendOpts, payload);
 	}
 
 	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<IResponse> {
-		return this._request(Method.PUT, opts, extendOpts, payload);
+		return this._request('PUT', opts, extendOpts, payload);
 	}
 
 	public delete(opts: IGenericOptions | string, extendOpts?: IGenericOptions): Promise<IResponse> {
-		return this._request(Method.DELETE, opts, extendOpts);
+		return this._request('DELETE', opts, extendOpts);
 	}
 
 	public login(username: string, password: string): Promise<string> {

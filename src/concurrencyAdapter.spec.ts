@@ -56,7 +56,7 @@ describe('Concurrency Adapter', () => {
 					Accept: 'application/json',
 					'User-Agent': 'concurrency',
 				},
-				method: 'get',
+				method: 'GET',
 				timeout: 60000,
 				url: 'http://api.example.com/limit',
 			});
@@ -66,7 +66,7 @@ describe('Concurrency Adapter', () => {
 					Accept: 'application/json',
 					'User-Agent': 'concurrency',
 				},
-				method: 'get',
+				method: 'GET',
 				timeout: 60000,
 				url: 'http://api.example.com/limit2',
 			});
@@ -112,7 +112,7 @@ describe('Concurrency Adapter', () => {
 						Accept: 'application/json',
 						'User-Agent': 'concurrency',
 					},
-					method: 'get',
+					method: 'GET',
 					timeout: 60000,
 					url: 'http://api.example.com/limit',
 				});
@@ -125,7 +125,7 @@ describe('Concurrency Adapter', () => {
 						Accept: 'application/json',
 						'User-Agent': 'concurrency',
 					},
-					method: 'get',
+					method: 'GET',
 					timeout: 60000,
 					url: 'http://api.example.com/limit2',
 				});
