@@ -72,15 +72,14 @@ describe('AnxApi', () => {
 
 			describe('with invalid config', () => {
 
-				it('should throw on missing target', (done) => {
+				it('should throw on missing target', () => {
 					const api = new AnxApi({
 						rateLimiting: false,
 						target: '',
 					});
 
-					api.get('/user').catch((err) => {
+					return api.get('/user').catch((err) => {
 						expect(err).toBeInstanceOf(errors.TargetError);
-						done();
 					});
 				});
 
@@ -179,17 +178,17 @@ describe('AnxApi', () => {
 
 			describe('with encodeParams true', () => {
 
-				beforeEach((done) => {
+				beforeEach(() => {
 					opts = null;
 					const api = new AnxApi({
 						target: 'http://example.com',
 						rateLimiting: false,
 						request(o) {
 							opts = o;
-							return done();
+							return Promise.resolve({} as any);
 						},
 					});
-					api.get({
+					return api.get({
 						uri: 'user',
 						timeout: 5000,
 						startElement: 100,
@@ -314,14 +313,10 @@ describe('AnxApi', () => {
 						});
 					});
 
-					it('should reject with NotAuthenticatedError', (done) => {
-						api.get('user').then(() => {
-							return done(new Error('Did not catch 401'));
-						}).catch((err) => {
-							if (!(err instanceof errors.NotAuthenticatedError)) {
-								return done(new Error('Did not catch NotAuthenticatedError'));
-							}
-							return done();
+					it('should reject with NotAuthenticatedError', () => {
+						expect.assertions(1);
+						return api.get('user').catch((err) => {
+							expect(err).toBeInstanceOf(errors.NotAuthenticatedError);
 						});
 					});
 
