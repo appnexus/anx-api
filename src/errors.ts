@@ -12,7 +12,7 @@ export class ApiError extends Error {
 	public req;
 	public res;
 
-	constructor(req?, res?) {
+	constructor(req?: any, res?: IResponse) {
 		super();
 
 		// Error.captureStackTrace not supported in Firefox
@@ -34,8 +34,8 @@ export class ApiError extends Error {
 			// Traverse through general API JSON Response
 			if (res.body && res.body.response) {
 				response = res.body.response; // res is raw api response
-			} else if (res.response) {
-				response = res.response; // res is body
+			} else if ((res as any).response) {
+				response = (res as any).response; // res is body
 			} else {
 				response = res;
 			}

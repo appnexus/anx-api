@@ -47,23 +47,23 @@
   "dependencies": {
     "@types/axios": "^0.14.0",
     "axios": "^0.19.0",
-    "lodash": "^4.17.11",
-    "qs": "^6.5.2",
-    "url-join": "^4.0.0"
+    "lodash": "^4.17.15",
+    "qs": "^6.8.0",
+    "url-join": "^4.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.1",
-    "@types/lodash": "^4.14.115",
-    "@types/node": "^10.5.5",
-    "@types/qs": "^6.5.1",
-    "@types/url-join": "^0.8.2",
-    "coveralls": "^3.0.4",
-    "jest": "^24.8.0",
-    "nock": "^10.0.6",
+    "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.138",
+    "@types/node": "^10.14.18",
+    "@types/qs": "^6.5.3",
+    "@types/url-join": "^4.0.0",
+    "coveralls": "^3.0.6",
+    "jest": "^24.9.0",
+    "nock": "^11.3.4",
     "pre-push": "^0.1.1",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.17.0",
-    "typescript": "^3.0.1"
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   },
   "jest": {
     "verbose": false,

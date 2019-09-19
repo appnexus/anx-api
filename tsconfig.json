@@ -5,6 +5,7 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "commonjs",

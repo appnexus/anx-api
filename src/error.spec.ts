@@ -1,4 +1,4 @@
-import * as nock from 'nock';
+import nock from 'nock';
 
 import { AnxApi } from './api';
 import * as errors from './errors';

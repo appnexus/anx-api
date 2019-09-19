@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as query from 'qs';
-import * as urlJoin from 'url-join';
+import urlJoin from 'url-join';
 
 export type Method =
 	| 'get' | 'GET'
@@ -97,7 +97,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 		const startTime = new Date().getTime();
 
 		if (_.isEmpty(_self._config.target)) {
-			return reject(new errors.TargetError(opts, 'Target not set'));
+			return reject(new errors.TargetError('Target not set'));
 		}
 
 		// Validate Opts
