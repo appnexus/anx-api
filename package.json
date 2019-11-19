@@ -21,7 +21,7 @@
     "build": "npm run clean && tsc",
     "clean": "rm -rf coverage && rm -rf lib && mkdir lib",
     "cover": "jest src --coverage",
-    "dependency-check": "npm audit",
+    "dependency-check": "npm audit --production",
     "lint": "eslint --ext .js,.ts src",
     "lint-fix": "eslint --ext .js,.ts src --fix",
     "preversion": "npm run build",
