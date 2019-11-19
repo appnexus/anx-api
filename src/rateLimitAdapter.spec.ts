@@ -5,7 +5,6 @@ jest.mock('axios');
 const axiosMock: jest.Mock = axios as any;
 
 describe('Rate Limit Adapter', () => {
-
 	let onRateLimitExceededStub;
 	let onRateLimitPauseStub;
 	let onRateLimitResumeStub;
@@ -23,21 +22,22 @@ describe('Rate Limit Adapter', () => {
 	});
 
 	it('should handle RateLimitExceededError', () => {
-
-		axiosMock.mockResolvedValueOnce({
-			status: 405,
-			headers: {
-				'retry-after': '1',
-				'x-ratelimit-read': '1000',
-				'x-ratelimit-system': '1000-Default',
-				'x-ratelimit-write': '1000',
-			},
-			body: {},
-		}).mockResolvedValueOnce({
-			status: 200,
-			headers: {},
-			body: {},
-		});
+		axiosMock
+			.mockResolvedValueOnce({
+				status: 405,
+				headers: {
+					'retry-after': '1',
+					'x-ratelimit-read': '1000',
+					'x-ratelimit-system': '1000-Default',
+					'x-ratelimit-write': '1000',
+				},
+				body: {},
+			})
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {},
+				body: {},
+			});
 
 		const api = new AnxApi({
 			target: 'http://api.example.com',
@@ -55,11 +55,9 @@ describe('Rate Limit Adapter', () => {
 			expect(onRateLimitResumeStub).toHaveBeenCalledTimes(1);
 			return null;
 		});
-
 	});
 
 	it('should handle non-standard RateLimitExceededError', () => {
-
 		axiosMock.mockResolvedValueOnce({
 			status: 405,
 			headers: {
@@ -85,24 +83,24 @@ describe('Rate Limit Adapter', () => {
 			expect(onRateLimitPauseStub).not.toHaveBeenCalled();
 			expect(onRateLimitResumeStub).not.toHaveBeenCalled();
 		});
-
 	});
 
 	it('should adapt up limits', () => {
-
-		axiosMock.mockResolvedValueOnce({
-			status: 200,
-			headers: {
-				'x-ratelimit-read': '6',
-				'x-ratelimit-system': '1000-Default',
-				'x-ratelimit-write': '1000',
-			},
-			body: {},
-		}).mockResolvedValueOnce({
-			status: 200,
-			headers: {},
-			body: {},
-		});
+		axiosMock
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {
+					'x-ratelimit-read': '6',
+					'x-ratelimit-system': '1000-Default',
+					'x-ratelimit-write': '1000',
+				},
+				body: {},
+			})
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {},
+				body: {},
+			});
 
 		const api = new AnxApi({
 			target: 'http://api.example.com',
@@ -123,24 +121,24 @@ describe('Rate Limit Adapter', () => {
 				return null;
 			});
 		});
-
 	});
 
 	it('should adapt down limits', () => {
-
-		axiosMock.mockResolvedValueOnce({
-			status: 200,
-			headers: {
-				'x-ratelimit-read': '1',
-				'x-ratelimit-system': '1000-Default',
-				'x-ratelimit-write': '1000',
-			},
-			body: {},
-		}).mockResolvedValueOnce({
-			status: 200,
-			headers: {},
-			body: {},
-		});
+		axiosMock
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {
+					'x-ratelimit-read': '1',
+					'x-ratelimit-system': '1000-Default',
+					'x-ratelimit-write': '1000',
+				},
+				body: {},
+			})
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {},
+				body: {},
+			});
 
 		const api = new AnxApi({
 			target: 'http://api.example.com',
@@ -161,24 +159,25 @@ describe('Rate Limit Adapter', () => {
 				return null;
 			});
 		});
-
 	});
 
 	it('should limit multiple requests', () => {
-
-		axiosMock.mockResolvedValueOnce({
-			status: 200,
-			headers: {},
-			body: {},
-		}).mockResolvedValueOnce({
-			status: 200,
-			headers: {},
-			body: {},
-		}).mockResolvedValueOnce({
-			status: 200,
-			headers: {},
-			body: {},
-		});
+		axiosMock
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {},
+				body: {},
+			})
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {},
+				body: {},
+			})
+			.mockResolvedValueOnce({
+				status: 200,
+				headers: {},
+				body: {},
+			});
 
 		const api = new AnxApi({
 			target: 'http://api.example.com',
@@ -192,17 +191,11 @@ describe('Rate Limit Adapter', () => {
 
 		expect.assertions(3);
 
-		return Promise.all([
-			api.get('/limit'),
-			api.get('/limit'),
-			api.get('/limit'),
-		]).then(() => {
+		return Promise.all([api.get('/limit'), api.get('/limit'), api.get('/limit')]).then(() => {
 			expect(onRateLimitExceededStub).not.toHaveBeenCalled();
 			expect(onRateLimitPauseStub).toHaveBeenCalledTimes(2);
 			expect(onRateLimitResumeStub).toHaveBeenCalledTimes(2);
 			return;
 		});
-
 	});
-
 });

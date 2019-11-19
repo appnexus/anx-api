@@ -35,14 +35,17 @@ export class ConcurrencyQueue {
 	}
 
 	private makeRequest(reqInfo: IRequestQueueItem): void {
-		this.options.request(reqInfo.opts).then((res) => {
-			this.finished(reqInfo);
-			reqInfo.resolve(res);
-			return null;
-		}).catch((err) => {
-			this.finished(reqInfo);
-			reqInfo.reject(err);
-		});
+		this.options
+			.request(reqInfo.opts)
+			.then((res) => {
+				this.finished(reqInfo);
+				reqInfo.resolve(res);
+				return null;
+			})
+			.catch((err) => {
+				this.finished(reqInfo);
+				reqInfo.reject(err);
+			});
 		this.running.push(reqInfo);
 	}
 }

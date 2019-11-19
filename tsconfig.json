@@ -18,7 +18,5 @@
   "exclude": [
     "node_modules",
     "lib",
-    "./src/**/*.spec.js",
-    "./src/**/*.spec.ts"
   ]
 }

@@ -1,4 +1,3 @@
-
 export interface IResponse {
 	req?: any;
 	uri: any;

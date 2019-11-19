@@ -2,25 +2,26 @@ import * as _ from 'lodash';
 
 import { IResponse } from './types';
 
+// Api Errors
+
 export class ApiError extends Error {
+	public name = 'ApiError';
+	public isAnxApi = true;
+	public isApiError = true;
 	public id;
 	public statusCode: number;
 	public code;
-	public defaultMessage;
 	public description;
 	public response;
 	public req;
 	public res;
 
-	constructor(req?: any, res?: IResponse) {
+	constructor(req: any, res: IResponse, customMessage?: string) {
 		super();
 
 		// Error.captureStackTrace not supported in Firefox
 		// tslint:disable-next-line
 		Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-
-		this.name = 'ApiError';
-		this.defaultMessage = this.defaultMessage || '';
 
 		let response;
 		let id;
@@ -41,91 +42,90 @@ export class ApiError extends Error {
 			}
 
 			// Extract values from object - duck type check
-			if (response.hasOwnProperty('error_id')) { // Api Response
+			if (response.hasOwnProperty('error_id')) {
+				// Api Response
 				id = response.error_id;
 				code = response.error_code;
 				message = response.error;
 				description = response.error_description;
-			} else if (response.hasOwnProperty('id')) { // Simple Object
+			} else if (response.hasOwnProperty('id')) {
+				// Simple Object
 				id = response.id;
 				code = response.code;
 				message = response.message;
 				description = response.description;
-			} else {
-				message = res;
 			}
-		} else {
-			message = res;
 		}
 
 		this.id = id;
 		this.code = code;
-		this.message = (message || this.defaultMessage);
-		delete this.defaultMessage;
-		this.description = (description || null);
+		this.message = message || customMessage;
+		this.description = description || null;
 		this.req = req;
 		this.res = res;
 	}
 }
 
 export class NotAuthorizedError extends ApiError {
-	public defaultMessage = 'Authorization failed';
 	public name = 'NotAuthorizedError';
+	constructor(req, res) {
+		super(req, res, 'Authorization failed');
+	}
 }
 
 // NotAuthenticated extends NotAuthorized for backwards compatibility
-export class NotAuthenticatedError extends NotAuthorizedError {
-	public defaultMessage = 'Authentication failed';
+export class NotAuthenticatedError extends ApiError {
 	public name = 'NotAuthenticatedError';
+	constructor(req, res) {
+		super(req, res, 'Authentication failed');
+	}
 }
 
 export class RateLimitExceededError extends ApiError {
-	public defaultMessage = 'Rate Limit Exceeded';
 	public name = 'RateLimitExceededError';
 	public retryAfter;
-	constructor(opts, res) {
-		super(opts, res);
+	constructor(req, res) {
+		super(req, res, 'Rate Limit Exceeded');
 		this.retryAfter = res.headers && res.headers['retry-after'] && parseInt(res.headers['retry-after'], 10);
 	}
 }
 
 export class SystemServiceUnavailableError extends ApiError {
-	public defaultMessage = 'Service Unavailable';
 	public name = 'SystemServiceUnavailableError';
-}
-
-export class SystemUnknownError extends ApiError {
-	public defaultMessage = 'Unknown';
-	public name = 'SystemUnknownError';
-}
-
-export class NetworkError extends Error {
-	public name = 'NetworkError';
-	public req;
-	public err;
-	constructor(req, err) {
-		super();
-		this.req = req;
-		this.err = err;
+	constructor(req, res) {
+		super(req, res, 'Service Unavailable');
 	}
 }
 
-export class ArgumentError extends Error {
-	public name = 'ArgumentError';
-	public req;
-	constructor(req, message) {
-		super();
-		this.message = message;
-		this.req = req;
+export class SystemUnknownError extends ApiError {
+	public name = 'SystemUnknownError';
+	constructor(req, res) {
+		super(req, res, 'Unknown');
 	}
 }
 
 export class TargetError extends ApiError {}
 
+// Network Errors
+
+export class NetworkError extends Error {
+	public name = 'NetworkError';
+	public isAnxApi = true;
+	public isNetworkError = true;
+	public code;
+	public err;
+	public req;
+	constructor(err, req) {
+		super();
+		this.err = err;
+		this.req = req;
+	}
+}
+
 export class DNSLookupError extends NetworkError {
 	public name = 'DNSLookupError';
-	constructor(req, err) {
-		super(req, err);
+	constructor(err, req) {
+		super(err, req);
 		this.message = 'DNS Lookup Error: ' + err.hostname;
 	}
 }
@@ -155,66 +155,83 @@ export class ConnectionRefusedError extends NetworkError {
 	public message = 'Connection Refused Error';
 }
 
+// Argument Errors
+
+export class ArgumentError extends Error {
+	public name = 'ArgumentError';
+	public isAnxApi = true;
+	public isArgumentError = true;
+	public req;
+	constructor(req, message) {
+		super();
+		this.message = message;
+		this.req = req;
+	}
+}
+
+export function buildRequestError(err: Error, req) {
+	let error: Error = err;
+
+	if ((err as any).code) {
+		const networkError: any = err;
+		if (networkError.code === 'ENOTFOUND') {
+			error = new DNSLookupError(err, req);
+		} else if (networkError.code === 'ECONNABORTED') {
+			error = new ConnectionAbortedError(err, req);
+		} else if (networkError.code === 'ECONNREFUSED') {
+			error = new ConnectionRefusedError(err, req);
+		} else if (networkError.code === 'ECONNRESET') {
+			error = new ConnectionResetError(err, req);
+		} else if (networkError.code === 'ETIMEDOUT') {
+			error = new ConnectionTimeoutError(err, req);
+		} else if (networkError.code === 'ESOCKETTIMEDOUT') {
+			error = new SocketTimeoutError(err, req);
+		}
+	}
+
+	return error;
+}
+
 // Build error from root response
 // https://wiki.appnexus.com/display/adnexusdocumentation/API+Semantics#APISemantics-Errors
-export const buildError = (req?, res?): ApiError => {
-	let ErrorType: any = ApiError;
+export const buildError = (err: Error, req, res): ApiError | NetworkError => {
+	let error: ApiError | NetworkError;
+
+	let statusCode;
+	let errorId;
+	let errorCode;
 
 	if (res) {
-		let statusCode;
-		let errorId;
-		let errorCode;
-
-		if (res instanceof Error || res.errno) {
-			if (res.code === 'ENOTFOUND') {
-				ErrorType = DNSLookupError;
-			}
-
-			if (res.code === 'ECONNABORTED') {
-				ErrorType = ConnectionAbortedError;
-			}
-
-			if (res.code === 'ECONNREFUSED') {
-				ErrorType = ConnectionRefusedError;
-			}
-
-			if (res.code === 'ECONNRESET') {
-				ErrorType = ConnectionResetError;
-			}
-
-			if (res.code === 'ETIMEDOUT') {
-				ErrorType = ConnectionTimeoutError;
-			}
-
-			if (res.code === 'ESOCKETTIMEDOUT') {
-				ErrorType = SocketTimeoutError;
-			}
-		}
-
 		statusCode = res.statusCode;
 
 		if (res.body && res.body.response) {
 			errorId = res.body.response.error_id;
 			errorCode = res.body.response.error_code;
 		}
+	}
 
-		if (statusCode || errorId) {
-			// Differentiating Authentication vs Authorization [http://stackoverflow.com/a/6937030/2483105]
-			if (statusCode === 401 || errorId === 'NOAUTH') {
-				ErrorType = NotAuthenticatedError;
-			} else if (statusCode === 403 || errorId === 'UNAUTH') {
-				ErrorType = NotAuthorizedError;
-			} else if (errorId === 'SYSTEM' && errorCode === 'SERVICE_UNAVAILABLE') {
-				ErrorType = SystemServiceUnavailableError;
-			} else if (statusCode === 405 || statusCode === 429) { // Legacy code 405
-				ErrorType = RateLimitExceededError;
-			} else if (errorId === 'SYSTEM' && errorCode === 'RATE_EXCEEDED') { // Legacy rate limit detection pre 1.17
-				ErrorType = RateLimitExceededError;
-			} else if (errorId === 'SYSTEM' && errorCode === 'UNKNOWN') {
-				ErrorType = SystemUnknownError;
-			}
+	if (statusCode || errorId) {
+		// Differentiating Authentication vs Authorization [http://stackoverflow.com/a/6937030/2483105]
+		if (statusCode === 401 || errorId === 'NOAUTH') {
+			error = new NotAuthenticatedError(req, res);
+		} else if (statusCode === 403 || errorId === 'UNAUTH') {
+			error = new NotAuthorizedError(req, res);
+		} else if (errorId === 'SYSTEM' && errorCode === 'SERVICE_UNAVAILABLE') {
+			error = new SystemServiceUnavailableError(req, res);
+		} else if (statusCode === 405 || statusCode === 429) {
+			// Legacy code 405
+			error = new RateLimitExceededError(req, res);
+		} else if (errorId === 'SYSTEM' && errorCode === 'RATE_EXCEEDED') {
+			// Legacy rate limit detection pre 1.17
+			error = new RateLimitExceededError(req, res);
+		} else if (errorId === 'SYSTEM' && errorCode === 'UNKNOWN') {
+			error = new SystemUnknownError(req, res);
 		}
 	}
 
-	return new ErrorType(req, res);
+	if (error) {
+		return error;
+	}
+
+	return new ApiError(req, res, 'Unknown Api Error');
 };

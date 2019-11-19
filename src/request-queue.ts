@@ -35,14 +35,17 @@ export class RequestQueue {
 	private timeoutId: NodeJS.Timer;
 
 	constructor(options: IRequestQueueOptions) {
-		this.options = _.assign({
-			request: null,
-			limit: DEFAULT_LIMIT,
-			limitSeconds: DEFAULT_LIMIT_SECONDS,
-			onRateLimitExceeded: _.noop,
-			onRateLimitPause: _.noop,
-			onRateLimitResume: _.noop,
-		}, options);
+		this.options = _.assign(
+			{
+				request: null,
+				limit: DEFAULT_LIMIT,
+				limitSeconds: DEFAULT_LIMIT_SECONDS,
+				onRateLimitExceeded: _.noop,
+				onRateLimitPause: _.noop,
+				onRateLimitResume: _.noop,
+			},
+			options,
+		);
 		this.queue = [];
 		this.limitCount = 0;
 		this._resetTimeout();
@@ -68,12 +71,15 @@ export class RequestQueue {
 	}
 
 	private _processQueue(retryAfter?: number): void {
-		if (this.queue.length > 0) { // if items left to process
-			if (this.limitCount < Math.max(this.options.limit - DEFAULT_LIMIT_COUNT_BUFFER, 1)) { // if not over limit
+		if (this.queue.length > 0) {
+			// if items left to process
+			if (this.limitCount < Math.max(this.options.limit - DEFAULT_LIMIT_COUNT_BUFFER, 1)) {
+				// if not over limit
 				this.limitCount++;
 				this._execute(this.dequeue());
 				this._processQueue();
-			} else if (!this.paused()) { // schedule
+			} else if (!this.paused()) {
+				// schedule
 				this.options.onRateLimitPause();
 				this._schedule(retryAfter);
 			}
@@ -82,7 +88,7 @@ export class RequestQueue {
 
 	private _schedule(retryAfter?: number): void {
 		if (!this.timeoutId) {
-			const delay = Math.max(retryAfter || (this.expires - Date.now()), 0);
+			const delay = Math.max(retryAfter || this.expires - Date.now(), 0);
 			this.timeoutId = setTimeout(() => {
 				this._resetTimeout();
 				this.limitCount = 0;
@@ -97,27 +103,30 @@ export class RequestQueue {
 			clearTimeout(this.timeoutId);
 			this.timeoutId = null;
 		}
-		this.expires = Date.now() + ((this.options.limitSeconds + DEFAULT_LIMIT_SECONDS_BUFFER) * ONE_SECOND);
+		this.expires = Date.now() + (this.options.limitSeconds + DEFAULT_LIMIT_SECONDS_BUFFER) * ONE_SECOND;
 	}
 
 	private _execute(reqInfo: IRequestQueueItem): Promise<IResponse> {
-		return this.options.request(reqInfo.opts).then((res) => {
-			return reqInfo.resolve(this._checkHeaders(res)) as any;
-		}).catch((err) => {
-			if (err instanceof RateLimitExceededError) {
-				this.options.onRateLimitExceeded(err);
-				if (_.isNil(err.retryAfter)) {
-					// Abort retry due to missing retryAfter
+		return this.options
+			.request(reqInfo.opts)
+			.then((res) => {
+				return reqInfo.resolve(this._checkHeaders(res)) as any;
+			})
+			.catch((err) => {
+				if (err instanceof RateLimitExceededError) {
+					this.options.onRateLimitExceeded(err);
+					if (_.isNil(err.retryAfter)) {
+						// Abort retry due to missing retryAfter
+						return reqInfo.reject(err);
+					}
+					const retryAfter = err.retryAfter ? err.retryAfter * ONE_SECOND + RETRY_AFTER_BUFFER_TIME : DEFAULT_RATE_LIMIT_TIMEOUT;
+					this.limitCount = Infinity;
+					this.queue.push(reqInfo);
+					this._processQueue(retryAfter);
+				} else {
 					return reqInfo.reject(err);
 				}
-				const retryAfter = err.retryAfter ? (err.retryAfter * ONE_SECOND) + RETRY_AFTER_BUFFER_TIME : DEFAULT_RATE_LIMIT_TIMEOUT;
-				this.limitCount = Infinity;
-				this.queue.push(reqInfo);
-				this._processQueue(retryAfter);
-			} else {
-				return reqInfo.reject(err);
-			}
-		});
+			});
 	}
 
 	private _checkHeaders(res: IResponse): IResponse {

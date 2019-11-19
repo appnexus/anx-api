@@ -21,7 +21,7 @@ export const deprecatedMethod = (methodName: string, className: string, useName:
 		warnings.deprecated[methodName + className + useName] = _.once(() => {
 			// tslint:disable-next-line:no-console
 			const log = (console.warn || console.log || _.noop).bind(console);
-			log(`Method ${className}.${methodName} is deprecated, use ${className}.${useName } instead.`);
+			log(`Method ${className}.${methodName} is deprecated, use ${className}.${useName} instead.`);
 		});
 	}
 	warnings.deprecated[methodName + className + useName]();

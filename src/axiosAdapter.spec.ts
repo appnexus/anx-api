@@ -7,11 +7,9 @@ jest.mock('axios');
 const axiosMock: jest.Mock = axios as any;
 
 describe('Axios Adapter', () => {
-
 	it.skip('should make correct axios request', () => {});
 
 	it('should transform axios response', () => {
-
 		expect.assertions(2);
 
 		axiosMock.mockResolvedValueOnce({
@@ -41,11 +39,9 @@ describe('Axios Adapter', () => {
 			expect(_.isNumber(res.requestTime)).toBe(true);
 			return null;
 		});
-
 	});
 
 	it('should handle axios error 400 response', () => {
-
 		expect.assertions(4);
 
 		axiosMock.mockResolvedValueOnce({
@@ -72,7 +68,5 @@ describe('Axios Adapter', () => {
 			expect(res.requestTime).toBeDefined();
 			return null;
 		});
-
 	});
-
 });
