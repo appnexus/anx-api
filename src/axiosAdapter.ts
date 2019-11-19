@@ -24,24 +24,28 @@ export const axiosAdapter = (config) => (opts: IRequestOptionsInternal): Promise
 
 	const startTime = new Date().getTime();
 
-	return axios(axiosConfig).then((res) => {
-		return {
-			uri: opts.uri,
-			statusCode: res.status,
-			headers: res.headers,
-			body: res.data,
-			requestTime: new Date().getTime() - startTime,
-		};
-	}).catch((err): IResponse => {
-		if (!err.response) {
-			throw err;
-		}
-		return {
-			uri: opts.uri,
-			statusCode: err.response.status,
-			headers: err.response.headers,
-			body: err.response.data,
-			requestTime: new Date().getTime() - startTime,
-		};
-	});
+	return axios(axiosConfig)
+		.then((res) => {
+			return {
+				uri: opts.uri,
+				statusCode: res.status,
+				headers: res.headers,
+				body: res.data,
+				requestTime: new Date().getTime() - startTime,
+			};
+		})
+		.catch(
+			(err): IResponse => {
+				if (!err.response) {
+					throw err;
+				}
+				return {
+					uri: opts.uri,
+					statusCode: err.response.status,
+					headers: err.response.headers,
+					body: err.response.data,
+					requestTime: new Date().getTime() - startTime,
+				};
+			},
+		);
 };

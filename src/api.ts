@@ -2,20 +2,13 @@ import * as _ from 'lodash';
 import * as query from 'qs';
 import urlJoin from 'url-join';
 
-export type Method =
-	| 'get' | 'GET'
-	| 'delete' | 'DELETE'
-	| 'head' | 'HEAD'
-	| 'options' | 'OPTIONS'
-	| 'post' | 'POST'
-	| 'put' | 'PUT'
-	| 'patch' | 'PATCH';
-
 import { axiosAdapter } from './axiosAdapter';
 import { concurrencyAdapter } from './concurrencyAdapter';
 import * as errors from './errors';
 import { rateLimitAdapter } from './rateLimitAdapter';
 import { IResponse } from './types';
+
+export type Method = 'get' | 'GET' | 'delete' | 'DELETE' | 'head' | 'HEAD' | 'options' | 'OPTIONS' | 'post' | 'POST' | 'put' | 'PUT' | 'patch' | 'PATCH';
 
 const packageJson = require('../package.json');
 
@@ -80,9 +73,11 @@ function _isInteger(value: any): boolean {
 }
 
 function _normalizeOpts(opts: IGenericOptions | string, extendOpts: IGenericOptions): IRequestOptions {
-	const newOpts = _.isString(opts) ? {
-		uri: opts,
-	} : opts || {};
+	const newOpts = _.isString(opts)
+		? {
+				uri: opts,
+		  }
+		: opts || {};
 	return _.assign({ method: null }, newOpts, extendOpts);
 }
 
@@ -93,11 +88,10 @@ export function statusOk(body) {
 function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 	const _self = this;
 	return new Promise((resolve, reject) => {
-		let params;
 		const startTime = new Date().getTime();
 
 		if (_.isEmpty(_self._config.target)) {
-			return reject(new errors.TargetError('Target not set'));
+			return reject(new errors.TargetError('Target not set', null));
 		}
 
 		// Validate Opts
@@ -110,7 +104,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 
 		// Configure Options
 		let reqOpts: IRequestOptionsInternal = {
-			method: (opts.method || 'GET'),
+			method: opts.method || 'GET',
 			uri: urlJoin(_self._config.target, _.trimStart(opts.uri, '/')),
 			timeout: opts.timeout || _self._config.timeout,
 			rejectUnauthorized: false,
@@ -154,10 +148,10 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 			reqOpts.params.start_element = (+opts.startElement || reqOpts.params.start_element || 0).toString(); // startElement is required if numElements is set
 		}
 
-		params = query.stringify(reqOpts.params, {encode: reqOpts.encodeParams});
+		const params = query.stringify(reqOpts.params, { encode: reqOpts.encodeParams });
 
 		if (params !== '') {
-			reqOpts.uri += (opts.uri.indexOf('?') === -1) ? '?' : '&';
+			reqOpts.uri += !opts.uri.includes('?') ? '?' : '&';
 			reqOpts.uri += params;
 		}
 
@@ -168,49 +162,55 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 			}
 		}
 
-		return _self._config.request(reqOpts).then((res) => {
-			const totalTime = new Date().getTime() - startTime;
+		return _self._config
+			.request(reqOpts)
+			.then((res) => {
+				const totalTime = new Date().getTime() - startTime;
 
-			let newRes: IResponse = _.assign({
-				requestTime: res.requestTime || totalTime,
-				totalTime: new Date().getTime() - startTime,
-			}, res);
+				let newRes: IResponse = _.assign(
+					{
+						requestTime: res.requestTime || totalTime,
+						totalTime: new Date().getTime() - startTime,
+					},
+					res,
+				);
 
-			if (_self._config.afterRequest) {
-				const afterRequestRes = _self._config.afterRequest(newRes);
-				if (afterRequestRes) {
-					newRes = _.assign({}, newRes, afterRequestRes);
+				if (_self._config.afterRequest) {
+					const afterRequestRes = _self._config.afterRequest(newRes);
+					if (afterRequestRes) {
+						newRes = _.assign({}, newRes, afterRequestRes);
+					}
 				}
-			}
 
-			if (newRes.statusCode >= 400) {
-				return reject(errors.buildError(reqOpts, newRes));
-			}
+				if (newRes.statusCode >= 400) {
+					return reject(errors.buildError(null, reqOpts, newRes));
+				}
 
-			// Temporary fix
-			let errorId;
-			let errorCode;
-			if (newRes.body && newRes.body.response && newRes.body.response) {
-				errorId = newRes.body.response.error_id;
-				errorCode = newRes.body.response.error_code;
-			}
-			if (errorId === 'SYSTEM' && errorCode === 'SERVICE_UNAVAILABLE') {
-				return reject(errors.buildError(reqOpts, newRes));
-			}
-			if (errorId === 'SYSTEM' && errorCode === 'UNKNOWN') {
-				return reject(errors.buildError(reqOpts, newRes));
-			}
+				// Temporary fix
+				let errorId;
+				let errorCode;
+				if (newRes.body && newRes.body.response && newRes.body.response) {
+					errorId = newRes.body.response.error_id;
+					errorCode = newRes.body.response.error_code;
+				}
+				if (errorId === 'SYSTEM' && errorCode === 'SERVICE_UNAVAILABLE') {
+					return reject(errors.buildError(null, reqOpts, newRes));
+				}
+				if (errorId === 'SYSTEM' && errorCode === 'UNKNOWN') {
+					return reject(errors.buildError(null, reqOpts, newRes));
+				}
 
-			newRes.req = reqOpts;
+				newRes.req = reqOpts;
 
-			return resolve(newRes);
-		}).catch((err) => {
-			let newErr;
-			if (_self._config.afterRequest) {
-				newErr = _self._config.afterRequest(err);
-			}
-			return reject(errors.buildError(reqOpts, newErr || err));
-		});
+				return resolve(newRes);
+			})
+			.catch((err) => {
+				let newErr = err;
+				if (_self._config.afterRequest) {
+					newErr = _self._config.afterRequest(err);
+				}
+				return reject(errors.buildRequestError(newErr, reqOpts));
+			});
 	});
 }
 
@@ -234,15 +234,21 @@ export class AnxApi {
 		this.request = __request;
 
 		// Install optional rate limiting adapter
-		this.request = this._config.rateLimiting ? rateLimitAdapter(_.assign({}, config, {
-			request: __request.bind(this),
-		})) : __request.bind(this);
+		this.request = this._config.rateLimiting
+			? rateLimitAdapter(
+					_.assign({}, config, {
+						request: __request.bind(this),
+					}),
+			  )
+			: __request.bind(this);
 
 		// Install optional concurrency adapter
-		this._config.request = this._config.concurrencyLimit ? concurrencyAdapter({
-			limit: this._config.concurrencyLimit,
-			request: this._config.request,
-		}) : this._config.request;
+		this._config.request = this._config.concurrencyLimit
+			? concurrencyAdapter({
+					limit: this._config.concurrencyLimit,
+					request: this._config.request,
+			  })
+			: this._config.request;
 	}
 
 	public _request(method: Method, opts: IGenericOptions | string, extendOpts: IGenericOptions, payload?): Promise<IResponse> {
@@ -274,36 +280,41 @@ export class AnxApi {
 				newOpts.startElement = startElement;
 				newOpts.numElements = numElements;
 
-				return this.get(newOpts).then((res) => {
-					if (!statusOk(res.body)) {
-						return reject(res);
-					}
-					const response = res.body.response;
-					const count = response.count || 0;
-					const outputTerm = response.dbg_info.output_term;
-					if (!firstOutputTerm) {
-						firstOutputTerm = outputTerm;
-					}
+				return this.get(newOpts)
+					.then((res) => {
+						if (!statusOk(res.body)) {
+							return reject(res);
+						}
+						const response = res.body.response;
+						const count = response.count || 0;
+						const outputTerm = response.dbg_info.output_term;
+						if (!firstOutputTerm) {
+							firstOutputTerm = outputTerm;
+						}
 
-					numElements = response.num_elements;
+						numElements = response.num_elements;
 
-					totalTime += response.dbg_info.time || 0;
-					elements = elements.concat(response[outputTerm]);
-					if (count <= startElement + numElements) {
-						const newResponse = _.assign({}, {
-							count: elements.length,
-							start_element: 0,
-							num_elements: elements.length,
-							dbg_info: _.assign({}, response.dbg_info, {
-								output_term: firstOutputTerm,
-								time: totalTime,
-							}),
-						});
-						newResponse[firstOutputTerm] = elements;
-						return resolve({ body: { response: newResponse } });
-					}
-					return getAll(startElement + numElements);
-				}).catch(reject);
+						totalTime += response.dbg_info.time || 0;
+						elements = elements.concat(response[outputTerm]);
+						if (count <= startElement + numElements) {
+							const newResponse = _.assign(
+								{},
+								{
+									count: elements.length,
+									start_element: 0,
+									num_elements: elements.length,
+									dbg_info: _.assign({}, response.dbg_info, {
+										output_term: firstOutputTerm,
+										time: totalTime,
+									}),
+								},
+							);
+							newResponse[firstOutputTerm] = elements;
+							return resolve({ body: { response: newResponse } });
+						}
+						return getAll(startElement + numElements);
+					})
+					.catch(reject);
 			};
 
 			return getAll(0);
@@ -334,7 +345,7 @@ export class AnxApi {
 				this._config.token = res.body.response.token;
 				return this._config.token;
 			}
-			throw errors.buildError(reqOpts, res);
+			throw errors.buildError(null, reqOpts, res);
 		});
 	}
 
@@ -345,5 +356,4 @@ export class AnxApi {
 			},
 		});
 	}
-
 }

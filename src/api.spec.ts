@@ -4,15 +4,12 @@ import { AnxApi, statusOk } from './api';
 import * as errors from './errors';
 
 describe('AnxApi', () => {
-
 	describe('Request', () => {
-
 		describe('config', () => {
 			let opts;
 			let res;
 
 			describe('with valid config', () => {
-
 				beforeEach(() => {
 					opts = null;
 					res = null;
@@ -24,7 +21,14 @@ describe('AnxApi', () => {
 						rateLimiting: false,
 						request(o) {
 							opts = o;
-							return Promise.resolve({ testKey: 'testValue', statusCode: 200, headers: {}, body: {}, requestTime: 0, uri: '' });
+							return Promise.resolve({
+								testKey: 'testValue',
+								statusCode: 200,
+								headers: {},
+								body: {},
+								requestTime: 0,
+								uri: '',
+							});
 						},
 						beforeRequest(reqOpts) {
 							return _.assign({}, reqOpts, { body: 'test' });
@@ -67,11 +71,9 @@ describe('AnxApi', () => {
 				it('should attach original request options to the response', () => {
 					expect(res.req).toEqual(opts);
 				});
-
 			});
 
 			describe('with invalid config', () => {
-
 				it('should throw on missing target', () => {
 					const api = new AnxApi({
 						rateLimiting: false,
@@ -82,9 +84,7 @@ describe('AnxApi', () => {
 						expect(err).toBeInstanceOf(errors.TargetError);
 					});
 				});
-
 			});
-
 		});
 
 		describe('Options', () => {
@@ -92,7 +92,6 @@ describe('AnxApi', () => {
 			let get;
 
 			describe('with encodeParams defaulted to false', () => {
-
 				beforeEach(() => {
 					opts = null;
 					const api = new AnxApi({
@@ -100,7 +99,13 @@ describe('AnxApi', () => {
 						rateLimiting: false,
 						request(o) {
 							opts = o;
-							return Promise.resolve({ statusCode: 200, headers: {}, body: {}, requestTime: 0, uri: '' });
+							return Promise.resolve({
+								statusCode: 200,
+								headers: {},
+								body: {},
+								requestTime: 0,
+								uri: '',
+							});
 						},
 					});
 					get = api.get({
@@ -110,16 +115,15 @@ describe('AnxApi', () => {
 						numElements: 25,
 						params: {
 							myParam: 'value',
-							myStdArray: [
-								1,
-								2,
-								3,
+							myStdArray: [1, 2, 3],
+							myObjArray: [
+								{
+									a: 'apple',
+								},
+								{
+									b: 'bee',
+								},
 							],
-							myObjArray: [{
-								a: 'apple',
-							}, {
-								b: 'bee',
-							}],
 						},
 					});
 
@@ -173,11 +177,9 @@ describe('AnxApi', () => {
 						return null;
 					});
 				});
-
 			});
 
 			describe('with encodeParams true', () => {
-
 				beforeEach(() => {
 					opts = null;
 					const api = new AnxApi({
@@ -203,7 +205,6 @@ describe('AnxApi', () => {
 				it('uri should encode params', () => {
 					expect(_.includes(opts.uri, 'myEncodedString=%25ssp')).toBe(true);
 				});
-
 			});
 
 			describe('validation', () => {
@@ -226,73 +227,73 @@ describe('AnxApi', () => {
 				});
 
 				function expectValidationError(errOpts, expected, done) {
-					api.request(errOpts).then(() => {
-						return done(new Error('Expected error: ' + expected));
-					}).catch((err) => {
-						expect(err).toBeInstanceOf(errors.ArgumentError);
-						if (err.message !== expected) {
-							return done(new Error('Unexpected error message: ' + err.message + ' Expected: ' + expected));
-						}
-						return done();
-					});
+					api
+						.request(errOpts)
+						.then(() => {
+							return done(new Error('Expected error: ' + expected));
+						})
+						.catch((err) => {
+							expect(err).toBeInstanceOf(errors.ArgumentError);
+							if (err.message !== expected) {
+								return done(new Error('Unexpected error message: ' + err.message + ' Expected: ' + expected));
+							}
+							return done();
+						});
 				}
 
-				_.each({
-					uri: [
-						{ value: 'creative' },
-						{ value: null },
-						{ value: undefined },
-					],
-					startElement: [
-						{ value: null },
-						{ value: undefined },
-						{ value: 0 },
-						{ value: 1.1, message: 'Invalid startElement' },
-						{ value: '', message: 'Invalid startElement' },
-						{ value: 5, uriContains: 'start_element=5' },
-						{ value: '10', uriContains: 'start_element=10' },
-						{ value: 'ZZZ', message: 'Invalid startElement' },
-					],
-					numElements: [
-						{ value: null },
-						{ value: undefined },
-						{ value: 0 },
-						{ value: 1.1, message: 'Invalid numElements' },
-						{ value: '', message: 'Invalid numElements' },
-						{ value: 5, uriContains: 'num_elements=5' },
-						{ value: '10', uriContains: 'num_elements=10' },
-						{ value: 'ZZZ', message: 'Invalid numElements' },
-					],
-				}, (tests: any, param) => {
-					describe(param, () => {
-						_.forEach(tests, (test) => {
-							const newOpts: any = {};
-							if (param !== 'uri') {
-								newOpts.uri = '/user';
-							}
-							newOpts[param] = test.value;
-							if (test.message) {
-								it(param + ' should not accept ' + test.value, (done) => {
-									expectValidationError(newOpts, test.message, done);
-								});
-							} else {
-								it(param + ' should accept ' + test.value, () => {
-									return api.request(newOpts).then(() => {
-										if (test.uriContains) {
-											expect(_.includes(reqOpts.uri, test.uriContains)).toBe(true);
-										}
-										return null;
+				_.each(
+					{
+						uri: [{ value: 'creative' }, { value: null }, { value: undefined }],
+						startElement: [
+							{ value: null },
+							{ value: undefined },
+							{ value: 0 },
+							{ value: 1.1, message: 'Invalid startElement' },
+							{ value: '', message: 'Invalid startElement' },
+							{ value: 5, uriContains: 'start_element=5' },
+							{ value: '10', uriContains: 'start_element=10' },
+							{ value: 'ZZZ', message: 'Invalid startElement' },
+						],
+						numElements: [
+							{ value: null },
+							{ value: undefined },
+							{ value: 0 },
+							{ value: 1.1, message: 'Invalid numElements' },
+							{ value: '', message: 'Invalid numElements' },
+							{ value: 5, uriContains: 'num_elements=5' },
+							{ value: '10', uriContains: 'num_elements=10' },
+							{ value: 'ZZZ', message: 'Invalid numElements' },
+						],
+					},
+					(tests: any, param) => {
+						describe(param, () => {
+							_.forEach(tests, (test) => {
+								const newOpts: any = {};
+								if (param !== 'uri') {
+									newOpts.uri = '/user';
+								}
+								newOpts[param] = test.value;
+								if (test.message) {
+									it(param + ' should not accept ' + test.value, (done) => {
+										expectValidationError(newOpts, test.message, done);
 									});
-								});
-							}
+								} else {
+									it(param + ' should accept ' + test.value, () => {
+										return api.request(newOpts).then(() => {
+											if (test.uriContains) {
+												expect(_.includes(reqOpts.uri, test.uriContains)).toBe(true);
+											}
+											return null;
+										});
+									});
+								}
+							});
 						});
-					});
-				});
-
+					},
+				);
 			});
 
 			describe('Errors', () => {
-
 				describe('NotAuthenticatedError', () => {
 					let api;
 
@@ -319,17 +320,12 @@ describe('AnxApi', () => {
 							expect(err).toBeInstanceOf(errors.NotAuthenticatedError);
 						});
 					});
-
 				});
-
 			});
-
 		});
-
 	});
 
 	describe('#request', () => {
-
 		describe('opts.headers', () => {
 			let api;
 
@@ -344,7 +340,6 @@ describe('AnxApi', () => {
 			});
 
 			describe('json default', () => {
-
 				it('should set up GET request for json', () => {
 					expect.assertions(2);
 					return api.request({}).then((opts) => {
@@ -384,23 +379,32 @@ describe('AnxApi', () => {
 
 					it('should allow overriding Content-Type', () => {
 						expect.assertions(2);
-						return api.request({ method: 'GET', headers: { 'Content-Type': 'application/json' } }).then((opts) => {
-							expect(opts.headers.Accept).toBe('application/json');
-							expect(opts.headers['Content-Type']).toBeDefined();
-							return null;
-						});
+						return api
+							.request({
+								method: 'GET',
+								headers: { 'Content-Type': 'application/json' },
+							})
+							.then((opts) => {
+								expect(opts.headers.Accept).toBe('application/json');
+								expect(opts.headers['Content-Type']).toBeDefined();
+								return null;
+							});
 					});
 				});
-
 			});
 
 			it('should allow overriding json accept type', () => {
 				expect.assertions(2);
-				return api.request({ method: 'POST', headers: { Accept: 'text/csv', 'Content-Type': 'text/csv' }}).then((opts) => {
-					expect(opts.headers.Accept).toBe('text/csv');
-					expect(opts.headers['Content-Type']).toBe('text/csv');
-					return null;
-				});
+				return api
+					.request({
+						method: 'POST',
+						headers: { Accept: 'text/csv', 'Content-Type': 'text/csv' },
+					})
+					.then((opts) => {
+						expect(opts.headers.Accept).toBe('text/csv');
+						expect(opts.headers['Content-Type']).toBe('text/csv');
+						return null;
+					});
 			});
 
 			it('should allow setting Accept and Content-Type with mimeType option', () => {
@@ -411,7 +415,6 @@ describe('AnxApi', () => {
 					return null;
 				});
 			});
-
 		});
 
 		describe('url formatting', () => {
@@ -461,7 +464,6 @@ describe('AnxApi', () => {
 	});
 
 	describe('#get', () => {
-
 		describe('opts', () => {
 			let opts;
 
@@ -485,9 +487,7 @@ describe('AnxApi', () => {
 			it('should use string path', () => {
 				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
-
 		});
-
 	});
 
 	describe('#getAll', () => {
@@ -504,8 +504,32 @@ describe('AnxApi', () => {
 		});
 
 		it('should ', () => {
-			requestStub.mockReturnValueOnce(Promise.resolve({ body: { response: { status: 'OK', count: 3, num_elements: 2, users: [{ id: 1 }, { id: 2 }], dbg_info: { output_term: 'users' } } } }));
-			requestStub.mockReturnValueOnce(Promise.resolve({ body: { response: { status: 'OK', count: 3, num_elements: 2, user: { id: 3 }, dbg_info: { output_term: 'user' } } } }));
+			requestStub.mockReturnValueOnce(
+				Promise.resolve({
+					body: {
+						response: {
+							status: 'OK',
+							count: 3,
+							num_elements: 2,
+							users: [{ id: 1 }, { id: 2 }],
+							dbg_info: { output_term: 'users' },
+						},
+					},
+				}),
+			);
+			requestStub.mockReturnValueOnce(
+				Promise.resolve({
+					body: {
+						response: {
+							status: 'OK',
+							count: 3,
+							num_elements: 2,
+							user: { id: 3 },
+							dbg_info: { output_term: 'user' },
+						},
+					},
+				}),
+			);
 			return api.getAll('user').then((res) => {
 				expect(requestStub.mock.calls[0][0].uri).toEqual('http://example.com/user?start_element=0&num_elements=100');
 				expect(requestStub.mock.calls[1][0].uri).toEqual('http://example.com/user?start_element=2&num_elements=2');
@@ -518,23 +542,25 @@ describe('AnxApi', () => {
 						},
 						num_elements: 3,
 						start_element: 0,
-						users: [{
-							id: 1,
-						}, {
-							id: 2,
-						}, {
-							id: 3,
-						}],
+						users: [
+							{
+								id: 1,
+							},
+							{
+								id: 2,
+							},
+							{
+								id: 3,
+							},
+						],
 					},
 				});
 				return null;
 			});
 		});
-
 	});
 
 	describe('#post', () => {
-
 		describe('opts', () => {
 			let opts;
 
@@ -561,13 +587,10 @@ describe('AnxApi', () => {
 			it('should place the payload into the post body', () => {
 				expect(opts.body).toEqual({ name: 'MyName' });
 			});
-
 		});
-
 	});
 
 	describe('#put', () => {
-
 		describe('opts', () => {
 			let opts;
 
@@ -594,13 +617,10 @@ describe('AnxApi', () => {
 			it('should place the payload into the put body', () => {
 				expect(opts.body).toEqual({ name: 'MyName' });
 			});
-
 		});
-
 	});
 
 	describe('#delete', () => {
-
 		describe('opts', () => {
 			let opts;
 
@@ -623,13 +643,10 @@ describe('AnxApi', () => {
 			it('should use string path', () => {
 				expect(_.includes(opts.uri, 'http://example.com/user')).toBe(true);
 			});
-
 		});
-
 	});
 
 	describe('#statusOk', () => {
-
 		it('should return true when status is OK', () => {
 			expect(statusOk({ response: { status: 'OK' } })).toBe(true);
 		});
@@ -645,11 +662,9 @@ describe('AnxApi', () => {
 		it('should return false with no response field', () => {
 			expect(statusOk({})).toBe(false);
 		});
-
 	});
 
 	describe('#login', () => {
-
 		function buildApi(responseData) {
 			const api = new AnxApi({
 				// target: 'http://example.com',
@@ -679,16 +694,19 @@ describe('AnxApi', () => {
 					},
 				},
 			});
-			return api.login('test_user', 'bad_password').then(() => {
-				throw new Error('Did not catch Login Error');
-			}).catch((err) => {
-				// API treats bad password as Authentication instead of Authorization Error.
-				// assert(err instanceof NotAuthenticatedError, 'Api.NotAuthenticatedError');
-				expect(err).toBeInstanceOf(errors.NotAuthorizedError);
+			return api
+				.login('test_user', 'bad_password')
+				.then(() => {
+					throw new Error('Did not catch Login Error');
+				})
+				.catch((err) => {
+					// API treats bad password as Authentication instead of Authorization Error.
+					// assert(err instanceof NotAuthenticatedError, 'Api.NotAuthenticatedError');
+					expect(err).toBeInstanceOf(errors.NotAuthorizedError);
 
-				expect('UNAUTH').toBe(err.id);
-				expect('No match found for user/pass').toBe(err.message);
-			});
+					expect('UNAUTH').toBe(err.id);
+					expect('No match found for user/pass').toBe(err.message);
+				});
 		});
 
 		it('should login give api auth token', () => {
@@ -726,11 +744,11 @@ describe('AnxApi', () => {
 			return api.switchUser(1234).then(() => {
 				expect(requestStub.mock.calls[0][0].method).toBe('POST');
 				expect(requestStub.mock.calls[0][0].uri).toBe('http://example.com/auth');
-				expect(requestStub.mock.calls[0][0].body).toEqual({ auth: { switch_to_user: 1234 }});
+				expect(requestStub.mock.calls[0][0].body).toEqual({
+					auth: { switch_to_user: 1234 },
+				});
 				return null;
 			});
 		});
-
 	});
-
 });

@@ -1,0 +1,12 @@
+{
+  "extends": ["appnexus/typescript"],
+  "rules": {
+    "no-console": "off",
+    "no-prototype-builtins": "off",
+    "promise/param-names": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-this-alias": "off"
+  }
+}

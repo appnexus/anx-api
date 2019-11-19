@@ -21,7 +21,7 @@ export interface IRateLimitAdapterOptions {
 	onRateLimitResume?: () => any;
 }
 
-export const rateLimitAdapter = (options: IRateLimitAdapterOptions): (opts: IRequestOptionsInternal) => Promise<void> => {
+export const rateLimitAdapter = (options: IRateLimitAdapterOptions): ((opts: IRequestOptionsInternal) => Promise<void>) => {
 	const readQueue: RequestQueue = new RequestQueue({
 		request: options.request,
 		limit: options.rateLimitRead || DEFAULT_READ_LIMIT,
