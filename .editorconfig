@@ -11,6 +11,6 @@ insert_final_newline = true
 indent_size = 2
 
 # Use spaces for certain kinds of files
-[*.{json,md}]
+[*.{json,md,yaml}]
 indent_style = space
 indent_size = 2

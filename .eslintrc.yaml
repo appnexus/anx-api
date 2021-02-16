@@ -1,0 +1,19 @@
+extends:
+  - appnexus/typescript
+
+rules:
+  no-console: off
+  no-prototype-builtins: off
+  promise/param-names: off
+  "@typescript-eslint/unbound-method": off
+  "@typescript-eslint/explicit-function-return-type": off
+  "@typescript-eslint/camelcase": off
+  "@typescript-eslint/no-this-alias": off
+
+
+  # Should fix
+  '@typescript-eslint/ban-types': off
+  '@typescript-eslint/naming-convention': off
+  '@typescript-eslint/no-floating-promises': off
+  '@typescript-eslint/no-unsafe-member-access': off
+  '@typescript-eslint/restrict-plus-operands': off

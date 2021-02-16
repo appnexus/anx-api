@@ -1,5 +1,9 @@
 # Change Log
 
+## v8.0.1
+- [patch] Updated axios
+- [patch] Updated dev dependencies
+
 ## v8.0.0
 
 - [major] Reworked errors
