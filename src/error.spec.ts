@@ -253,10 +253,7 @@ describe('Error Types', () => {
 		});
 
 		it('Should handle software timeouts', () => {
-			nock('http://api.example.com')
-				.get('/timeout')
-				.delayConnection(2000)
-				.reply(200);
+			nock('http://api.example.com').get('/timeout').delayConnection(2000).reply(200);
 
 			const api = new AnxApi({
 				target: 'http://api.example.com',
