@@ -1,5 +1,10 @@
 # Change Log
 
+## v8.0.2
+- [patch] Updated axios
+- [patch] Removed pre-push for security reasons
+- [patch] Updated dev dependencies
+
 ## v8.0.1
 - [patch] Updated axios
 - [patch] Updated dev dependencies
