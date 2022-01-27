@@ -1,6 +1,6 @@
 {
   "name": "anx-api",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "AppNexus Api Wrapper",
   "homepage": "https://github.com/appnexus/anx-api",
   "bugs": "https://github.com/appnexus/anx-api/issues",
