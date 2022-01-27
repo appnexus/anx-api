@@ -19,11 +19,6 @@
     "test": "jest src",
     "watch": "jest src --watch"
   },
-  "pre-push": [
-    "lint",
-    "test",
-    "dependency-check"
-  ],
   "keywords": [
     "AppNexus"
   ],
@@ -36,9 +31,9 @@
     }
   ],
   "dependencies": {
-    "axios": "^0.18.0",
-    "lodash": "^4.17.10",
-    "qs": "^6.5.2",
+    "axios": "^0.25.0",
+    "lodash": "^4.17.21",
+    "qs": "^6.10.3",
     "url-join": "^4.0.0"
   },
   "devDependencies": {
@@ -54,8 +49,7 @@
     "eslint-plugin-lodash": "^2.7.0",
     "eslint-plugin-promise": "^3.8.0",
     "jest": "^23.6.0",
-    "nock": "^9.4.4",
-    "pre-push": "^0.1.1"
+    "nock": "^9.4.4"
   },
   "jest": {
     "testEnvironment": "node"
