@@ -15,5 +15,6 @@ rules:
   '@typescript-eslint/ban-types': off
   '@typescript-eslint/naming-convention': off
   '@typescript-eslint/no-floating-promises': off
+  '@typescript-eslint/no-unsafe-argument': off
   '@typescript-eslint/no-unsafe-member-access': off
   '@typescript-eslint/restrict-plus-operands': off
