@@ -1,9 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
-
-import httpAdapter from 'axios/lib/adapters/http';
 import * as _ from 'lodash';
 import { IRequestOptionsInternal } from './api';
 import { IResponse } from './types';
+
+const httpAdapter = axios.getAdapter('http');
 
 export const axiosAdapter =
 	(config) =>
