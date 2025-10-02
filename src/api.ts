@@ -169,7 +169,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 
 				let newRes: IResponse = _.assign(
 					{
-						requestTime: res.requestTime || totalTime,
+						requestTime: res.requestTime ?? totalTime,
 						totalTime: new Date().getTime() - startTime,
 					},
 					res,
@@ -189,7 +189,7 @@ function __request(opts: IRequestOptionsInternal): Promise<IResponse> {
 				// Temporary fix
 				let errorId;
 				let errorCode;
-				if (newRes.body && newRes.body.response && newRes.body.response) {
+				if (newRes.body?.response) {
 					errorId = newRes.body.response.error_id;
 					errorCode = newRes.body.response.error_code;
 				}
@@ -268,7 +268,7 @@ export class AnxApi {
 		return this._request('GET', opts, extendOpts);
 	}
 
-	public getAll(opts: IGenericOptions, extendOpts): Promise<any> {
+	public getAll(opts: IGenericOptions, extendOpts?: IGenericOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const newOpts = _normalizeOpts(opts, extendOpts);
 			let numElements = opts.numElements || 100;
@@ -286,16 +286,14 @@ export class AnxApi {
 							return reject(res);
 						}
 						const response = res.body.response;
-						const count = response.count || 0;
+						const count = response.count ?? 0;
 						const outputTerm = response.dbg_info.output_term;
-						if (!firstOutputTerm) {
-							firstOutputTerm = outputTerm;
-						}
+						firstOutputTerm ??= outputTerm;
 
 						numElements = response.num_elements;
 
-						totalTime += response.dbg_info.time || 0;
-						elements = elements.concat(response[outputTerm]);
+						totalTime += response.dbg_info.time ?? 0;
+						elements = elements.concat(response[firstOutputTerm]);
 						if (count <= startElement + numElements) {
 							const newResponse = _.assign(
 								{},
@@ -321,11 +319,63 @@ export class AnxApi {
 		});
 	}
 
-	public post(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<IResponse> {
+	public post(opts: IOptionsWithPayload | string, payload?, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request('POST', opts, extendOpts, payload);
 	}
 
-	public put(opts: IOptionsWithPayload | string, payload, extendOpts?: IGenericOptions): Promise<IResponse> {
+	public postAll(opts: IOptionsWithPayload, payload?, extendOpts?: IGenericOptions): Promise<any> {
+		return new Promise((resolve, reject) => {
+			let numElements = opts.numElements || 100;
+			let firstOutputTerm = /creative-search/.test(opts.uri) ? 'creatives' : '';
+			let elements = [];
+			let totalTime = 0;
+
+			const postAll = (startElement) => {
+				opts.startElement = startElement;
+				opts.numElements = numElements;
+
+				return this.post(opts, payload, extendOpts)
+					.then((res) => {
+						if (!statusOk(res.body)) {
+							return reject(res);
+						}
+						const response = res.body.response;
+						const count = response.count ?? 0;
+						const outputTerm = response.dbg_info.output_term;
+						if (!firstOutputTerm) {
+							firstOutputTerm = outputTerm;
+						}
+
+						numElements = response.num_elements;
+
+						totalTime += response.dbg_info.time ?? 0;
+						elements = elements.concat(response[firstOutputTerm]);
+						if (count <= startElement + numElements) {
+							const newResponse = _.assign(
+								{},
+								{
+									count: elements.length,
+									start_element: 0,
+									num_elements: elements.length,
+									dbg_info: _.assign({}, response.dbg_info, {
+										output_term: firstOutputTerm,
+										time: totalTime,
+									}),
+								},
+							);
+							newResponse[firstOutputTerm] = elements;
+							return resolve({ body: { response: newResponse } });
+						}
+						return postAll(startElement + numElements);
+					})
+					.catch(reject);
+			};
+
+			return postAll(0);
+		});
+	}
+
+	public put(opts: IOptionsWithPayload | string, payload?, extendOpts?: IGenericOptions): Promise<IResponse> {
 		return this._request('PUT', opts, extendOpts, payload);
 	}
 
