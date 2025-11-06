@@ -1,6 +1,6 @@
 {
   "name": "anx-api",
-  "version": "8.0.6",
+  "version": "8.1.0",
   "description": "AppNexus Api Wrapper",
   "homepage": "https://github.com/appnexus/anx-api",
   "bugs": "https://github.com/appnexus/anx-api/issues",
@@ -40,7 +40,7 @@
     }
   ],
   "dependencies": {
-    "axios": "1.8.2",
+    "axios": "1.12.0",
     "lodash": "^4.17.15",
     "qs": "^6.10.3",
     "url-join": "^4.0.1"
