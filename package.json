@@ -1,6 +1,6 @@
 {
   "name": "anx-api",
-  "version": "8.1.0",
+  "version": "8.2.0",
   "description": "AppNexus Api Wrapper",
   "homepage": "https://github.com/appnexus/anx-api",
   "bugs": "https://github.com/appnexus/anx-api/issues",
@@ -53,7 +53,6 @@
     "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
-    "coveralls": "^3.1.0",
     "eslint": "^8.19.0",
     "eslint-config-appnexus": "^7.1.1",
     "eslint-plugin-import": "^2.26.0",
